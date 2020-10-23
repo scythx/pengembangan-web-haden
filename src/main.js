@@ -1,15 +1,20 @@
-const express = require('express')
-const {Pool} = require('pg')
+import "core-js"
+
+require('dotenv').config()
+
+import express from 'express'
+import {Pool} from 'pg'
+
+const pool = new Pool({
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
+    user: process.env.DB_USER,
+    database: process.env.DB_DATABASE,
+    password: process.env.DB_PASSWORD
+})
 
 const app = express()
-const port = 8080
-const pool = new Pool({
-    host: 'db',
-    port: 5432,
-    user: 'postgres',
-    database: 'postgres',
-    password: 'secret'
-})
+const port = process.env.PORT
 
 app.use(express.json())
 
