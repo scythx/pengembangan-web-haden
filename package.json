@@ -1,16 +1,28 @@
 {
-  "name": "io.github.scythx.pengembangan-web-haden",
+  "name": "harden",
   "version": "1.0.0",
-  "description": "",
-  "main": "src/main.js",
+  "private": true,
   "dependencies": {
+    "core-js": "^3.6.5",
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "pg": "^8.4.1"
   },
   "devDependencies": {
-    "jest": "^26.6.1"
+    "@babel/core": "^7.12.3",
+    "@babel/plugin-syntax-top-level-await": "^7.12.1",
+    "@babel/plugin-transform-runtime": "^7.12.1",
+    "@babel/preset-env": "^7.12.1",
+    "babel-loader": "^8.1.0",
+    "jest": "^26.6.1",
+    "webpack": "^5.2.0",
+    "webpack-cli": "^4.1.0",
+    "webpack-node-externals": "^2.5.2"
   },
   "scripts": {
+    "build": "webpack --mode=development",
+    "watch": "webpack --watch --mode=development",
+    "serve": "node dist/main.bundle.js",
     "test": "jest"
   }
 }
