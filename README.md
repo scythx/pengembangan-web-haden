@@ -1,4 +1,4 @@
-# Haden
+# Harden
 
 ## Setup & Running
 
