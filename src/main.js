@@ -26,7 +26,7 @@ app.get('/api/sports/get', function(req, res){
             return console.error('error running query', err);
         }
         console.log(result.rows);
-        res.send(result.rows);
+        //res.send(result.rows);
     });
 });
 
@@ -37,7 +37,7 @@ app.get('/api/sports/get/:sport_id', function(req, res){
             return console.error('error running query', err);
         }
         console.log(result.rows[0]);
-        res.send(result.rows[0]);
+        //res.send(result.rows[0]);
     });
 });
 
@@ -47,7 +47,8 @@ app.post('/api/sports/create', function(req, res){
         if(err){
             return console.error('error running query', err);
         }
-        res.redirect('/api/sports/get');
+        console.log(result);
+        //res.redirect('/api/sports/get');
     });
 });
 
@@ -57,7 +58,8 @@ app.put('/api/sports/edit/:sport_id', function(req, res){
         if(err){
             return console.error('error running query', err);
         }
-        res.redirect('/api/sports/get');
+        console.log(result);
+        //res.redirect('/api/sports/get');
     });
 });
 
@@ -68,30 +70,30 @@ app.delete('/api/sports/delete/:sport_id', function(req, res){
             return console.error('error running query', err);
         }
         console.log(result);
-        res.redirect('/api/sports/get');
+        //res.redirect('/api/sports/get');
     });
 });
 
 /*LEAGUE*/
-//GET ALL LEAGUES
+//GET ALL LEAGUES (TESTED)
 app.get('/api/leagues/get', function(req, res){
     pool.query('SELECT * FROM league', function(err, result){
         if(err){
             return console.error('error running query', err);
         }
         console.log(result.rows);
-        res.send(result.rows);
+        //res.send(result.rows);
     });
 });
 
-//GET LEAGUE BY ID
+//GET LEAGUE BY ID (TESTED)
 app.get('/api/leagues/get/:league_id', function(req, res){
     pool.query('SELECT * FROM league WHERE id_league = $1', [req.params.league_id], function(err, result){
         if(err){
             return console.error('error running query', err);
         }
-        console.log(result.rows);
-        res.send(result.rows);
+        console.log(result.rows[0]);
+        //res.send(result.rows[0]);
     });
 });
 
@@ -101,7 +103,8 @@ app.post('/api/leagues/create', function(req, res){
         if(err){
             return console.error('error running query', err);
         }
-        res.redirect('/api/leagues/get');
+        console.log(result);
+        //res.redirect('/api/leagues/get');
     });
 });
 
@@ -111,7 +114,8 @@ app.put('/api/leagues/edit/:league_id', function(req, res){
         if(err){
             return console.error('error running query', err);
         }
-        res.redirect('/api/leagues/get');
+        console.log(result);
+        //res.redirect('/api/leagues/get');
     });
 });
 
@@ -121,7 +125,8 @@ app.delete('/api/leagues/delete/:league_id', function(req, res){
         if(err){
             return console.error('error running query', err);
         }
-        res.redirect('/api/leagues/get');
+        console.log(result);
+        //res.redirect('/api/leagues/get');
     });
 });
 
