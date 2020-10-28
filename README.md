@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 # Haden
+=======
+# Harden
+>>>>>>> 3afb589c1a6119283e6f4f0a8f899793bd257041
 
 ## Setup & Running
 
