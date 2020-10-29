@@ -5,6 +5,7 @@ import express from 'express'
 import * as db from './database'
 import * as imageStorage  from './image-storage'
 import * as matchesStorage from './matches'
+import * as userStorage from './user-storage'
 
 const app = express()
 const port = process.env.PORT
@@ -318,8 +319,48 @@ app.delete('/api/articles/:articleId', function(req, res, next) {
     res.send()
 });
 
+// USERS
+app.get('/api/users/', async (req, res) => {
+    const users = await userStorage.getAll()
+    res.send(await users.rows)
+})
+
+app.get('/api/users/:id/', async (req, res) => {
+    const user = await userStorage.getOne(req.params.id)
+    res.send(await user.rows)
+})
+
+app.post('/api/users/', async (req, res) => {
+    const fullname = req.body.fullname
+    const email = req.body.email
+    const password = req.body.password
+    const isSubscirbedNewsletter = req.body.is_subscribed_newsletter
+    const isWriter = req.body.is_writer
+
+    await userStorage.createOne(fullname, email, password, isSubscirbedNewsletter, isWriter)
+    res.status(201).send()
+})
+
+app.put('/api/users/:id/', async (req, res) => {
+    const id = req.params.id
+    const fullname = req.body.fullname
+    const email = req.body.email
+    const password = req.body.password
+    const isSubscirbedNewsletter = req.body.is_subscribed_newsletter
+    const isWriter = req.body.is_writer
+
+    await userStorage.updateOne(id, fullname, email, password, isSubscirbedNewsletter, isWriter)
+    res.status(200).send()
+})
+
+app.delete('/api/users/:id/', async (req, res) => {
+    await userStorage.deleteOne(req.params.id)
+    res.status(200).send()
+});
+
 (async () => {
     await imageStorage.createTable()
+    await userStorage.createTable()
 
     const server = app.listen(port, () => {
         console.log(`app listening at http://localhost:${port}`)
