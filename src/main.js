@@ -6,6 +6,8 @@ import * as db from './database'
 import * as imageStorage  from './image-storage'
 import * as matchesStorage from './matches'
 import * as userStorage from './user-storage'
+import * as sportStorage from './sport-storage'
+import * as leagueStorage from './league-storage'
 
 const app = express()
 const port = process.env.PORT
@@ -115,115 +117,79 @@ app.delete('/api/matches/:id/', async (req, res) => {
 })
 
 /* SPORT*/
-//GET ALL SPORTS (TESTED)
-app.get('/api/sports/get', function(req, res){
-    db.query('SELECT * FROM sport', function(err, result){
-        if(err){
-            return console.error('error running query', err);
-        }
-        console.log(result.rows);
-        //res.send(result.rows);
-    });
-});
+//GET ALL SPORTS
+app.get('/api/sports/', async (req, res) => {
+    const sports = await sportStorage.getAll()
+    res.send(await sports.rows)
+})
 
-//GET SPORT BY ID (TESTED)
-app.get('/api/sports/get/:sport_id', function(req, res){
-    db.query('SELECT * FROM sport WHERE id_sport = $1', [req.params.sport_id], function(err, result){
-        if(err){
-            return console.error('error running query', err);
-        }
-        console.log(result.rows[0]);
-        //res.send(result.rows[0]);
-    });
-});
+//GET SPORT BY ID
+app.get('/api/sports/:sport_id/', async (req, res) => {
+    const sport = await sportStorage.getOne(req.params.sport_id)
+    res.send(await sport.rows)
+})
 
 //CREATE SPORT
-app.post('/api/sports/create', function(req, res){
-    db.query('INSERT INTO sport (id_sport, name) values ($1, $2)', [req.body.id_sport, req.body.name], function(err, result){
-        if(err){
-            return console.error('error running query', err);
-        }
-        console.log(result);
-        //res.redirect('/api/sports/get');
-    });
-});
+app.post('/api/sports/', async (req, res) => {
+    const name = req.body.name
+
+    await sportStorage.createOne(name)
+    res.status(201).send()
+})
 
 //EDIT SPORT
-app.put('/api/sports/edit/:sport_id', function(req, res){
-    db.query('UPDATE sport SET name = $2 WHERE id_sport = $1', [req.params.sport_id, req.body.name], function(err, result){
-        if(err){
-            return console.error('error running query', err);
-        }
-        console.log(result);
-        //res.redirect('/api/sports/get');
-    });
-});
+app.put('/api/sports/:sport_id/', async (req, res) => {
+    const sportId = req.params.sport_id
+    const name = req.body.name
+
+    await sportStorage.updateOne(sportId, name)
+    res.status(200).send()
+})
 
 //DELETE SPORT (TESTED)
-app.delete('/api/sports/delete/:sport_id', function(req, res){
-    db.query('DELETE FROM sport WHERE id_sport = $1', [req.params.sport_id], function(err, result){
-        if(err){
-            return console.error('error running query', err);
-        }
-        console.log(result);
-        //res.redirect('/api/sports/get');
-    });
+app.delete('/api/sports/:sport_id/', async (req, res) => {
+    await sportStorage.deleteOne(req.params.sport_id)
+    res.status(200).send()
 });
 
 /*LEAGUE*/
 //GET ALL LEAGUES (TESTED)
-app.get('/api/leagues/get', function(req, res){
-    db.query('SELECT * FROM league', function(err, result){
-        if(err){
-            return console.error('error running query', err);
-        }
-        console.log(result.rows);
-        //res.send(result.rows);
-    });
-});
+app.get('/api/leagues/', async (req, res) => {
+    const leagues = await leagueStorage.getAll()
+    res.send(await leagues.rows)
+})
 
 //GET LEAGUE BY ID (TESTED)
-app.get('/api/leagues/get/:league_id', function(req, res){
-    db.query('SELECT * FROM league WHERE id_league = $1', [req.params.league_id], function(err, result){
-        if(err){
-            return console.error('error running query', err);
-        }
-        console.log(result.rows[0]);
-        //res.send(result.rows[0]);
-    });
-});
+app.get('/api/leagues/:league_id/', async (req, res) => {
+    const league = await leagueStorage.getOne(req.params.league_id)
+    res.send(await league.rows)
+})
 
 //CREATE LEAGUE
-app.post('/api/leagues/create', function(req, res){
-    db.query('INSERT INTO league (id_league, id_sport, name, country) VALUES ($1, $2, $3, $4)', [req.body.id_league, req.body.id_sport, req.body.name, req.body.country], function(err, result){
-        if(err){
-            return console.error('error running query', err);
-        }
-        console.log(result);
-        //res.redirect('/api/leagues/get');
-    });
-});
+app.post('/api/leagues/', async (req, res) => {
+    const sportId = req.body.sportId
+    const name = req.body.name
+    const country = req.body.country
+
+    await leagueStorage.createOne(sportId, name, country)
+    res.status(201).send()
+})
 
 //EDIT LEAGUE
-app.put('/api/leagues/edit/:league_id', function(req, res){
-    db.query('UPDATE league SET id_sport = $2, name = $3, country = $4 WHERE id_league = $1', [req.params.league_id, req.body.id_sport, req.body.name, req.body.country], function(err, result){
-        if(err){
-            return console.error('error running query', err);
-        }
-        console.log(result);
-        //res.redirect('/api/leagues/get');
-    });
-});
+app.put('/api/leagues/:league_id/', async (req, res) => {
+    const leagueId = req.params.league_id
+    const sportId = req.body.sportId
+    const name = req.body.name
+    const country = req.body.country
 
-//DELETE LEAGUE
-app.delete('/api/leagues/delete/:league_id', function(req, res) {
-    db.query('DELETE FROM league WHERE id_league = $1', [req.params.league_id], function(err, result){
-        if(err){
-            return console.error('error running query', err);
-        }
-        console.log(result);
-        //res.redirect('/api/leagues/get');
-    });
+    await leagueStorage.updateOne(leagueId, sportId, name, country)
+    res.status(200).send()
+})
+
+//DELETE LEAGUE (TESTED)
+app.delete('/api/leagues/:league_id/', async (req, res) => {
+    await leagueStorage.deleteOne(req.params.league_id)
+    res.status(200).send()
 });
 
 app.get('/api/articles', function (req, res, next) {
