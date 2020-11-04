@@ -6,6 +6,7 @@ import * as db from './database'
 import * as imageStorage  from './image-storage'
 import * as matchesStorage from './matches'
 import * as userStorage from './user-storage'
+import * as teamStorage from './team'
 
 const app = express()
 const port = process.env.PORT
@@ -356,6 +357,46 @@ app.put('/api/users/:id/', async (req, res) => {
 app.delete('/api/users/:id/', async (req, res) => {
     await userStorage.deleteOne(req.params.id)
     res.status(200).send()
+})
+
+// worked (tested)
+app.get('/api/teams/', async (req, res) => {
+    const teams = await teamStorage.getAllTeam();
+    res.send(await teams.rows);
+});
+
+// worked (tested)
+app.get('/api/teams/:id/', async (req, res) => {
+    const team = await teamStorage.getParticularTeam(req.params.id);
+    res.send(team.rows);
+});
+
+// work (tested)
+app.post('/api/teams/', async (req, res) => {
+    const id = req.body.id_team;
+    const team_name = req.body.name;
+    const sport_id = req.body.sport_id;
+    const country = req.body.country;
+
+    await teamStorage.insertNewTeam(id, team_name, sport_id, country);
+    res.status(200).send()
+});
+
+// worked (tested)
+app.put('/api/teams/:id', async (req, res) => {
+    const id = req.params.id;
+    const team_name = req.body.name;
+    const sport_id = req.body.sport_id;
+    const country = req.body.country;
+
+    await teamStorage.updateTeam(id, team_name, sport_id, country);
+    res.status(200).send()
+});
+
+// work (tested)
+app.delete('/api/teams/:id', async (req, res) => {
+    await teamStorage.deleteParticularTeam(req.params.id);
+    res.status(200).send();
 });
 
 (async () => {
