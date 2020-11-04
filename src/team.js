@@ -15,7 +15,7 @@ export async function createTable(){
 
 // work (tested) 
 export async function getAllTeam(){
-    let sql = "SELECT * FROM Team";
+    let sql = `SELECT * FROM ${TABLE_NAME};`;
     const result = await db.query(sql);
     console.table(result.rows);
     return result;
@@ -23,26 +23,26 @@ export async function getAllTeam(){
 
 // work (tested)
 export async function getParticularTeam(_id){
-    let sql = "SELECT * FROM Team WHERE id_team = $1";
+    let sql = `SELECT * FROM ${TABLE_NAME} WHERE team_id = $1;`;
     const result = await db.query(sql, [_id]);
     console.table(result.rows);
     return result;
 }
 
 // work (tested)
-export async function insertNewTeam(_id, _name, _sportId, _country){
-    let sql = "INSERT INTO Team (id_team, name, sport_id, country) VALUES ($1, $2, $3, $4)";
-    db.query(sql, [_id, _name, _sportId, _country]);
+export async function insertNewTeam(_name, _sportId, _country){
+    let sql = `INSERT INTO ${TABLE_NAME} (team_name, team_sport_id, team_country) VALUES ($1, $2, $3);`;
+    db.query(sql, [_name, _sportId, _country]);
 }
 
 // work (tested)
 export async function updateTeam(_id, _name, _sportId, _country){
-    let sql = "UPDATE Team SET name = $1, sport_id =$2, country = $3 WHERE id_team = $4";
+    let sql = `UPDATE ${TABLE_NAME} SET team_name = $1, team_sport_id =$2, team_country = $3 WHERE team_id = $4;`;
     db.query(sql, [_name, _sportId, _country, _id])
 }
 
 // work (tested)
 export async function deleteParticularTeam(_id){
-    let sql = "DELETE FROM Team WHERE id_team = $1";
+    let sql = `DELETE FROM ${TABLE_NAME} WHERE team_id = $1;`;
     db.query(sql, [_id]);
 }

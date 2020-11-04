@@ -339,23 +339,22 @@ app.get('/api/teams/:id/', async (req, res) => {
 
 // work (tested)
 app.post('/api/teams/', async (req, res) => {
-    const id = req.body.id_team;
-    const team_name = req.body.name;
-    const sport_id = req.body.sport_id;
-    const country = req.body.country;
+    const team_name = req.body.team_name;
+    const team_sport_id = req.body.team_sport_id;
+    const team_country = req.body.team_country;
 
-    await teamStorage.insertNewTeam(id, team_name, sport_id, country);
+    await teamStorage.insertNewTeam(team_name, team_sport_id, team_country);
     res.status(200).send()
 });
 
 // worked (tested)
 app.put('/api/teams/:id', async (req, res) => {
-    const id = req.params.id;
-    const team_name = req.body.name;
-    const sport_id = req.body.sport_id;
-    const country = req.body.country;
+    const team_id = req.params.id;
+    const team_name = req.body.team_name;
+    const team_sport_id = req.body.team_sport_id;
+    const team_country = req.body.team_country;
 
-    await teamStorage.updateTeam(id, team_name, sport_id, country);
+    await teamStorage.updateTeam(team_id, team_name, team_sport_id, team_country);
     res.status(200).send()
 });
 
