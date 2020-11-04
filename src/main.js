@@ -368,6 +368,7 @@ app.delete('/api/teams/:id', async (req, res) => {
 (async () => {
     await imageStorage.createTable()
     await userStorage.createTable()
+    await teamStorage.createTable()
 
     const server = app.listen(port, () => {
         console.log(`app listening at http://localhost:${port}`)

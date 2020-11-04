@@ -1,6 +1,18 @@
 import * as db from './database'
 
 
+const TABLE_NAME = 'Teams';
+export async function createTable(){
+    let sql = `CREATE TABLE IF NOT EXISTS ${TABLE_NAME}(
+        team_id BIGSERIAL PRIMARY KEY NOT NULL,
+        team_name VARCHAR(255) NOT NULL,
+        team_sport_id INT NOT NULL,
+        team_country VARCHAR(255) NOT NULL
+    );`;
+
+    return db.query(sql);
+}
+
 // work (tested) 
 export async function getAllTeam(){
     let sql = "SELECT * FROM Team";
