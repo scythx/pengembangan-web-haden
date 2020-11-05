@@ -1,13 +1,15 @@
 import fs from 'fs'
 import path from 'path'
 import stream from 'stream'
+import util from 'util'
 import _ from 'lodash'
 import * as uuid from 'uuid'
 import * as db from './database'
 
-const STORAGE_ROOT_PATH = path.resolve('dist/static')
-const TABLE_NAME = 'images'
+const STORAGE_ROOT_PATH = path.resolve('dist/public/assets')
 
+const TABLE_NAME = 'images' + ((process.env.NODE_ENV === 'test') ? Date.now()
+                                                                 : (''))
 export const createTable = async () => {
     return db.query(`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
                          id INT GENERATED ALWAYS AS IDENTITY,
@@ -18,7 +20,7 @@ export const createTable = async () => {
 }
 
 export const deleteTable = async () => {
-    return db.query(`DROP TABLE ${TABLE_NAME}`)
+    return db.query(`DROP TABLE IF EXISTS ${TABLE_NAME}`)
 }
 
 export const get = async (criteria) => {
@@ -34,9 +36,9 @@ export const get = async (criteria) => {
 const generateStoreId = () => {
     return Buffer.from(uuid.parse(uuid.v4()))
                  .toString('base64')
-                 .replace('+', '-')
-                 .replace('/', '_')
-                 .replace(/=+$/, '')
+                 .replace(/\+/g, '-')
+                 .replace(/\//g, '_')
+                 .replace(/=+$/g, '')
 }
 
 const getByCriteria = async (criteria) => {
@@ -54,7 +56,7 @@ const getByCriteria = async (criteria) => {
     }
 
     const queryResult = await
-          db.query(`SELECT * FROM images LIMIT $1 OFFSET $2;`,
+          db.query(`SELECT * FROM ${TABLE_NAME} LIMIT $1 OFFSET $2;`,
                    [criteria['limit'], criteria['offset']])
 
     return queryResult.rows.map((currentValue) => {
@@ -71,7 +73,7 @@ const getById = async (id) => {
         return new Error(`Unexpected passed argument ${id}.`)
 
     const queryResult = await
-          db.query(`SELECT * FROM images WHERE id = $1;`,
+          db.query(`SELECT * FROM ${TABLE_NAME} WHERE id = $1;`,
                    [id])
 
     if (queryResult.rows.length == 0) {
@@ -103,36 +105,33 @@ export const remove = async (id) => {
 
 export const insert = async (metadata, data = new stream.Readable.from([])) => {
     if (!_.isPlainObject(metadata))
-        return new Error(`Unexpected passed argument ${metadata}.`)
+        throw new TypeError(`'metadata' has invalid argument of ${metadata}.`)
 
     if (!_.isString(metadata['name']))
-        return new Error(`Invalid image name ${metadata['name']}.`)
+        throw new TypeError(`Invalid image name of ${metadata['name']}.`)
 
     if (!isValidImageExtension(metadata['extension']))
-        throw new Error(`Invalid image extension ${metadata['extension']}`)
+        throw new TypeError(`Invalid image extension of \
+                             ${metadata['extension']}.`)
 
     const storeId = generateStoreId()
 
     const queryResult = await
-          db.query(`INSERT INTO images (name, unique_name, extension)
+          db.query(`INSERT INTO ${TABLE_NAME} (name, unique_name, extension)
                     VALUES ($1, $2, $3)
                     RETURNING id;`,
                    [metadata['name'], storeId, metadata['extension']])
 
     if (queryResult.rows.length == 0) {
-        throw "Unable to insert entry to table `images` to database."
+        throw new Error(`Unable insert entry to the ${TABLE_NAME} table.`)
     }
 
     const ws = fs.createWriteStream(path.join(STORAGE_ROOT_PATH,
                                               storeId + metadata['extension']))
 
-    await new Promise((resolve) => {
-        ws.on('finish', () => {
-            resolve()
-        })
+    data.pipe(ws)
 
-        data.pipe(ws)
-    })
+    await util.promisify(stream.finished)(ws)
 
     return {
         'id': queryResult.rows[0]['id']
@@ -148,7 +147,7 @@ export const update = async (id, data) => {
         throw new Error(`Value {id} for 'id' has to be greater than or equal to 0`)
 
     const queryResult = await
-          db.query(`SELECT * FROM images WHERE id = $1`, [id])
+          db.query(`SELECT * FROM ${TABLE_NAME} WHERE id = $1`, [id])
 
     if (queryResult.rows.length == 0) {
         throw "Unable to overwrite content of " + id
@@ -159,11 +158,8 @@ export const update = async (id, data) => {
 
     const ws = fs.createWriteStream(path.join(STORAGE_ROOT_PATH, filename))
 
-    await new Promise((resolve) => {
-        ws.on('finish', () => {
-            resolve()
-        })
 
-        data.pipe(ws)
-    })
+    data.pipe(ws)
+
+    await util.promisify(stream.finished)(ws)
 }
