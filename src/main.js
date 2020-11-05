@@ -15,9 +15,10 @@ const port = process.env.PORT
 
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
+app.use(express.static('dist/public'))
 
 app.delete('/api/images/:imageId', async (request, response) => {
-    imageStorage.deleteOne(Number(request.params['imageId']))
+    imageStorage.remove(Number(request.params['imageId']))
 
     response.status(202)
             .end()
@@ -46,17 +47,15 @@ app.post('/api/images', async (request, response) => {
     const extension = path.extname(filename)
     const name = path.basename(filename, extension)
 
-    response.json(await imageStorage.insertEmpty({
+    response.status(200)
+            .json(await imageStorage.insert({
         'name': name,
         'extension': extension
     }))
 })
 
 app.put('/api/images/:imageId', async (request, response) => {
-    await imageStorage.update({
-        'id': Number(request.params['imageId']),
-        'content': request
-    })
+    await imageStorage.update(Number(request.params['imageId']), request)
 
     response.status(204)
             .end()
@@ -365,20 +364,31 @@ app.delete('/api/teams/:id', async (req, res) => {
     res.status(200).send();
 });
 
-(async () => {
-    await imageStorage.createTable()
-    await userStorage.createTable()
+app.start = async () => {
+    try {
+        await imageStorage.createTable()
+        await userStorage.createTable()
 
-    const server = app.listen(port, () => {
-        console.log(`app listening at http://localhost:${port}`)
-    })
+        const server = app.listen(port, () => {
+            console.log(`app listening at http://localhost:${port}`)
+        })
 
-    app.close = async () => {
-        server.close()
-        await db.close()
+        app.close = async () => {
+            await new Promise((resolve) => {
+                server.close(() => {
+                    resolve()
+                })
+            })
+            await db.close()
+        }
     }
-})().catch((err) => {
-    console.error(err)
-})
+    catch (err) {
+        console.error(err)
+    }
+}
+
+if (process.env.NODE_ENV !== 'test') {
+    app.start()
+}
 
 export default app
