@@ -1,7 +1,6 @@
-import 'core-js'
-
 import path from 'path'
 import express from 'express'
+import cors from 'cors'
 import * as db from './database'
 import * as imageStorage  from './image-storage'
 import * as matchesStorage from './matches'
@@ -13,6 +12,7 @@ import * as teamStorage from './team'
 const app = express()
 const port = process.env.PORT
 
+app.use(cors())
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
 app.use(express.static('dist/public'))

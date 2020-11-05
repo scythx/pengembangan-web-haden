@@ -1,4 +1,4 @@
-# Harden
+# harden-backend
 
 ## Setup & Running
 
@@ -8,7 +8,7 @@ Create `.env` file within project root directory with following content
 
 ``` text
 NODE_ENV=development
-PORT=8080
+PORT=8081
 DB_HOST=db
 DB_PORT=5432
 DB_USER=postgres
