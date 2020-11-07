@@ -43,16 +43,16 @@ const generateStoreId = () => {
 
 const getByCriteria = async (criteria) => {
     if (!_.isPlainObject(criteria))
-        return new Error(`Unexpected passed argument ${criteria}.`)
+        throw new Error(`Unexpected passed argument ${criteria}.`)
 
     if (!_.isNumber(criteria['limit']) ||
-        !_.inRange(criteria['limit'], 1, 100)) {
-        return new Error('The limit has to be between 1 to 100.')
+        !_.inRange(criteria['limit'], 1, 101)) {
+        throw new Error('The limit has to be between 1 to 100.')
     }
 
     if (!_.isNumber(criteria['offset']) ||
-        !criteria['offset'] >= 0) {
-        return new Error(`The offset has to be more than or equal to 0.`)
+        !_.gte(criteria['offset'], 0)) {
+        throw new Error(`The offset has to be more than or equal to 0.`)
     }
 
     const queryResult = await
@@ -62,8 +62,9 @@ const getByCriteria = async (criteria) => {
     return queryResult.rows.map((currentValue) => {
         return {
             'id': currentValue['id'],
-            'name': currentValue['name'] + currentValue['extension'],
-            'url': currentValue['unique_name'] + currentValue['extension']
+            'name': currentValue['name'],
+            'url': `http://localhost:${process.env.PORT}/assets/\
+${currentValue['unique_name']}${currentValue['extension']}`
         }
     })
 }

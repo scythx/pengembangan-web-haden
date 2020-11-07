@@ -1,6 +1,7 @@
 import path from 'path'
 import express from 'express'
 import cors from 'cors'
+import _ from 'lodash'
 import * as db from './database'
 import * as imageStorage  from './image-storage'
 import * as matchesStorage from './matches'
@@ -25,13 +26,17 @@ app.delete('/api/images/:imageId', async (request, response) => {
 })
 
 app.get('/api/images', async (request, response) => {
-    if (request.query['limit'] === undefined) {
-        request.query['limit'] = 100
-    }
+    request.query['limit'] = Number(request.query['limit'])
 
-    if (request.query['offset'] === undefined) {
+    if (_.isNaN(request.query['limit']) ||
+        !_.inRange(request.query['limit'], 1, 101))
+        request.query['limit'] = 100
+
+    request.query['offset'] = Number(request.query['offset'])
+
+    if (_.isNaN(request.query['offset']) ||
+        !_.gte(request.query['limit'], 0))
         request.query['offset'] = 0
-    }
 
     response.json(await imageStorage.get({
         'limit': request.query['limit'],
