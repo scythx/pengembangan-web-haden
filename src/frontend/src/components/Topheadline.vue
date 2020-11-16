@@ -4,12 +4,12 @@
     <h1>Top Headline</h1>
     <ul class="list-unstyled">
       <div class="item-container">
-        <a href="#" v-for="item in topheadline.slice(0,5)">
+        <a href="#" v-for="(item, index) in topheadline.slice(0,5)">
           <li class="media">
               <div class="media-body">
                 <h5 class="text-sm-left">{{item.title}}</h5>
               </div>
-              <img v-bind:src="item.image" class="mr-3" alt="...">
+              <img v-bind:src="images[index].url" class="mr-3" alt="...">
           </li>
         </a>
       </div> 
@@ -28,6 +28,7 @@ export default {
       return{
         articles: [],
         topheadline:[],
+        images:[]
       }
   },
   methods:{
@@ -43,6 +44,11 @@ export default {
           }
           i++;
         }
+    })
+
+    http.get('/images')
+      .then((response) => {
+        this.images = response['data']
     })
   }
 }

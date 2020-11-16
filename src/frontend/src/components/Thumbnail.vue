@@ -1,13 +1,13 @@
 <template>
   <div id="container" >
-    <div v-for="i in mapped.slice(0,3)">
+    <div v-for="(i, index) in mapped.slice(0,3)">
       <hr>
       <h1>{{getLeagueName(i.id_league)}}</h1>
       <ul class="list-unstyled">
         <div class="item-container">
-          <a href="#" v-for="item in i.articles.slice(0,2)">
+          <a href="#" v-for="(item, idx) in i.articles.slice(0,2)">
             <li class="media">
-                <img v-bind:src="item.image" class="ml-3" alt="...">
+                <img v-bind:src="images[index+idx].url" class="ml-3" alt="...">
                 <div class="media-body">
                   <h5 class="text-sm-left">{{item.title}}</h5>
                 </div>
@@ -32,6 +32,7 @@ export default {
         articles: [],
         leagues: [],
         mapped:[],
+        images:[]
       }
   },
   methods:{
@@ -78,6 +79,11 @@ export default {
               j = 0
             }
           })
+    })
+
+    http.get('/images')
+      .then((response) => {
+        this.images = response['data']
     })
   } 
 }
