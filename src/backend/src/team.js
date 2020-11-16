@@ -4,10 +4,15 @@ import * as db from './database'
 const TABLE_NAME = 'Teams';
 export async function createTable(){
     let sql = `CREATE TABLE IF NOT EXISTS ${TABLE_NAME}(
-        team_id BIGSERIAL PRIMARY KEY NOT NULL,
-        team_name VARCHAR(255) NOT NULL,
-        team_sport_id INT NOT NULL,
-        team_country VARCHAR(255) NOT NULL
+        id_team integer NOT NULL,
+        name text COLLATE pg_catalog."default",
+        sport_id integer NOT NULL,
+        country text COLLATE pg_catalog."default",
+        CONSTRAINT team_pkey PRIMARY KEY (id_team),
+        CONSTRAINT team_sport_id_fkey FOREIGN KEY (sport_id)
+            REFERENCES public.sport (id_sport) MATCH SIMPLE
+            ON UPDATE NO ACTION
+            ON DELETE NO ACTION
     );`;
 
     return db.query(sql);

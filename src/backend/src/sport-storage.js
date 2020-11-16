@@ -1,6 +1,15 @@
 import * as db from './database'
 
 const TABLE_NAME = 'sport'
+export async function createTable(){
+    let sql = `CREATE TABLE IF NOT EXISTS ${TABLE_NAME}(
+        id_sport integer NOT NULL,
+        name text COLLATE pg_catalog."default",
+        CONSTRAINT sport_pkey PRIMARY KEY (id_sport)
+    );`;
+
+    return db.query(sql);
+}
 
 export async function deleteTable() {
     return db.query(`DROP TABLE ${TABLE_NAME};`)
