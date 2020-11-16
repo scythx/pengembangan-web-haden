@@ -3,12 +3,14 @@ import express from 'express'
 import cors from 'cors'
 import _ from 'lodash'
 import * as db from './database'
+import * as articleStorage from './article-storage'
 import * as imageStorage  from './image-storage'
 import * as matchesStorage from './matches'
 import * as userStorage from './user-storage'
 import * as sportStorage from './sport-storage'
 import * as leagueStorage from './league-storage'
 import * as teamStorage from './team'
+import * as sequence from './db-sequence'
 
 const app = express()
 const port = process.env.PORT
@@ -373,6 +375,8 @@ app.start = async () => {
         await imageStorage.createTable()
         await userStorage.createTable()
         await teamStorage.createTable()
+        await articleStorage.createTable()
+        await sequence.createSequence()
 
         const server = app.listen(port, () => {
             console.log(`app listening at http://localhost:${port}`)
