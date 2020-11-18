@@ -1,11 +1,16 @@
-import { createApp } from 'vue'
+import Vue from 'vue'
 import 'bootstrap'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import jquery from 'jquery'
 import App from './App.vue'
+import http from './http'
+import vuetify from './plugins/vuetify';
 
+Vue.config.productionTip = false
+Vue.prototype.$jquery = jquery
+Vue.prototype.$http = http
 
-const app = createApp(App)
-
-app.config.globalProperties.$jquery = jquery
-app.mount('#app')
+new Vue({
+  vuetify,
+  render: h => h(App)
+}).$mount('#app')
