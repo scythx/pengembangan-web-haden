@@ -1,7 +1,7 @@
 import * as db from './database'
 
 
-const TABLE_NAME = 'Teams';
+const TABLE_NAME = 'team';
 export async function createTable(){
     let sql = `CREATE TABLE IF NOT EXISTS ${TABLE_NAME}(
         team_id BIGSERIAL PRIMARY KEY NOT NULL,
@@ -45,4 +45,10 @@ export async function updateTeam(_id, _name, _sportId, _country){
 export async function deleteParticularTeam(_id){
     let sql = `DELETE FROM ${TABLE_NAME} WHERE team_id = $1;`;
     db.query(sql, [_id]);
+}
+
+export async function getJoinTeamSport(){
+    let sql = `SELECT ${TABLE_NAME}.id_team, sport.name as sport_name, ${TABLE_NAME}.name, ${TABLE_NAME}.country
+                FROM ${TABLE_NAME} JOIN sport ON ${TABLE_NAME}.sport_id = sport.id_sport`;
+    return db.query(sql);
 }

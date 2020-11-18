@@ -22,7 +22,7 @@
   </div>
   <div class="row">
     <div class="col-md-3 p-2"
-         v-for="item in items">
+         v-for="item in items" v-bind:key="item">
       <GalleryItem
        :name="item['name']"
        :url="item['url']"
