@@ -140,6 +140,8 @@ app.get('/api/sports/:sport_id/', async (req, res) => {
 app.post('/api/sports/', async (req, res) => {
     const name = req.body.name
 
+    console.log(name)
+
     await sportStorage.createOne(name)
     res.status(201).send()
 })
@@ -198,6 +200,29 @@ app.delete('/api/leagues/:league_id/', async (req, res) => {
     await leagueStorage.deleteOne(req.params.league_id)
     res.status(200).send()
 });
+
+app.get('/api/leagues-sport/', async (req, res) => {
+    const leagues = await leagueStorage.getJoinLeagueSport();
+    res.send(leagues.rows);
+})
+
+app.post('/api/leagues-sport/', async (req, res) => {
+    const sportName = req.body.sport_name
+    const leagueName = req.body.league_name
+    const country = req.body.country
+    
+    await leagueStorage.createWithSportName(sportName, leagueName, country)
+    res.status(200).send()
+})
+
+app.put('/api/leagues-sport/', async (req, res) => {
+    const sportName = req.body.sport_name
+    const leagueName = req.body.league_name
+    const country = req.body.country
+    
+    await leagueStorage.updateWithSportName(sportName, leagueName, country)
+    res.status(200).send()
+})
 
 app.get('/api/articles', function (req, res, next) {
     db.query(`SELECT * FROM public.article`,
@@ -369,6 +394,11 @@ app.delete('/api/teams/:id', async (req, res) => {
     await teamStorage.deleteParticularTeam(req.params.id);
     res.status(200).send();
 });
+
+app.get('/api/teams-sport/', async(req, res) => {
+    const teams = await teamStorage.getJoinTeamSport();
+    res.send(teams.rows);
+})
 
 app.start = async () => {
     try {

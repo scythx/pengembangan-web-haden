@@ -27,8 +27,8 @@ export async function getOne(sportId) {
 }
 
 export async function createOne(name) {
-    db.query(`INSERT INTO ${TABLE_NAME} VALUES (DEFAULT, $1);`,
-        [name])
+    console.log(name)
+    db.query(`INSERT INTO ${TABLE_NAME}(name) VALUES($1);`, [name])
 }
 
 export async function updateOne(sportId, name) {
