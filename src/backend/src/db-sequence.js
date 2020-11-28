@@ -29,7 +29,7 @@ export async function createSequence(){
         MINVALUE 1
         MAXVALUE 10000
         CACHE 1;
-    );`;
+    ;`;
 
     return db.query(sql);
 }

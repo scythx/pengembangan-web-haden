@@ -406,7 +406,7 @@ app.start = async () => {
         await userStorage.createTable()
         await teamStorage.createTable()
         await articleStorage.createTable()
-        await sequence.createSequence()
+        //await sequence.createSequence()
 
         const server = app.listen(port, () => {
             console.log(`app listening at http://localhost:${port}`)
