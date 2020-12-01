@@ -1,4 +1,5 @@
 <template>
+<div class="league-table">
    <div class="container">
        <div class="table-responsive">
            <div class="table-warapper">
@@ -30,16 +31,9 @@
                                {{ row[obj.key] }}
                            </td>
                            <td>
-                               <a href="#editLeagueModal" class="edit" data-toggle="modal">
-                               <i class="material-icons" data-toggle="tooltip" title="edit">
-                                   &#xE254;
-                               </i>
-                           </a>
-                           <a href="#deleteLeagueModal" class="delete" data-toggle="modal">
-                               <i class="material-icons" data-toggle="tooltip" title="delete">
-                                   &#xE872;
-                               </i>
-                           </a></td>
+                               <a href="#" class="btn btn-danger" role="button" @click="deleteModal(row['id_league'])" aria-pressed="false">Delete</a>
+							   <a href="#" class="btn btn-warning" role="button" @click="editModal(row)" aria-pressed="false">Update</a>
+                            </td>
                        </tr>
                    </tbody>
                </table>
@@ -74,20 +68,22 @@
                    <div class="modal-body">
                        <div class="form-group">
                            <label>Name</label>
-                           <input type="text" class="form-control" required>
+                           <input type="text" class="form-control" v-model="name" required>
                        </div>
                        <div class="form-group">
                            <label>Sport Name</label>
-                           <input type="text" class="form-control" required>
+                           <select v-model="selected_sport" class="browser-default custom-select">
+                            <option v-for="sport in sports" v-bind:key="sport.id_sport" v-bind:value="sport.id_sport">{{ sport.name }}</option>
+                           </select>
                        </div>
                        <div class="form-group">
                            <label>Country</label>
-                           <input type="text" class="form-control" required>
+                           <input type="text" class="form-control" v-model="country" required>
                        </div>
                    </div>
                    <div class="modal-footer">
                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                       <input type="button" class="btn btn-success" value="Add">
+                       <input type="button" class="btn btn-success" value="Add" v-on:click="addLeague()">
                    </div>
                </form>
            </div>
@@ -99,7 +95,7 @@
            <div class="modal-content">
                <form>
                    <div class="modal-header">
-                       <h4 class="modal-title"> Edit Sport </h4>
+                       <h4 class="modal-title"> Edit League </h4>
                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
                            &times;
                        </button>
@@ -107,20 +103,22 @@
                    <div class="modal-body">
                        <div class="form-group">
                            <label>Name</label>
-                           <input type="text" class="form-control" required>
+                           <input type="text" id="new_league_name" class="form-control" :value="[[league_name_placeholder]]" required>
                        </div>
                        <div class="form-group">
                            <label>Sport Name</label>
-                           <input type="text" class="form-control" required>
+                           <select v-model="selected_sport" class="browser-default custom-select">
+                                <option v-for="sport in sports" v-bind:key="sport.id_sport" v-bind:value="sport.id_sport">{{ sport.name }}</option>
+                           </select>
                        </div>
                        <div class="form-group">
                            <label>Country</label>
-                           <input type="text" class="form-control" required>
+                           <input type="text" class="form-control" id="new_country" :value="[[country_placeholder]]" required>
                        </div>
                    </div>
                    <div class="modal-footer">
                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                       <input type="button" class="btn btn-success" value="Update">
+                       <input type="button" class="btn btn-success" value="Update" @click="editLeague()">
                    </div>
                </form>
            </div>
@@ -141,17 +139,87 @@
 					</div>
 					<div class="modal-footer">
 						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-						<input type="submit" class="btn btn-danger" value="Delete">
+						<input type="submit" class="btn btn-danger" @click="deleteLeague()" value="Delete">
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
+</div>
 </template>
 
 <script>
+import http from '@/http'
+
 export default {
-    props: ['theData', 'theHeader']
+    name:'LeagueTable',
+    props: ['theData', 'theHeader', 'sports'],
+    data(){
+        return{
+            active_id : '',
+            selected_sport : '',
+            name : '',
+            country : '',
+
+            active_id : '',
+            league_name_placeholder : '',
+            sport_placeholder : '',
+            sportId_placeholder: '',
+            country_placeholder : ''
+        }
+    },
+
+    methods :{
+        editModal : function(league){
+            this.active_id = league['id_league']
+            this.league_name_placeholder = league['name']
+            this.sport_placeholder = league['sport_name']
+            this.sportId_placeholder = league['sport_id']
+            this.country_placeholder = league['country']
+
+            this.$jquery('#editLeagueModal').modal('toggle')
+        },
+
+        deleteModal : function(id){
+            console.log(id)
+            this.active_id = id
+            console.log(this.active_id)
+		    this.$jquery('#deleteLeagueModal').modal('toggle')
+	    },
+
+        addLeague : function(){
+            try{
+                console.log(this.selected_sport)
+                http.post('/leagues/', {
+                    'name' : this.name,
+                    'sportId' : this.selected_sport,
+                    'country' : this.country
+			    })
+            }
+            catch(err){
+                console.log(err)
+            }
+        },
+
+        editLeague : function(){
+            try{
+                console.log(document.getElementById('new_league_name').value)
+                http.put(`/leagues/${this.active_id}`, {
+                    'sportId' : this.selected_sport,
+                    'name' : document.getElementById('new_league_name').value,
+                    'country' : document.getElementById('new_country').value
+			    })
+            }
+            catch(err){
+                console.log(err)
+            }
+        },
+
+        deleteLeague : function(){
+            console.log(this.active_id)
+            http.delete(`leagues/${this.active_id}`)
+        }
+    }
 }
 </script>
 

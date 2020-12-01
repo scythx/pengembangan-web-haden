@@ -1,22 +1,28 @@
 <template>
+<v-app>
+  <v-main>
     <div id="CategoriesPage">
+        <!--Header/-->
         <SportTable v-if="dataSport" :theData="dataSport" :theHeader="headerSport"/>
-        <LeagueTable v-if="dataLeague" :theData="dataLeague" :theHeader="headerLeague"/>
-        <TeamTable v-if="dataTeam" :theData="dataTeam" :theHeader="headerTeam"/>
+        <LeagueTable v-if="dataLeague" :theData="dataLeague" :theHeader="headerLeague" :sports="dataSport"/>
+        <TeamTable v-if="dataTeam" :theData="dataTeam" :theHeader="headerTeam" :sports="dataSport"/>
     </div>
+  </v-main>
+</v-app>
 </template>
 
 <script>
 import SportTable from './SportTable'
 import LeagueTable from './LeagueTable'
 import TeamTable from './TeamTable'
+import Header from './Header'
 import http from '@/http'
 
 export default {
 
     name:'CategoriesPage',
     components: {
-    SportTable, LeagueTable, TeamTable
+    SportTable, LeagueTable, TeamTable, Header
   },
 
   data(){
@@ -77,6 +83,7 @@ export default {
     //get sport
     http.get('/sports')
     .then((response) => {
+      console.log(response.data)
       this.dataSport = response.data
     })
 

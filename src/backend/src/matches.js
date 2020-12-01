@@ -3,8 +3,9 @@ import * as db from './database'
 //create match table
 const TABLE_NAME = 'match';
 export const createTable = async () => {
+    console.log("here matches");
     return db.query(`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
-                         id_match BIGSERIAL PRIMARY KEY NOT NULL,
+                        id_match BIGSERIAL PRIMARY KEY NOT NULL,
                          home_team_id BIGINT NOT NULL,
                          away_team_id BIGINT,
                          home_score INT NOT NULL,
@@ -14,7 +15,7 @@ export const createTable = async () => {
                          FOREIGN KEY(home_team_id) REFERENCES team(id_team),
                          FOREIGN KEY(away_team_id) REFERENCES team(id_team),
                          FOREIGN KEY(league_id) REFERENCES league(id_league),
-                         FOREIGN KEY(sport_id) REFERENCES sport(id_sport);`)
+                         FOREIGN KEY(sport_id) REFERENCES sport(id_sport));`)
 }
 
 //get all matches
