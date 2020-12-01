@@ -65,7 +65,7 @@ export default {
   },
   methods: {
     onUploadInput(event) {
-      event.target.files.map((image) => {
+      [...event.target.files].map((image) => {
         http.post('/images', {
           'name': image.name
         })
