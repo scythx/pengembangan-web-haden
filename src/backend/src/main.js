@@ -198,6 +198,7 @@ app.post('/api/leagues/', async (req, res) => {
 
 //EDIT LEAGUE
 app.put('/api/leagues/:league_id/', async (req, res) => {
+    console.log(req.body.name)
     const leagueId = req.params.league_id
     const sportId = req.body.sportId
     const name = req.body.name
@@ -414,10 +415,13 @@ app.get('/api/teams-sport/', async(req, res) => {
 
 app.start = async () => {
     try {
+        await sportStorage.createTable()
+        await leagueStorage.createTable()
         await imageStorage.createTable()
         await sportStorage.createTable()
         await userStorage.createTable()
         await teamStorage.createTable()
+        await matchesStorage.createTable()
         await articleStorage.createTable()
         //await sequence.createSequence()
 

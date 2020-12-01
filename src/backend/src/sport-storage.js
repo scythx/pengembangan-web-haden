@@ -2,8 +2,9 @@ import * as db from './database'
 
 const TABLE_NAME = 'sport'
 export async function createTable(){
+    console.log("here sport storage");
     let sql = `CREATE TABLE IF NOT EXISTS ${TABLE_NAME}(
-        id_sport integer NOT NULL,
+        id_sport bigserial NOT NULL,
         name text COLLATE pg_catalog."default",
         CONSTRAINT sport_pkey PRIMARY KEY (id_sport)
     );`;
