@@ -12,13 +12,25 @@ import * as leagueStorage from './league-storage'
 import * as teamStorage from './team'
 import * as sequence from './db-sequence'
 
+const history = require('connect-history-api-fallback')
 const app = express()
 const port = process.env.PORT
 
 app.use(cors())
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
-app.use(express.static('dist/public'))
+
+const staticMiddleware = express.static(__dirname + '/public')
+app.use(staticMiddleware)
+app.use(history({
+    disableDotRule: true,
+    verbose: true
+}))
+app.use(staticMiddleware)
+
+app.get('/', function (req, res) {
+    res.render(path.join(__dirname + '/public/index.html'));
+})
 
 app.delete('/api/images/:imageId', async (request, response) => {
     imageStorage.remove(Number(request.params['imageId']))
@@ -403,6 +415,7 @@ app.get('/api/teams-sport/', async(req, res) => {
 app.start = async () => {
     try {
         await imageStorage.createTable()
+        await sportStorage.createTable()
         await userStorage.createTable()
         await teamStorage.createTable()
         await articleStorage.createTable()

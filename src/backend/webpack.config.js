@@ -1,27 +1,30 @@
-const nodeExternals = require('webpack-node-externals');
+const { IgnorePlugin } = require('webpack')
+const NodeExternals = require('webpack-node-externals')
 
 module.exports = {
-    entry: [
-        './src/main.js'
-    ],
-    output: {
-        path: __dirname + '/dist',
-        filename: "main.bundle.js"
-    },
-    target: 'node',
-    externals: [nodeExternals()],
-    module: {
-        rules: [
-            {
-                test: /\.m?js$/,
-                exclude: /node_modules/,
-                use: {
-                    loader: "babel-loader",
-                    options: {
-                        presets: ['@babel/preset-env']
-                    }
-                }
-            }
-        ]
-    }
-};
+  devtool: 'eval-source-map',
+  entry: [
+    './src/main.js'
+  ],
+  externals: [NodeExternals()],
+  module: {
+    rules: [
+      {
+        test: /\.m?js$/,
+        exclude: /node_modules/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env'],
+            plugins: ['@babel/plugin-transform-runtime']
+          }
+        }
+      }
+    ]
+  },
+  output: {
+    path: __dirname + '/dist',
+    filename: "main.bundle.js"
+  },
+  target: 'node'
+}
