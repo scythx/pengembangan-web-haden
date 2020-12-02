@@ -9,6 +9,9 @@
   "dependencies": {
     "axios": "^0.21.0",
     "bootstrap": "^4.5.3",
+    "@ckeditor/ckeditor5-build-classic": "^23.1.0",
+    "@ckeditor/ckeditor5-build-inline": "^23.1.0",
+    "@ckeditor/ckeditor5-vue": "^1.0.3",
     "core-js": "^3.6.5",
     "jquery": "^3.5.1",
     "popper.js": "^1.16.1",
