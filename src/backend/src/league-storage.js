@@ -3,14 +3,15 @@ import * as db from './database'
 
 const TABLE_NAME = 'league'
 export async function createTable(){
+    console.log("here league");
     let sql = `CREATE TABLE IF NOT EXISTS ${TABLE_NAME}(
-        id_league integer NOT NULL,
+        id_league bigserial NOT NULL,
         name text COLLATE pg_catalog."default",
-        sport_id integer NOT NULL,
+        sport_id bigint NOT NULL,
         country text COLLATE pg_catalog."default",
         CONSTRAINT league_pkey PRIMARY KEY (id_league),
         CONSTRAINT sport_fkey FOREIGN KEY (sport_id)
-            REFERENCES public.sport (id_sport) MATCH SIMPLE
+            REFERENCES sport (id_sport) MATCH SIMPLE
             ON UPDATE NO ACTION
             ON DELETE NO ACTION
             NOT VALID
@@ -35,7 +36,8 @@ export async function getOne(leagueId) {
 }
 
 export async function createOne(sportId, name, country) {
-    db.query(`INSERT INTO ${TABLE_NAME} VALUES (DEFAULT, $1, $2, $3);`,
+    console.log(sportId)
+    db.query(`INSERT INTO ${TABLE_NAME}(sport_id, name, country) VALUES ($1, $2, $3);`,
         [sportId, name, country])
 }
 
@@ -64,7 +66,7 @@ export async function updateWithSportName(id, sportName, leagueName, country){
 
 export async function updateOne(leagueId, sportId, name, country) {
     db.query(`UPDATE ${TABLE_NAME} 
-    SET id_sport = $2, name = $3, country = $4 WHERE id_league = $1;`
+    SET sport_id = $2, name = $3, country = $4 WHERE id_league = $1;`
         , [leagueId, sportId, name, country])
 }
 
@@ -73,7 +75,7 @@ export async function deleteOne(leagueId) {
 }
 
 export async function getJoinLeagueSport(){
-    let sql = `SELECT ${TABLE_NAME}.id_league, sport.name as sport_name, ${TABLE_NAME}.name, ${TABLE_NAME}.country
+    let sql = `SELECT ${TABLE_NAME}.id_league, sport.name as sport_name, ${TABLE_NAME}.name, ${TABLE_NAME}.country, ${TABLE_NAME}.sport_id
             FROM ${TABLE_NAME} JOIN sport ON ${TABLE_NAME}.sport_id = sport.id_sport`;
     return db.query(sql)
 }

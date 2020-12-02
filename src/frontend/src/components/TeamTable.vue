@@ -1,4 +1,5 @@
 <template>
+<div class="team-table">
    <div class="container">
        <div class="table-responsive">
            <div class="table-warapper">
@@ -8,7 +9,7 @@
                            <h2><b>Team</b></h2>
                        </div>
                        <div class="col-xs-6">
-                           <a href="#addTeamModal" class="btn btn-success" data-toggle="modal"> 
+                           <a href="#addTeamModal" class="btn btn-success" data-toggle="modal">
                                <i class="material-icons">&#xE147;</i>
                                <span>Add New</span>
                            </a>
@@ -30,16 +31,9 @@
                                {{ row[obj.key] }}
                            </td>
                            <td>
-                               <a href="#" class="edit" @click="editModal(row)">
-                               <i class="material-icons" data-toggle="tooltip" title="edit">
-                                   &#xE254;
-                               </i>
-                           </a>
-                           <a href="#" class="delete" @click="deleteModal">
-                               <i class="material-icons" data-toggle="tooltip" title="delete">
-                                   &#xE872;
-                               </i>
-                           </a></td>
+                               <a href="#" class="btn btn-danger" role="button" @click="deleteModal(row['id_team'])" aria-pressed="false">Delete</a>
+							   <a href="#" class="btn btn-warning" role="button" @click="editModal(row)" aria-pressed="false">Update</a>
+                            </td>
                        </tr>
                    </tbody>
                </table>
@@ -60,7 +54,7 @@
    </div>
 
    <!-- MODAL -->
-   <!-- Modal Add Sport -->
+   <!-- Modal Add Team -->
    <div id="addTeamModal" class="modal fade">
        <div class="modal-dialog">
            <div class="modal-content">
@@ -74,26 +68,28 @@
                    <div class="modal-body">
                        <div class="form-group">
                            <label>Name</label>
-                           <input type="text" class="form-control" required>
+                           <input type="text" class="form-control" v-model="name" required>
                        </div>
                        <div class="form-group">
                            <label>Sport Name</label>
-                           <input type="text" class="form-control" required>
+                           <select v-model="selected_sport" class="browser-default custom-select">
+                            <option v-for="sport in sports" v-bind:key="sport.id_sport" v-bind:value="sport.id_sport">{{ sport.name }}</option>
+                           </select>
                        </div>
                        <div class="form-group">
                            <label>Country</label>
-                           <input type="text" class="form-control" required>
+                           <input type="text" class="form-control" v-model="country" required>
                        </div>
                    </div>
                    <div class="modal-footer">
                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                       <input type="button" class="btn btn-success" value="Add">
+                       <input type="button" class="btn btn-success" value="Add" @click="addTeam()">
                    </div>
                </form>
            </div>
        </div>
    </div>
-   <!-- Modal Edit Sport -->
+   <!-- Modal Edit Team -->
    <div id="editTeamModal" class="modal fade">
        <div class="modal-dialog">
            <div class="modal-content">
@@ -107,55 +103,64 @@
                    <div class="modal-body">
                        <div class="form-group">
                            <label>Name</label>
-                           <input type="text" class="form-control" :value="[[name_placeholder]]" required>
+                           <input type="text" class="form-control" id="new_team_name" :value="[[name_placeholder]]" required>
                        </div>
                        <div class="form-group">
                            <label>Sport Name</label>
-                           <input type="text" class="form-control" :value="[[sport_placeholder]]" required>
+                           <select v-model="selected_sport" class="browser-default custom-select">
+                                <option v-for="sport in sports" v-bind:key="sport.id_sport" v-bind:value="sport.id_sport">{{ sport.name }}</option>
+                           </select>
                        </div>
                        <div class="form-group">
                            <label>Country</label>
-                           <input type="text" class="form-control" :value="[[country_placeholder]]" required>
+                           <input type="text" class="form-control" id="new_team_country" :value="[[country_placeholder]]" required>
                        </div>
                    </div>
                    <div class="modal-footer">
                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                       <input type="button" class="btn btn-success" value="Update">
+                       <input type="button" class="btn btn-success" @click="updateTeam()" value="Update">
                    </div>
                </form>
            </div>
        </div>
    </div>
-   <!-- Modal Delete League -->
+   <!-- Modal Delete Team -->
    <div id="deleteTeamModal" class="modal fade">
    <div class="modal-dialog">
 			<div class="modal-content">
 				<form>
-					<div class="modal-header">						
+					<div class="modal-header">
 						<h4 class="modal-title">Delete Team</h4>
 						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
 					</div>
-					<div class="modal-body">					
+					<div class="modal-body">
 						<p>Are you sure you want to delete these Records?</p>
 						<p class="text-warning"><small>This action cannot be undone.</small></p>
 					</div>
 					<div class="modal-footer">
 						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-						<input type="submit" class="btn btn-danger" value="Delete">
+						<input type="submit" class="btn btn-danger" data-dismiss="modal" @click="deleteTeam()" value="Delete">
 					</div>
 				</form>
 			</div>
 		</div>
 	</div>
+</div>
 </template>
 
 <script>
+import http from '@/http'
+
 export default {
     name : 'TeamTable',
-    props: ['theData', 'theHeader'],
+    props: ['theData', 'theHeader', 'sports'],
     data(){
         return{
+            name : '',
+            country : '',
             active_id : '',
+            selected_sport : '',
+
             name_placeholder : '',
             sport_placeholder : '',
             country_placeholder : '',
@@ -166,17 +171,44 @@ export default {
         editModal(team){
             this.active_id = team['id_team']
             this.name_placeholder = team['name']
-            this.sport_placeholder = team['sport_name']
             this.country_placeholder = team['country']
             this.$jquery('#editTeamModal').modal('toggle');
         },
 
+        deleteModal : function(id){
+		    this.active_id = id
+		    this.$jquery('#deleteTeamModal').modal('toggle')
+        },
+
+        addTeam : function(){
+            console.log(this.selected_sport)
+            try{
+                http.post('/teams/', {
+                    'team_name' : this.name,
+                    'team_sport_id' : this.selected_sport,
+                    'team_country' : this.country
+                })
+            }
+            catch(err){
+                console.log(err)
+            }
+        },
+
         updateTeam(){
-            http.put(`/teams/${active_id}/`, {
-                'team_name' : this.name_placeholder,
-                'team_sport_id' : this.sport_placeholder,
-                'team_country' : this.country_placeholder  
-            })
+            try{
+                http.put(`/teams/${this.active_id}`, {
+                    'team_sport_id' : this.selected_sport,
+                    'team_name' : document.getElementById('new_team_name').value,
+                    'team_country' : document.getElementById('new_team_country').value
+			    })
+            }
+            catch(err){
+                console.log(err)
+            }
+        },
+
+        deleteTeam(){
+            http.delete(`teams/${this.active_id}`)
         }
 
     }
@@ -200,7 +232,7 @@ body {
 		border-radius: 3px;
         box-shadow: 0 1px 1px rgba(0,0,0,.05);
     }
-	.table-title {        
+	.table-title {
 		padding-bottom: 15px;
 		background: #435d7d;
 		color: #fff;
@@ -256,7 +288,7 @@ body {
         font-size: 13px;
         margin: 0 5px;
         cursor: pointer;
-    }	
+    }
     table.table td:last-child i {
 		opacity: 0.9;
 		font-size: 22px;
@@ -304,11 +336,11 @@ body {
     }
     .pagination li a:hover {
         color: #666;
-    }	
+    }
     .pagination li.active a, .pagination li.active a.page-link {
         background: #03A9F4;
     }
-    .pagination li.active a:hover {        
+    .pagination li.active a:hover {
         background: #0397d6;
     }
 	.pagination li.disabled i {
@@ -322,12 +354,12 @@ body {
         float: left;
         margin-top: 10px;
         font-size: 13px;
-    }    
+    }
 	/* Custom checkbox */
 	.custom-checkbox {
 		position: relative;
 	}
-	.custom-checkbox input[type="checkbox"] {    
+	.custom-checkbox input[type="checkbox"] {
 		opacity: 0;
 		position: absolute;
 		margin: 5px 0 0 3px;
@@ -402,8 +434,8 @@ body {
 	.modal .btn {
 		border-radius: 2px;
 		min-width: 100px;
-	}	
+	}
 	.modal form label {
 		font-weight: normal;
-	}	
+	}
 </style>

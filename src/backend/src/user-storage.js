@@ -3,6 +3,7 @@ import * as db from './database'
 const TABLE_NAME = 'users'
 
 export async function createTable() {
+    console.log("here user");
     return db.query(`CREATE TABLE IF NOT EXISTS ${TABLE_NAME} (
         id_user BIGSERIAL PRIMARY KEY NOT NULL,
         fullname VARCHAR (255) NOT NULL,

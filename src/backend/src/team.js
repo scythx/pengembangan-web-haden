@@ -3,14 +3,15 @@ import * as db from './database'
 
 const TABLE_NAME = 'team';
 export async function createTable(){
+    console.log("here team");
     let sql = `CREATE TABLE IF NOT EXISTS ${TABLE_NAME}(
-        id_team integer NOT NULL,
+        id_team bigserial NOT NULL,
         name text COLLATE pg_catalog."default",
-        sport_id integer NOT NULL,
+        sport_id bigint NOT NULL,
         country text COLLATE pg_catalog."default",
         CONSTRAINT team_pkey PRIMARY KEY (id_team),
         CONSTRAINT sport_id_fkey FOREIGN KEY (sport_id)
-            REFERENCES public.sport (id_sport) MATCH SIMPLE
+            REFERENCES sport (id_sport) MATCH SIMPLE
             ON UPDATE NO ACTION
             ON DELETE NO ACTION
     );`;
@@ -53,7 +54,7 @@ export async function deleteParticularTeam(_id){
 }
 
 export async function getJoinTeamSport(){
-    let sql = `SELECT ${TABLE_NAME}.id_team, sport.name as sport_name, ${TABLE_NAME}.name, ${TABLE_NAME}.country
+    let sql = `SELECT ${TABLE_NAME}.id_team, sport.name as sport_name, ${TABLE_NAME}.name, ${TABLE_NAME}.country, ${TABLE_NAME}.sport_id
                 FROM ${TABLE_NAME} JOIN sport ON ${TABLE_NAME}.sport_id = sport.id_sport`;
     return db.query(sql);
 }

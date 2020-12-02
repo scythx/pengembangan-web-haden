@@ -1,0 +1,62 @@
+apiVersion: 2019-12-01
+location: southeast asia
+name: harden
+properties:
+  containers:
+  - name: postgres
+    properties:
+      image: postgres
+      environmentVariables:
+        - name: "POSTGRES_PASSWORD"
+          secureValue: {{ DB_PASSWORD }}
+      resources:
+        requests:
+          cpu: 0.5
+          memoryInGb: 0.2
+  - name: backend
+    properties:
+      image: {{ REGISTRY_LOGIN_SERVER }}/{{ IMAGE_NAME }}:{{ IMAGE_TAG }}
+      environmentVariables:
+        - name: "NODE_ENV"
+          value: {{ NODE_ENV }}
+        - name: "NODE_HOSTNAME"
+          value: {{ NODE_HOSTNAME }}
+        - name: "PORT"
+          value: {{ PORT }}
+        - name: "DB_HOST"
+          value: {{ DB_HOST }}
+        - name: "DB_PORT"
+          value: {{ DB_PORT }}
+        - name: "DB_USER"
+          value: {{ DB_USER }}
+        - name: "DB_DATABASE"
+          value: {{ DB_DATABASE }}
+        - name: "DB_PASSWORD"
+          secureValue: {{ DB_PASSWORD }}
+      ports:
+      - port: {{ PORT }}
+      resources:
+        requests:
+          cpu: 0.5
+          memoryInGb: 0.3
+      volumeMounts:
+      - mountPath: /usr/src/app/public/assets
+        name: filesharevolume
+  osType: Linux
+  ipAddress:
+    type: Public
+    ports:
+    - protocol: tcp
+      port: {{ PORT }}
+    dnsNameLabel: {{ DNS_NAME_LABEL }}
+  volumes:
+  - name: filesharevolume
+    azureFile:
+      sharename: acishare
+      storageAccountName: {{ STORAGE_ACCOUNT_NAME }}
+      storageAccountKey: {{ STORAGE_ACCOUNT_KEY }}
+  imageRegistryCredentials:
+  - server: {{ REGISTRY_LOGIN_SERVER }}
+    username: {{ REGISTRY_USERNAME }}
+    password: {{ REGISTRY_PASSWORD }}
+type: Microsoft.ContainerInstance/containerGroups

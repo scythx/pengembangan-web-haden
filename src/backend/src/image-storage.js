@@ -6,8 +6,7 @@ import _ from 'lodash'
 import * as uuid from 'uuid'
 import * as db from './database'
 
-const STORAGE_ROOT_PATH = path.resolve('dist/public/assets')
-
+const STORAGE_ROOT_PATH = path.resolve(__dirname + '/public/assets')
 const TABLE_NAME = 'images' + ((process.env.NODE_ENV === 'test') ? Date.now()
                                                                  : (''))
 export const createTable = async () => {
@@ -63,7 +62,7 @@ const getByCriteria = async (criteria) => {
         return {
             'id': currentValue['id'],
             'name': currentValue['name'],
-            'url': `http://localhost:${process.env.PORT}/assets/\
+            'url': `http://${process.env.NODE_HOSTNAME}:${process.env.PORT}/assets/\
 ${currentValue['unique_name']}${currentValue['extension']}`
         }
     })

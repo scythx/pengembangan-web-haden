@@ -8,6 +8,7 @@ Create `.env` file within project root directory with following content
 
 ``` text
 NODE_ENV=development
+NODE_HOSTNAME=localhost
 PORT=8081
 DB_HOST=db
 DB_PORT=5432

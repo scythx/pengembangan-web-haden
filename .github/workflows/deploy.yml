@@ -1,0 +1,57 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    env:
+      NODE_ENV: development
+      NODE_HOSTNAME: harden.southeastasia.azurecontainer.io
+      PORT: 80
+      DB_HOST: localhost
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_DATABASE: postgres
+      IMAGE_NAME: harden
+      IMAGE_TAG: latest
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: 'Login via Azure CLI'
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: 'Build and push image'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      - run: |
+          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/$IMAGE_NAME:$IMAGE_TAG
+          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/$IMAGE_NAME:$IMAGE_TAG
+
+      - name: 'Deploy'
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            sed -i "s/{{ NODE_ENV }}/$NODE_ENV/; \
+                    s/{{ NODE_HOSTNAME }}/$NODE_HOSTNAME/; \
+                    s/{{ PORT }}/$PORT/; \
+                    s/{{ DB_HOST }}/$DB_HOST/; \
+                    s/{{ DB_PORT }}/$DB_PORT/; \
+                    s/{{ DB_USER }}/$DB_USER/; \
+                    s/{{ DB_PASSWORD }}/${{ secrets.BACKEND_DB_PASSWORD }}/; \
+                    s/{{ DB_DATABASE }}/$DB_DATABASE/; \
+                    s/{{ DNS_NAME_LABEL }}/${{ secrets.RESOURCE_GROUP }}/; \
+                    s/{{ IMAGE_NAME }}/$IMAGE_NAME/; \
+                    s/{{ IMAGE_TAG }}/$IMAGE_TAG/; \
+                    s/{{ REGISTRY_LOGIN_SERVER }}/${{ secrets.REGISTRY_LOGIN_SERVER }}/; \
+                    s/{{ REGISTRY_USERNAME }}/${{ secrets.REGISTRY_USERNAME }}/; \
+                    s/{{ REGISTRY_PASSWORD }}/${{ secrets.REGISTRY_PASSWORD }}/; \
+                    s/{{ STORAGE_ACCOUNT_NAME }}/${{ secrets.STORAGE_ACCOUNT_NAME }}/; \
+                    s/{{ STORAGE_ACCOUNT_KEY }}/${{ secrets.STORAGE_ACCOUNT_KEY }}/;" aci.yaml
+            az container create --resource-group harden --file aci.yaml

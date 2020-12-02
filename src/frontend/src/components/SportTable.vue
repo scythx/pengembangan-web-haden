@@ -1,4 +1,7 @@
 <template>
+<v-app>
+<v-main>
+<div class="sport-table">
    <div class="container">
        <div class="table-responsive">
            <div class="table-warapper">
@@ -8,7 +11,7 @@
                            <h2><b>Sports</b></h2>
                        </div>
                        <div class="col-xs-6">
-                           <a href="#addSportModal" class="btn btn-success" data-toggle="modal"> 
+                           <a href="#addSportModal" class="btn btn-success" data-toggle="modal">
                                <i class="material-icons">&#xE147;</i>
                                <span>Add New</span>
                            </a>
@@ -30,16 +33,9 @@
                                {{ row[obj.key] }}
                            </td>
                            <td>
-                               <a href="#" class="edit" @click="editModal(row)">
-                               <i class="material-icons" data-toggle="tooltip" title="edit">
-                                   &#xE254;
-                               </i>
-                           </a>
-                           <a href="#" class="delete" @click="deleteModal(row['id_sport'])">
-                               <i class="material-icons" data-toggle="tooltip" title="delete">
-                                   &#xE872;
-                               </i>
-                           </a></td>
+							   <a href="#" class="btn btn-danger" role="button" @click="deleteModal(row['id_sport'])" aria-pressed="false">Delete</a>
+							   <a href="#" class="btn btn-warning" role="button" @click="editModal(row)" aria-pressed="false">Update</a>
+						   </td>
                        </tr>
                    </tbody>
                </table>
@@ -112,25 +108,28 @@
    </div>
    <!-- Modal Delete Sport -->
    <div id="deleteSportModal" class="modal fade">
-   <div class="modal-dialog">
-			<div class="modal-content">
-				<form>
-					<div class="modal-header">						
-						<h4 class="modal-title">Delete Sport</h4>
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					</div>
-					<div class="modal-body">					
-						<p>Are you sure you want to delete these Records?</p>
-						<p class="text-warning"><small>This action cannot be undone.</small></p>
-					</div>
-					<div class="modal-footer">
-						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-						<input type="submit" class="btn btn-danger" v-on:click="deleteSport(active_id)" value="Delete">
-					</div>
-				</form>
-			</div>
+	<div class="modal-dialog">
+				<div class="modal-content">
+					<form>
+						<div class="modal-header">
+							<h4 class="modal-title">Delete Sport</h4>
+							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						</div>
+						<div class="modal-body">
+							<p>Are you sure you want to delete these Records?</p>
+							<p class="text-warning"><small>This action cannot be undone.</small></p>
+						</div>
+						<div class="modal-footer">
+							<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
+							<input type="submit" class="btn btn-danger" v-on:click="deleteSport(active_id)" value="Delete">
+						</div>
+					</form>
+				</div>
 		</div>
 	</div>
+</div>
+</v-main>
+</v-app>
 </template>
 
 <script>
@@ -163,7 +162,7 @@ export default {
 		console.log(this.sport_name)
 		try{
 			http.post('/sports/', {
-			'name' : this.sport_name
+				'name' : this.sport_name
 			})
 		}
 		catch(err){
@@ -207,7 +206,7 @@ body {
 		border-radius: 3px;
         box-shadow: 0 1px 1px rgba(0,0,0,.05);
     }
-	.table-title {        
+	.table-title {
 		padding-bottom: 15px;
 		background: #435d7d;
 		color: #fff;
@@ -263,7 +262,7 @@ body {
         font-size: 13px;
         margin: 0 5px;
         cursor: pointer;
-    }	
+    }
     table.table td:last-child i {
 		opacity: 0.9;
 		font-size: 22px;
@@ -311,11 +310,11 @@ body {
     }
     .pagination li a:hover {
         color: #666;
-    }	
+    }
     .pagination li.active a, .pagination li.active a.page-link {
         background: #03A9F4;
     }
-    .pagination li.active a:hover {        
+    .pagination li.active a:hover {
         background: #0397d6;
     }
 	.pagination li.disabled i {
@@ -329,12 +328,12 @@ body {
         float: left;
         margin-top: 10px;
         font-size: 13px;
-    }    
+    }
 	/* Custom checkbox */
 	.custom-checkbox {
 		position: relative;
 	}
-	.custom-checkbox input[type="checkbox"] {    
+	.custom-checkbox input[type="checkbox"] {
 		opacity: 0;
 		position: absolute;
 		margin: 5px 0 0 3px;
@@ -409,8 +408,8 @@ body {
 	.modal .btn {
 		border-radius: 2px;
 		min-width: 100px;
-	}	
+	}
 	.modal form label {
 		font-weight: normal;
-	}	
+	}
 </style>
