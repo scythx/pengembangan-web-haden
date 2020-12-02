@@ -5,6 +5,7 @@ import Gallery from '../components/Gallery.vue'
 import ArticleInputForm from '../components/ArticleInputForm.vue'
 import ArticleList from '../components/ArticleList.vue'
 import CategoriesPage from '../components/CategoriesPage.vue'
+import Stats from '../components/Dashboard.vue'
 
 Vue.use(VueRouter)
 
@@ -37,6 +38,18 @@ const routes = [
       {
         path: 'categories',
         component: CategoriesPage
+      },
+      {
+        path : 'home',
+        component: Stats
+      },
+      {
+        path : 'gallery',
+        component : Gallery
+      },
+      {
+        path: '/stats',
+        component : Stats
       }
     ]
   },
