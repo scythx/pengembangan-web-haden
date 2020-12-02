@@ -4,6 +4,7 @@ import Dashboard from '../views/Dashboard.vue'
 import Gallery from '../components/Gallery.vue'
 import ArticleInputForm from '../components/ArticleInputForm.vue'
 import ArticleList from '../components/ArticleList.vue'
+import CategoriesPage from '../components/CategoriesPage.vue'
 
 Vue.use(VueRouter)
 
@@ -32,9 +33,14 @@ const routes = [
             component: ArticleInputForm
           },
         ]
+      },
+      {
+        path: 'categories',
+        component: CategoriesPage
       }
     ]
-  }
+  },
+
 ]
 
 const router = new VueRouter({

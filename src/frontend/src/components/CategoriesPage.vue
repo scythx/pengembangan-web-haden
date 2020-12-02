@@ -2,7 +2,6 @@
 <v-app>
   <v-main>
     <div id="CategoriesPage">
-        <!--Header/-->
         <SportTable v-if="dataSport" :theData="dataSport" :theHeader="headerSport"/>
         <LeagueTable v-if="dataLeague" :theData="dataLeague" :theHeader="headerLeague" :sports="dataSport"/>
         <TeamTable v-if="dataTeam" :theData="dataTeam" :theHeader="headerTeam" :sports="dataSport"/>
