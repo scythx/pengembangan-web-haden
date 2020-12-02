@@ -37,7 +37,13 @@
             >
               Edit
             </button>
-            <button type="button" class="btn btn-sm btn-danger delete" data-toggle="modal" data-target="#articleDelete" @click="toBeDeleted(article)">
+            <button
+              type="button"
+              class="btn btn-sm btn-danger delete"
+              data-toggle="modal"
+              data-target="#articleDelete"
+              @click="toBeDeleted(article)"
+            >
               Delete
             </button>
           </td>
@@ -76,10 +82,15 @@
             >
               Close
             </button>
-            <button type="button" class="btn btn-danger" @click="del()">Yeah, delete it!</button>
+            <button type="button" class="btn btn-danger" @click="del()">
+              Yeah, delete it!
+            </button>
           </div>
         </div>
       </div>
+    </div>
+    <div class="main-content">
+      <router-view></router-view>
     </div>
   </div>
 </template>
@@ -91,7 +102,7 @@ export default {
   data() {
     return {
       articles: undefined,
-      articleDeleted: undefined
+      articleDeleted: undefined,
     };
   },
   mounted() {
@@ -100,7 +111,7 @@ export default {
   methods: {
     load() {
       http
-        .get("http://localhost:4000/api/articles")
+        .get("/articles")
         .then((res) => {
           this.articles = res.data;
         })
@@ -109,17 +120,22 @@ export default {
         });
     },
     add() {
-      //call vue add new article page
+      if (this.$route.path !== "/dashboard/add_article")
+        this.$router.push("/dashboard/add_article");
     },
     edit(article) {
       //call vue edit article page
       console.log(article.id_article);
     },
-    del(){
-      return http.delete('http://localhost:4000/api/articles/'+ this.articleDeleted.id_article).then(res =>{
-          this.load()
+    del() {
+      return http
+        .delete(
+          "/articles/" + this.articleDeleted.id_article
+        )
+        .then((res) => {
+          this.load();
           this.articleDeleted = undefined;
-      })
+        });
     },
     toBeDeleted(article) {
       this.articleDeleted = article;

@@ -238,7 +238,7 @@ app.put('/api/leagues-sport/', async (req, res) => {
 })
 
 app.get('/api/articles', function (req, res, next) {
-    db.query(`SELECT * FROM public.article`,
+    db.query(`SELECT * FROM article`,
                 function (err, result) {
         if (err) {
             console.log(err);
@@ -293,10 +293,10 @@ app.get('/api/articles/teams/:team', function (req, res, next) {
 });
 
 app.post('/api/articles/', function(req, res, next) {
-    db.query(`INSERT INTO public.article(
-        id_article, title, content, date_published, is_headline, id_sport, id_league, id_team)
-        VALUES (5, $1, $2, $3, $4, $5, $6, $7);`,
-        [req.body.judul,req.body.konten,req.body.date,req.body.is_headline,req.body.id_sport,req.body.id_league,req.body.id_team],
+    db.query(`INSERT INTO article(
+        title, content, date_published, is_headline)
+        VALUES ($1, $2, NOW(), $3);`,
+        [req.body.title, req.body.content, req.body.is_headline],
         function (err, result) {
         if (err) {
             console.log(err);
@@ -320,7 +320,7 @@ app.put('/api/articles/:articleId', function(req, res, next) {
 });
 
 app.delete('/api/articles/:articleId', function(req, res, next) {
-    db.query(`DELETE FROM public.article WHERE id_article=${req.params.articleId}`,
+    db.query(`DELETE FROM article WHERE id_article=${req.params.articleId}`,
         function (err, result) {
         if (err) {
             console.log(err);

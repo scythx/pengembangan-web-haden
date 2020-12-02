@@ -6,20 +6,19 @@
         type="text"
         class="form-control"
         placeholder="Article title"
-        aria-label="Username"
-        aria-describedby="basic-addon1"
         v-model="article.title"
+        style="font-weight: bold; color:black;"
       />
     </div>
-    <div class="input-group mb-3">
-      <textarea
-        rows="15"
-        class="form-control"
-        placeholder="Article body"
+    <div class="mb-2" style=".c">
+      <ckeditor
+        tag-name="textarea"
         aria-label="With textarea"
-        aria-describedby="inputGroup-sizing-sm"
+        :editor="editor"
         v-model="article.content"
-      ></textarea>
+        :config="editorConfig"
+        placeholder="Article body"
+      ></ckeditor>
     </div>
     <div class="d-flex flex-row-reverse align-items-center">
       <button class="btn btn-primary" @click="add()">Publish</button>
@@ -38,28 +37,66 @@
 </template>
 
 <script>
-import http from '@/http'
+import http from "@/http";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 export default {
+  components: {
+    ClassicEditor,
+  },
   data() {
     return {
       article: {
         title: "",
         content: "",
-        is_header: false
+        is_header: false,
+      },
+      editor: ClassicEditor,
+      editorConfig: {
+        //toolbar: [ 'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'blockQuote', 'clipboard','image' ],
+        //The configuration of the editor.
+        fillEmptyBlocks: false,
+        basicEntities: false,
+        entities: false,
+        entities_greek: false,
+        entities_latin: false,
+        entities_additional: "",
+        language: "en",
+        wordCount: {
+          container: document.getElementById("wordcount"),
+        },
+        ckfinder: {
+          // Upload the images to the server using the CKFinder QuickUpload command.
+          uploadUrl:
+            "https://example.com/ckfinder/core/connector/php/connector.php?command=QuickUpload&type=Images&responseType=json",
+
+          // Define the CKFinder configuration (if necessary).
+          options: {
+            resourceType: "Images",
+          },
+        },
+        mediaEmbed: {
+          previewsInData: true,
+        },
       },
     };
   },
-  mounted() {
-
-  },
+  mounted() {},
   methods: {
     add() {
-      http.post("http://localhost:4000/api/articles/", this.article).then((res) => {
-        this.article.title = "";
-        this.article.content = "";
-        this.article.is_header = false;
-      });
+      http
+        .post("/articles/", this.article)
+        .then((res) => {
+          this.article.title = "";
+          this.article.content = "";
+          this.article.is_header = false;
+        });
     },
   },
 };
 </script>
+
+<style>
+.ck-editor__editable {
+  min-height: 300px;
+}
+</style>
