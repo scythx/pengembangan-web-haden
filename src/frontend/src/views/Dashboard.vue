@@ -21,10 +21,10 @@
                         Article</a>
                     <ul class="collapse list-unstyled" id="pageSubmenu">
                         <li>
-                            <a href="#">Post New Article</a>
+                            <a @click="onAddArticleMenuClick">Post New Article</a>
                         </li>
                         <li>
-                            <a href="#">All Article</a>
+                            <a @click="onListArticleMenuClick">All Article</a>
                         </li>
                         <li>
                             <a href="#">Categories</a>
@@ -113,6 +113,14 @@ export default {
     onMediaMenuClick() {
       if (this.$route.path !== '/dashboard/gallery')
           this.$router.push('/dashboard/gallery')
+    },
+    onAddArticleMenuClick() {
+      if (this.$route.path !== '/dashboard/add_article')
+          this.$router.push('/dashboard/add_article')
+    },
+    onListArticleMenuClick() {
+      if (this.$route.path !== '/dashboard/list_article')
+          this.$router.push('/dashboard/list_article')
     }
   },
   mounted() {

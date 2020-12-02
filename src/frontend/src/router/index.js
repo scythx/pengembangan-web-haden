@@ -2,6 +2,8 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Dashboard from '../views/Dashboard.vue'
 import Gallery from '../components/Gallery.vue'
+import ArticleInputForm from '../components/ArticleInputForm.vue'
+import ArticleList from '../components/ArticleList.vue'
 
 Vue.use(VueRouter)
 
@@ -14,6 +16,22 @@ const routes = [
       {
         path: 'gallery',
         component: Gallery
+      },
+      {
+        path: '/dashboard/add_article',
+        name: 'add_article',
+        component: ArticleInputForm
+      },
+      {
+        path: '/dashboard/list_article',
+        name: 'list_article',
+        component: ArticleList,
+        children: [
+          {
+            path: '/dashboard/add_article',
+            component: ArticleInputForm
+          },
+        ]
       }
     ]
   }

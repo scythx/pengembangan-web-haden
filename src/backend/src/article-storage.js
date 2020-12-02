@@ -3,7 +3,7 @@ import * as db from './database'
 const TABLE_NAME = 'article'
 export async function createTable(){
     let sql = `CREATE TABLE IF NOT EXISTS ${TABLE_NAME}(
-        id_article integer NOT NULL,
+        id_article bigserial NOT NULL,
         title text COLLATE pg_catalog."default",
         author text COLLATE pg_catalog."default",
         content text COLLATE pg_catalog."default",
