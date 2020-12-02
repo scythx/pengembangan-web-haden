@@ -20,17 +20,20 @@ app.use(cors())
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
 
+// const staticMiddleware = express.static(__dirname + '/public')
+// app.use(staticMiddleware)
+// app.use(history({
+//     disableDotRule: true,
+//     verbose: true
+// }))
+// app.use(staticMiddleware)
+
+// app.get('/', function (req, res) {
+//     res.render(path.join(__dirname + '/public/index.html'));
+// })
+
 const staticMiddleware = express.static(__dirname + '/public')
 app.use(staticMiddleware)
-app.use(history({
-    disableDotRule: true,
-    verbose: true
-}))
-app.use(staticMiddleware)
-
-app.get('/', function (req, res) {
-    res.render(path.join(__dirname + '/public/index.html'));
-})
 
 app.delete('/api/images/:imageId', async (request, response) => {
     imageStorage.remove(Number(request.params['imageId']))
