@@ -27,7 +27,7 @@
                             <a @click="onListArticleMenuClick">All Article</a>
                         </li>
                         <li>
-                            <a href="#">Categories</a>
+                            <a @click="onCategoriesMenuClick">Categories</a>
                         </li>
                     </ul>
                 </li>
@@ -121,6 +121,11 @@ export default {
     onListArticleMenuClick() {
       if (this.$route.path !== '/dashboard/list_article')
           this.$router.push('/dashboard/list_article')
+    },
+    onCategoriesMenuClick() {
+        console.log("Got HEre")
+        if (this.$route.path !== '/dashboard/categories')
+            this.$router.push('/dashboard/categories')
     }
   },
   mounted() {
