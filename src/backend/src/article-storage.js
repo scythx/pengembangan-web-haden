@@ -10,6 +10,7 @@ export async function createTable(){
         date_published date,
         is_headline boolean,
         id_sport integer,
+        id_league integer,
         id_team integer,
         user_id integer,
         CONSTRAINT article_pkey PRIMARY KEY (id_article)

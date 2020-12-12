@@ -1,25 +1,25 @@
 <template>
   <div id="container">
     <div
-        v-for="(league,i) in leagues.slice(0,3)"
-        :key="i"
+        v-for="(item, index) in mapped.slice(0,3)"
+        :key="index"
     >
-        <div id="title" class="display-4 font-weight-light" v-text="league.name"></div>
+        <div id="title" class="display-4 font-weight-light">{{getLeagueName(item.id_league)}}</div>
         <v-list 
             dense
             three-line
             class="container"
         >
         <v-list-item
-            v-for="(item, index) in topheadline.slice(0,2)"
-            :key="index"
+            v-for="(article, id) in item.articles.slice(0,2)"
+            :key="id"
             ripple
             @click="() => {}"
             class="tile mb-3"
             dense
         >
            <v-img
-                :src="images[index].url"
+                :src="images[id].url"
                 class="mr-4 ml-5"
                 max-width="384"
                 min-width="384"
@@ -27,7 +27,7 @@
             </v-img>
             <v-list-item-content>
                 <h1
-                v-text="item.title"
+                v-text="article.title"
                 class="h4 font-weight-light white--text"></h1>
             </v-list-item-content>
             
@@ -57,34 +57,60 @@ export default {
   data(){
       return{
         articles: [],
-        topheadline:[],
-        images:[],
-        leagues:[]
+        leagues: [],
+        mapped:[],
+        images:[]
       }
   },
   methods:{
+    getLeagueName(id) {
+      var i = 0
+      while(i < this.leagues.length){
+        if(this.leagues[i].id_league == id){
+          return this.leagues[i].name
+        }
+        i++
+      }
+    }
   },
   mounted(){
     http.get('/articles')
       .then((response) => {
         this.articles = response['data']
-        var i = 0
-        while(i < this.articles.length){
-          if(this.articles[i].is_headline){
-            this.topheadline.push(this.articles[i])
-          }
-          i++;
-        }
+        
+        http.get('/leagues')
+          .then((res) => {
+            this.leagues = res['data']
+            
+            
+            let temp = new Array()
+            var i = 0, j = 0
+
+            while(i < this.leagues.length){
+              while(j < this.articles.length){
+                if(this.leagues[i].id_league == this.articles[j].id_league){
+                    temp.push(this.articles[j])
+                }
+                j++
+              }
+
+              if(temp.length > 0){
+                var obj = new Object()
+                obj.id_league = this.leagues[i].id_league
+                obj.articles = temp
+                this.mapped.push(obj)
+                temp = new Array()
+              }
+
+              i++
+              j = 0
+            }
+          })
     })
 
     http.get('/images')
       .then((response) => {
         this.images = response['data']
-    })
-
-    http.get('/leagues')
-      .then((response) => {
-        this.leagues = response['data']
     })
   }
 }
