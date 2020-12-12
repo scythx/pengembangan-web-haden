@@ -171,6 +171,8 @@ export default {
         onHomeClick(){
           if (this.$route.path !== '/dashboard')
             this.$router.push('/dashboard')
+          
+          this.drawer = false
         },
         onAddArticleMenuClick() {
         if (this.$route.path !== '/dashboard/add_article')
