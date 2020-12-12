@@ -4,7 +4,7 @@
         v-for="(item, index) in mapped.slice(0,3)"
         :key="index"
     >
-        <div id="title" class="display-4 font-weight-light">{{getLeagueName(item.id_league)}}</div>
+        <div id="title" class="display-2 font-weight-light">{{getLeagueName(item.id_league)}}</div>
         <v-list 
             dense
             three-line
@@ -39,6 +39,7 @@
             rounded
             color="#FFCC00"
             dark
+            @click="() => {}"
         >
         <span id="lihatsemua" class="font-weight-light">Lihat Semua</span>
         </v-btn>
@@ -127,7 +128,7 @@ export default {
   background: #203E5F;
 }
 
-h1, .display-4{
+h1, .display-2{
   color: #FFFFFF;
 }
 

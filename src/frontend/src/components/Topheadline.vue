@@ -1,6 +1,7 @@
 <template>
   <div id="container">
-    <div id="title" class="display-4 font-weight-light">Top Headlines</div>
+    
+    <div id="title" class="display-2 font-weight-light">Top Headlines</div>
     <v-list 
       dense
       three-line
@@ -42,7 +43,11 @@ export default {
       return{
         articles: [],
         topheadline:[],
-        images:[]
+        images:[],
+        attrs: {
+          boilerplate: true,
+          elevation: 2,
+        },
       }
   },
   methods:{
@@ -80,7 +85,7 @@ export default {
   background: #203E5F;
 }
 
-h1, .display-4{
+h1, .display-2{
   color: #FFFFFF;
 }
 
