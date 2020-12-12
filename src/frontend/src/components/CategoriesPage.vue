@@ -14,7 +14,7 @@
 import SportTable from './SportTable'
 import LeagueTable from './LeagueTable'
 import TeamTable from './TeamTable'
-import Header from './Header'
+import Header from './HeaderCMS'
 import http from '@/http'
 
 export default {
