@@ -6,6 +6,9 @@ import ArticleInputForm from '../components/ArticleInputForm.vue'
 import ArticleList from '../components/ArticleList.vue'
 import CategoriesPage from '../components/CategoriesPage.vue'
 import Stats from '../components/Dashboard.vue'
+import MainPage from '../views/MainPage.vue'
+import MainPageComponent from '../components/MainPage.vue'
+import ThumbnailDetail from '../components/ThumbnailDetail'
 
 Vue.use(VueRouter)
 
@@ -16,8 +19,9 @@ const routes = [
     component: Dashboard,
     children: [
       {
-        path: 'gallery',
-        component: Gallery
+        path: '',
+        name: 'dashboard_status',
+        component: Stats
       },
       {
         path: '/dashboard/add_article',
@@ -40,19 +44,29 @@ const routes = [
         component: CategoriesPage
       },
       {
-        path : 'home',
-        component: Stats
-      },
-      {
-        path : 'gallery',
-        component : Gallery
-      },
-      {
-        path: '/stats',
-        component : Stats
+        path: 'gallery',
+        component: Gallery
       }
     ]
   },
+  {
+    path: '',
+    name: 'main_page',
+    component: MainPage,
+    children: [
+      {
+        path: '',
+        name: 'main_page_component',
+        component: MainPageComponent
+      },
+      {
+        path: 'articles/league/:id_league',
+        name: 'thumbnail_detail',
+        component: ThumbnailDetail,
+        props: true
+      }
+    ]
+  }
 
 ]
 
