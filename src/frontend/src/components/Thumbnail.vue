@@ -4,44 +4,47 @@
         v-for="(item, index) in mapped.slice(0,3)"
         :key="index"
     >
-        <div id="title" class="display-2 font-weight-light">{{getLeagueName(item.id_league)}}</div>
         <v-list 
             dense
-            three-line
             class="container"
+            width="auto"
         >
+        <h1 id="title" class="h1 font-weight-light"
+          :style="$vuetify.breakpoint.lg ? 'font-size:3vw' : 'font-size:5vw'">{{getLeagueName(item.id_league)}}</h1>
         <v-list-item
             v-for="(article, id) in item.articles.slice(0,2)"
             :key="id"
             ripple
-            @click="() => {}"
-            class="tile mb-3"
+            @click="onArticleClick(article.id_article)"
+            class="tile"
             dense
+            style="margin-bottom:1%"
         >
            <v-img
-                :src="images[id].url"
-                class="mr-4 ml-5"
-                max-width="384"
-                min-width="384"
+              :src="images[id].url"
+                style="margin-right:1%"
+              :max-width="$vuetify.breakpoint.lg ? '30%' : '40%'"
             >
             </v-img>
             <v-list-item-content>
                 <h1
                 v-text="article.title"
-                class="h4 font-weight-light white--text"></h1>
+                class="h4 font-weight-light"
+                :style="$vuetify.breakpoint.lg ? 'font-size:1.5vw' : 'font-size:2.5vw'"></h1>
             </v-list-item-content>
             
         </v-list-item>
         <v-btn
             block
             dense
-            elevation="2"
             rounded
             color="#FFCC00"
             dark
-            @click="() => {}"
+            @click="onLihatSemuaClick(item.id_league)"
+            :height="$vuetify.breakpoint.lg ? '2vw' : '4vw'"
         >
-        <span id="lihatsemua" class="font-weight-light">Lihat Semua</span>
+        <span id="lihatsemua" class="font-weight-light"
+        :style="$vuetify.breakpoint.lg ? 'font-size:1vw' : 'font-size:2vw'">Lihat Semua</span>
         </v-btn>
         <hr>
         </v-list>
@@ -51,10 +54,11 @@
 
 <script>
 import http from "@/http"
+import ThumbnailDetail from '../components/ThumbnailDetail.vue'
 
 export default {
   name: 'Thumbnail',
-  components: {},
+  components: {ThumbnailDetail},
   data(){
       return{
         articles: [],
@@ -72,6 +76,12 @@ export default {
         }
         i++
       }
+    },
+    onArticleClick(id){
+    },
+    onLihatSemuaClick(id){
+      if (this.$route.path !== '/articles/league/'+id)
+        this.$router.push('/articles/league/'+id)
     }
   },
   mounted(){
@@ -121,9 +131,6 @@ export default {
 #container, .container, .tile{
   background: #222831;
 }
-#title{
-  margin-left: 200px;
-}
 .tile:hover {
   background: #203E5F;
 }
@@ -134,7 +141,8 @@ h1, .display-2{
 
 hr { 
   display: block;
-  margin-top: 1em;
+  margin-top: 1%;
+  margin-bottom: 0.1%;
   border-style: inset;
   border-width: 1px;
 }

@@ -1,30 +1,33 @@
 <template>
   <div id="container">
-    
-    <div id="title" class="display-2 font-weight-light">Top Headlines</div>
-    <v-list 
-      dense
-      three-line
+    <v-list
+      dense 
       class="container"
       color="#222831"
+      width="auto"
     >
+      <h1 id="title" class="h1 font-weight-light"
+      :style="$vuetify.breakpoint.lg ? 'font-size:3vw' : 'font-size:5vw'">Top Headlines</h1>
       <v-list-item
             v-for="(item, index) in topheadline.slice(0,5)"
             :key="index"
             ripple
-            @click="() => {}"
-            class="tile mb-3"
+            @click="onArticleClick"
+            class="tile"
+            dense
+            style="margin-bottom:1%"
         >
           <v-list-item-content>
               <h1
-            v-text="item.title"
-            class="h4 font-weight-light white--text"></h1>
+                v-text="item.title"
+                class="h4 font-weight-light"
+                :style="$vuetify.breakpoint.lg ? 'font-size:1.5vw' : 'font-size:2.5vw'">
+              </h1>
           </v-list-item-content>
           <v-img
               :src="images[index].url"
-              class="mr-4 ml-5"
-              max-width="256"
-              min-width="256"
+              style="margin-left:1%"
+              :max-width="$vuetify.breakpoint.lg ? '30%' : '40%'"
           >
           </v-img>
         </v-list-item>
@@ -51,6 +54,9 @@ export default {
       }
   },
   methods:{
+    onArticleClick(){
+
+    }
   },
   mounted(){
     http.get('/articles')
@@ -78,9 +84,6 @@ export default {
   background: #222831;
   
 }
-#title{
-  margin-left: 200px;
-}
 .tile:hover {
   background: #203E5F;
 }
@@ -91,8 +94,8 @@ h1, .display-2{
 
 hr { 
   display: block;
-  margin-top: 1em;
-  margin-bottom: 0.5em;
+  margin-top: 1%;
+  margin-bottom: 1%;
   border-style: inset;
   border-width: 1px;
 }
