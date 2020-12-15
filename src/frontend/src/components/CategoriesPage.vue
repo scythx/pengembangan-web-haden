@@ -31,48 +31,61 @@ export default {
       dataTeam:[],
       headerSport: [
         {
-          key: 'id_sport',
-          title: 'ID'
+          value: 'id_sport',
+          text: 'ID'
         },
         {
-          key:'name',
-          title:'Sport Name'
+          value:'name',
+          text:'Sport Name'
+        },
+        {
+          value:'actions',
+          text:'Actions'
         }
       ],
       headerTeam: [
         {
-          key: 'id_team',
-          title: 'ID'
+          value: 'id_team',
+          text: 'ID'
         },
         {
-          key:'name',
-          title:'Team Name'
+          value:'name',
+          text:'Team Name'
         },
         {
-            key:'sport_name',
-            title:'Sport Name'
+            value:'sport_name',
+            text:'Sport Name'
         },
         {
-            key:'country',
-            title:'Country'
+            value:'country',
+            text:'Country'
+        },
+        {
+          value:'actions',
+          text:'Actions'
         }
       ],
       headerLeague: [
         {
-          key: 'id_league',
-          title: 'ID'
+          value: 'id_league',
+          text: 'ID'
         },
         {
-          key:'name',
-          title:'League Name'
+          value:'name',
+          text:'League Name'
         },
         {
-            key:'sport_name',
-            title:'Sport Name'
+            value:'sport_name',
+            text:'Sport Name'
         },
         {
-            key:'country',
-            title:'Country'
+            value:'country',
+            text:'Country'
+        },
+        
+        {
+          value:'actions',
+          text:'Actions'
         }
       ]
     }
@@ -82,7 +95,6 @@ export default {
     //get sport
     http.get('/sports')
     .then((response) => {
-      console.log(response.data)
       this.dataSport = response.data
     })
 
@@ -92,11 +104,13 @@ export default {
       this.dataTeam = response.data
     })
 
-    //get Team
+    //get League
     http.get('/leagues-sport')
     .then((response) => {
       this.dataLeague = response.data
     })
+
+    console.log(this.dataLeague)
 }
 }
 </script>

@@ -1,135 +1,78 @@
 <template>
-<v-app>
-<v-main>
-<div class="sport-table">
-   <div class="container">
-       <div class="table-responsive">
-           <div class="table-warapper">
-               <div class="table-title">
-                   <div class="row">
-                       <div class="col-xs-6">
-                           <h2><b>Sports</b></h2>
-                       </div>
-                       <div class="col-xs-6">
-                           <a href="#addSportModal" class="btn btn-success" data-toggle="modal">
-                               <i class="material-icons">&#xE147;</i>
-                               <span>Add New</span>
-                           </a>
-                       </div>
-                   </div>
-               </div>
-               <table class="table table-striped table-hover">
-                   <thead>
-                       <tr>
-                           <th  v-for="(obj, ind) in theHeader" v-bind:key="ind">
-                               {{ obj.title }}
-                           </th>
-                           <th>Actions</th>
-                       </tr>
-                   </thead>
-                   <tbody>
-                       <tr v-for="(row, index) in theData" v-bind:key="index">
-                           <td v-for="(obj, ind) in theHeader" v-bind:key="ind">
-                               {{ row[obj.key] }}
-                           </td>
-                           <td>
-							   <a href="#" class="btn btn-danger" role="button" @click="deleteModal(row['id_sport'])" aria-pressed="false">Delete</a>
-							   <a href="#" class="btn btn-warning" role="button" @click="editModal(row)" aria-pressed="false">Update</a>
-						   </td>
-                       </tr>
-                   </tbody>
-               </table>
-               <!-- <div class="clearfix">
-					<div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-					<ul class="pagination">
-						<li class="page-item disabled"><a href="#">Previous</a></li>
-						<li class="page-item"><a href="#" class="page-link">1</a></li>
-						<li class="page-item"><a href="#" class="page-link">2</a></li>
-						<li class="page-item active"><a href="#" class="page-link">3</a></li>
-						<li class="page-item"><a href="#" class="page-link">4</a></li>
-						<li class="page-item"><a href="#" class="page-link">5</a></li>
-						<li class="page-item"><a href="#" class="page-link">Next</a></li>
-					</ul>
-				</div> -->
-           </div>
-       </div>
-   </div>
+  <v-data-table
+    :headers="theHeader"
+    :items="theData"
+    sort-by="name"
+    class="elevation-1"
+    :footer-props="{
+        'items-per-page-options': [5, 10, 20, 40, -1]
+    }"
+    :items-per-page="5"
+  >
+    <template v-slot:top>
+      <v-toolbar flat>
+        <v-toolbar-title>Sports</v-toolbar-title>
+        <v-divider class="mx-4" inset vertical></v-divider>
+        <v-spacer></v-spacer>
+        <v-dialog v-model="dialog" max-width="500px">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn color="success" dark class="mb-2" v-bind="attrs" v-on="on">
+              + New Item
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="headline">{{formTitle}}</span>
+            </v-card-title>
 
-   <!-- MODAL -->
-   <!-- Modal Add Sport -->
-   <div id="addSportModal" class="modal fade">
-       <div class="modal-dialog">
-           <div class="modal-content">
-               <form>
-                   <div class="modal-header">
-                       <h4 class="modal-title"> Add Sport </h4>
-                       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                           &times;
-                       </button>
-                   </div>
-                   <div class="modal-body">
-                       <div class="form-group">
-                           <label>Name</label>
-                           <input type="text" id="name_input" class="form-control" v-model="sport_name" required>
-                       </div>
-                   </div>
-                   <div class="modal-footer">
-                       <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                       <input type="button" class="btn btn-success" value="Add" v-on:click="addSport()">
-                   </div>
-               </form>
-           </div>
-       </div>
-   </div>
-   <!-- Modal Edit Sport -->
-   <div id="editSportModal" class="modal fade">
-       <div class="modal-dialog">
-           <div class="modal-content">
-               <form>
-                   <div class="modal-header">
-                       <h4 class="modal-title"> Edit Sport </h4>
-                       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                           &times;
-                       </button>
-                   </div>
-                   <div class="modal-body">
-                       <div class="form-group">
-                           <label>Name</label>
-                           <input type="text" id="new_name"  class="form-control" :value="[[name_placeholder]]" required>
-                       </div>
-                   </div>
-                   <div class="modal-footer">
-                       <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                       <input type="button" class="btn btn-success" value="Update" @click="editSport()">
-                   </div>
-               </form>
-           </div>
-       </div>
-   </div>
-   <!-- Modal Delete Sport -->
-   <div id="deleteSportModal" class="modal fade">
-	<div class="modal-dialog">
-				<div class="modal-content">
-					<form>
-						<div class="modal-header">
-							<h4 class="modal-title">Delete Sport</h4>
-							<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-						</div>
-						<div class="modal-body">
-							<p>Are you sure you want to delete these Records?</p>
-							<p class="text-warning"><small>This action cannot be undone.</small></p>
-						</div>
-						<div class="modal-footer">
-							<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-							<input type="submit" class="btn btn-danger" v-on:click="deleteSport(active_id)" value="Delete">
-						</div>
-					</form>
-				</div>
-		</div>
-	</div>
-</div>
-</v-main>
-</v-app>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.name"
+                      label="Sport name"
+                    ></v-text-field>
+                  </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="close">
+                Cancel
+              </v-btn>
+              <v-btn color="blue darken-1" text @click="save">
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="dialogDelete" max-width="500px">
+          <v-card>
+            <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+              <v-btn color="blue darken-1" text @click="deleteSport">OK</v-btn>
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-toolbar>
+    </template>
+    <template v-slot:[`item.actions`]="{ item }">
+      <v-icon small class="mr-2" @click="editModal(item)">
+        mdi-pencil
+      </v-icon>
+      <v-icon small @click="deleteModal(item)">
+        mdi-delete
+      </v-icon>
+
+    </template>
+  </v-data-table>
 </template>
 
 <script>
@@ -140,45 +83,84 @@ export default {
     props: ['theData', 'theHeader'],
 	data() {
 		return{
-			sport_name : '',
-			name_placeholder : '',
-			active_id : ''
+            dialog : false,
+            dialogDelete : false,
+            active_id : -1,
+            editedItem: {
+                id_sport : '',
+                name: ''
+            },
+            defaultItem: {
+                id_sport : '',
+                name : ''
+            }
 		}
 	},
+
+    computed : {
+        formTitle(){
+            return this.active_id === -1? 'Add Sport' : 'Edit Sport'
+        }
+    },
 
 	methods : {
-	editModal : function(sport){
-		this.name_placeholder = sport['name']
-		this.active_id = sport['id_sport']
-		this.$jquery('#editSportModal').modal('toggle');
-	},
-
-	deleteModal : function(id){
-		this.active_id = id
-		this.$jquery('#deleteSportModal').modal('toggle')
-	},
-
-	addSport : function(){
-		console.log(this.sport_name)
-		try{
+    close : function(){
+        this.dialog = false
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.active_id = -1
+        })
+    },
+    save () {
+        if (this.active_id > -1) {
+            //Edit
+            http.put(`/sports/${this.active_id}`, {
+			    'name' : this.editedItem.name
+		    })
+        } 
+        else {
+            //CREATE
+            try{
 			http.post('/sports/', {
-				'name' : this.sport_name
+				'name' : this.editedItem.name
 			})
-		}
-		catch(err){
+		    }
+		    catch(err){
 			console.log(err)
-		}
+		    }
+        }
+        this.close()
+        window.location.reload()
+    },
+
+	editModal : function(sport){
+        this.editedItem = Object.assign({}, sport)
+        this.active_id = sport['id_sport']
+        this.dialog = true
 	},
 
-	deleteSport : function(id){
-		http.delete(`sports/${id}`)
+    addModal : function(){
+        console.log("got here")
+		this.$jquery('#addSportModal').modal('toggle');
+    },
+    
+	deleteModal : function(sport){
+		this.active_id = sport['id_sport']
+		this.dialogDelete = true
 	},
 
-	editSport : function(){
-		this.name_placeholder = document.getElementById('new_name').value
-		http.put(`/sports/${this.active_id}`, {
-			'name' : this.name_placeholder
-		})
+    closeDelete () {
+        this.dialogDelete = false
+        this.$nextTick(() => {
+          this.editedItem = Object.assign({}, this.defaultItem)
+          this.active_id = -1
+        })
+    },
+
+	deleteSport : function(){
+        http.delete(`sports/${this.active_id}`)
+        this.dialogDelete = false
+        window.location.reload()
 	}
 }
 

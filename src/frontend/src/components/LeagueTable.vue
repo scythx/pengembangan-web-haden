@@ -1,151 +1,94 @@
 <template>
-<div class="league-table">
-   <div class="container">
-       <div class="table-responsive">
-           <div class="table-warapper">
-               <div class="table-title">
-                   <div class="row">
-                       <div class="col-xs-6">
-                           <h2><b>League</b></h2>
-                       </div>
-                       <div class="col-xs-6">
-                           <a href="#addLeagueModal" class="btn btn-success" data-toggle="modal">
-                               <i class="material-icons">&#xE147;</i>
-                               <span>Add New</span>
-                           </a>
-                       </div>
-                   </div>
-               </div>
-               <table class="table table-striped table-hover">
-                   <thead>
-                       <tr>
-                           <th  v-for="(obj, ind) in theHeader" v-bind:key="ind">
-                               {{ obj.title }}
-                           </th>
-                           <th>Actions</th>
-                       </tr>
-                   </thead>
-                   <tbody>
-                       <tr v-for="(row, index) in theData" v-bind:key="index">
-                           <td v-for="(obj, ind) in theHeader" v-bind:key="ind">
-                               {{ row[obj.key] }}
-                           </td>
-                           <td>
-                               <a href="#" class="btn btn-danger" role="button" @click="deleteModal(row['id_league'])" aria-pressed="false">Delete</a>
-							   <a href="#" class="btn btn-warning" role="button" @click="editModal(row)" aria-pressed="false">Update</a>
-                            </td>
-                       </tr>
-                   </tbody>
-               </table>
-               <!-- <div class="clearfix">
-					<div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>
-					<ul class="pagination">
-						<li class="page-item disabled"><a href="#">Previous</a></li>
-						<li class="page-item"><a href="#" class="page-link">1</a></li>
-						<li class="page-item"><a href="#" class="page-link">2</a></li>
-						<li class="page-item active"><a href="#" class="page-link">3</a></li>
-						<li class="page-item"><a href="#" class="page-link">4</a></li>
-						<li class="page-item"><a href="#" class="page-link">5</a></li>
-						<li class="page-item"><a href="#" class="page-link">Next</a></li>
-					</ul>
-				</div> -->
-           </div>
-       </div>
-   </div>
+  <v-data-table
+    :headers="theHeader"
+    :items="theData"
+    sort-by="name"
+    class="elevation-1"
+    :footer-props="{
+        'items-per-page-options': [5, 10, 20, 40, -1]
+    }"
+    :items-per-page="5"
+  >
+    <template v-slot:top>
+      <v-toolbar flat>
+        <v-toolbar-title>League</v-toolbar-title>
+        <v-divider class="mx-4" inset vertical></v-divider>
+        <v-spacer></v-spacer>
+        <v-dialog v-model="dialog" max-width="500px">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn color="success" dark class="mb-2" v-bind="attrs" v-on="on">
+              + New Item
+            </v-btn>
+          </template>
+          <v-card>
+            <v-card-title>
+              <span class="headline">{{formTitle}}</span>
+            </v-card-title>
 
-   <!-- MODAL -->
-   <!-- Modal Add Sport -->
-   <div id="addLeagueModal" class="modal fade">
-       <div class="modal-dialog">
-           <div class="modal-content">
-               <form>
-                   <div class="modal-header">
-                       <h4 class="modal-title"> Add League </h4>
-                       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                           &times;
-                       </button>
-                   </div>
-                   <div class="modal-body">
-                       <div class="form-group">
-                           <label>Name</label>
-                           <input type="text" class="form-control" v-model="name" required>
-                       </div>
-                       <div class="form-group">
-                           <label>Sport Name</label>
-                           <select v-model="selected_sport" class="browser-default custom-select">
-                            <option v-for="sport in sports" v-bind:key="sport.id_sport" v-bind:value="sport.id_sport">{{ sport.name }}</option>
-                           </select>
-                       </div>
-                       <div class="form-group">
-                           <label>Country</label>
-                           <input type="text" class="form-control" v-model="country" required>
-                       </div>
-                   </div>
-                   <div class="modal-footer">
-                       <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                       <input type="button" class="btn btn-success" value="Add" v-on:click="addLeague()">
-                   </div>
-               </form>
-           </div>
-       </div>
-   </div>
-   <!-- Modal Edit Sport -->
-   <div id="editLeagueModal" class="modal fade">
-       <div class="modal-dialog">
-           <div class="modal-content">
-               <form>
-                   <div class="modal-header">
-                       <h4 class="modal-title"> Edit League </h4>
-                       <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
-                           &times;
-                       </button>
-                   </div>
-                   <div class="modal-body">
-                       <div class="form-group">
-                           <label>Name</label>
-                           <input type="text" id="new_league_name" class="form-control" :value="[[league_name_placeholder]]" required>
-                       </div>
-                       <div class="form-group">
-                           <label>Sport Name</label>
-                           <select v-model="selected_sport" class="browser-default custom-select">
-                                <option v-for="sport in sports" v-bind:key="sport.id_sport" v-bind:value="sport.id_sport">{{ sport.name }}</option>
-                           </select>
-                       </div>
-                       <div class="form-group">
-                           <label>Country</label>
-                           <input type="text" class="form-control" id="new_country" :value="[[country_placeholder]]" required>
-                       </div>
-                   </div>
-                   <div class="modal-footer">
-                       <input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-                       <input type="button" class="btn btn-success" value="Update" @click="editLeague()">
-                   </div>
-               </form>
-           </div>
-       </div>
-   </div>
-   <!-- Modal Delete League -->
-   <div id="deleteLeagueModal" class="modal fade">
-   <div class="modal-dialog">
-			<div class="modal-content">
-				<form>
-					<div class="modal-header">
-						<h4 class="modal-title">Delete League</h4>
-						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-					</div>
-					<div class="modal-body">
-						<p>Are you sure you want to delete these Records?</p>
-						<p class="text-warning"><small>This action cannot be undone.</small></p>
-					</div>
-					<div class="modal-footer">
-						<input type="button" class="btn btn-default" data-dismiss="modal" value="Cancel">
-						<input type="submit" class="btn btn-danger" @click="deleteLeague()" value="Delete">
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
-</div>
+            <v-card-text>
+              <v-container>
+                <v-row>
+                  <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.name"
+                      label="Name"
+                    ></v-text-field>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                    <v-select
+                      v-model="editedItem.sport_id"
+                      :items="sports"
+                      item-text="name"
+                      item-value="id_sport"
+                      label="Sport name"
+                    ></v-select>
+                    </v-col>
+                    <v-col cols="12" sm="6" md="4">
+                    <v-text-field
+                      v-model="editedItem.country"
+                      label="Country"
+                    ></v-text-field>
+                    </v-col>
+                </v-row>
+              </v-container>
+            </v-card-text>
+
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="close">
+                Cancel
+              </v-btn>
+              <v-btn color="blue darken-1" text @click="save">
+                Save
+              </v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <v-dialog v-model="dialogDelete" max-width="500px">
+          <v-card>
+            <v-card-title class="headline">Are you sure you want to delete this item?</v-card-title>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeDelete">Cancel</v-btn>
+              <v-btn color="blue darken-1" text @click="deleteLeague">OK</v-btn>
+              <v-spacer></v-spacer>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+      </v-toolbar>
+    </template>
+
+    <template v-slot:[`item.actions`]="{ item }">
+      <v-icon small class="mr-2" @click="editModal(item)">
+        mdi-pencil
+      </v-icon>
+      <v-icon small @click="deleteModal(item)">
+        mdi-delete
+      </v-icon>
+
+    </template>
+  </v-data-table>
 </template>
 
 <script>
@@ -156,68 +99,94 @@ export default {
     props: ['theData', 'theHeader', 'sports'],
     data(){
         return{
-            active_id : '',
-            selected_sport : '',
-            name : '',
-            country : '',
+            dialog : false,
+            dialogDelete : false,
+            active_id : -1,
+            editedItem : {
+                id_league : '',
+                sport_id : '',
+                name : '',
+                country:''
+            },
+            defaultItem : {
+                id_league : '',
+                sport_id : '',
+                name : '',
+                country:''
+            }
+        }
+    },
 
-            active_id : '',
-            league_name_placeholder : '',
-            sport_placeholder : '',
-            sportId_placeholder: '',
-            country_placeholder : ''
+    computed : {
+        formTitle(){
+            return this.active_id === -1? 'Add League' : 'Edit League'
         }
     },
 
     methods :{
-        editModal : function(league){
-            this.active_id = league['id_league']
-            this.league_name_placeholder = league['name']
-            this.sport_placeholder = league['sport_name']
-            this.sportId_placeholder = league['sport_id']
-            this.country_placeholder = league['country']
-
-            this.$jquery('#editLeagueModal').modal('toggle')
+        close : function(){
+            this.dialog = false
+            this.$nextTick(() => {
+            this.editedItem = Object.assign({}, this.defaultItem)
+            this.active_id = -1
+            })
         },
 
-        deleteModal : function(id){
-            console.log(id)
-            this.active_id = id
-            console.log(this.active_id)
-		    this.$jquery('#deleteLeagueModal').modal('toggle')
-	    },
-
-        addLeague : function(){
+        save : function () {
+        if (this.active_id > -1) {
+            //Edit
+            try{
+                http.put(`/leagues/${this.active_id}`, {
+                    'sportId' : this.editedItem.sport_id,
+                    'name' : this.editedItem.name,
+                    'country' : this.editedItem.country
+			    })
+            }
+            catch(err){
+                console.log(err)
+            }
+        } 
+        else {
+            //CREATE
             try{
                 console.log(this.selected_sport)
                 http.post('/leagues/', {
-                    'name' : this.name,
-                    'sportId' : this.selected_sport,
-                    'country' : this.country
+                    'name' : this.editedItem.name,
+                    'sportId' : this.editedItem.sport_id,
+                    'country' : this.editedItem.country
 			    })
             }
             catch(err){
                 console.log(err)
             }
+        }
+        this.close()
+        window.location.reload()
         },
 
-        editLeague : function(){
-            try{
-                console.log(document.getElementById('new_league_name').value)
-                http.put(`/leagues/${this.active_id}`, {
-                    'sportId' : this.selected_sport,
-                    'name' : document.getElementById('new_league_name').value,
-                    'country' : document.getElementById('new_country').value
-			    })
-            }
-            catch(err){
-                console.log(err)
-            }
+        editModal : function(league){
+            this.editedItem = Object.assign({}, league)
+            this.active_id = league['id_league']
+            this.dialog = true
+        },
+
+        deleteModal : function(league){
+            this.active_id = league['id_league']
+            this.dialogDelete = true
+	    },
+
+        closeDelete () {
+            this.dialogDelete = false
+            this.$nextTick(() => {
+              this.editedItem = Object.assign({}, this.defaultItem)
+              this.active_id = -1
+            })
         },
 
         deleteLeague : function(){
-            console.log(this.active_id)
             http.delete(`leagues/${this.active_id}`)
+            this.dialogDelete = false
+            window.location.reload()
         }
     }
 }
