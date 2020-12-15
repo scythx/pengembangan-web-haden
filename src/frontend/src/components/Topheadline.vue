@@ -1,20 +1,35 @@
 <template>
   <div id="container">
-    <hr>
-    <h1>Top Headline</h1>
-    <ul class="list-unstyled">
-      <div class="item-container">
-        <a href="#" v-for="(item, index) in topheadline.slice(0,5)">
-          <li class="media">
-              <div class="media-body">
-                <h5 class="text-sm-left">{{item.title}}</h5>
-              </div>
-              <img v-bind:src="images[index].url" class="mr-3" alt="...">
-          </li>
-        </a>
-      </div> 
-    </ul>
-    <hr>  
+    
+    <div id="title" class="display-2 font-weight-light">Top Headlines</div>
+    <v-list 
+      dense
+      three-line
+      class="container"
+      color="#222831"
+    >
+      <v-list-item
+            v-for="(item, index) in topheadline.slice(0,5)"
+            :key="index"
+            ripple
+            @click="() => {}"
+            class="tile mb-3"
+        >
+          <v-list-item-content>
+              <h1
+            v-text="item.title"
+            class="h4 font-weight-light white--text"></h1>
+          </v-list-item-content>
+          <v-img
+              :src="images[index].url"
+              class="mr-4 ml-5"
+              max-width="256"
+              min-width="256"
+          >
+          </v-img>
+        </v-list-item>
+        <hr>
+    </v-list>
   </div>
 </template>
 
@@ -28,7 +43,11 @@ export default {
       return{
         articles: [],
         topheadline:[],
-        images:[]
+        images:[],
+        attrs: {
+          boilerplate: true,
+          elevation: 2,
+        },
       }
   },
   methods:{
@@ -55,61 +74,26 @@ export default {
 </script>
 
 <style scoped>
+#container, .container, .tile{
+  background: #222831;
+  
+}
+#title{
+  margin-left: 200px;
+}
+.tile:hover {
+  background: #203E5F;
+}
+
+h1, .display-2{
+  color: #FFFFFF;
+}
+
 hr { 
   display: block;
-  margin-top: 0.5em;
+  margin-top: 1em;
   margin-bottom: 0.5em;
-  margin-left: 5%;
-  margin-right: 5%;
   border-style: inset;
   border-width: 1px;
-}
-
-h1{
-  color: white;
-  margin-left: 8%;
-  margin-right: 5%;
-  font-family: 'Open Sans', sans-serif;
-  font-size:4vw;
-}
-
-#container{
-  width: 100%;
-  position: absolute;
-  background-color: #222831;
-}
-
-.item-container{
-  margin-left: 5%;
-  margin-right: 5%;
-  width: 90%;
-}
-
-.media{
-  margin-top: 1%;
-  align-items: center;
-  border-radius: 0.5vw;
-}
-
-.media:hover{
-  background-color: #203E5F;
-}
-
-.media-body{
-  margin-left:3%;
-  margin-right:3%;
-  color: white;
-  text-align: left;
-  font-family: 'Open Sans', sans-serif;
-}
-
-h5{
-  font-size:2.5vw;
-}
-
-img{
-  width: 30%;
-  height: 30%;
-  border-radius: 0.5vw;
 }
 </style>
