@@ -72,6 +72,12 @@ const routes = [
         name: 'sport_articles',
         component: ArticlesSport,
         props: true
+      },
+      {
+        path: 'article/:id_article',
+        name: 'news_page',
+        component: NewsPage,
+        props: true
       }
     ]
   },
@@ -86,11 +92,6 @@ const routes = [
     component: () => import(
       /* webpackChunkName: "register" */
       '../views/Register.vue')
-  },
-  {
-    path: '/article/:id',
-    name: 'news_page',
-    component: NewsPage
   }
 ]
 
