@@ -54,11 +54,10 @@
 
 <script>
 import http from "@/http"
-import ThumbnailDetail from '../components/ThumbnailDetail.vue'
 
 export default {
   name: 'Thumbnail',
-  components: {ThumbnailDetail},
+  components: {},
   data(){
       return{
         articles: [],
