@@ -1,5 +1,6 @@
 import path from 'path'
 import express from 'express'
+import session from 'express-session'
 import cors from 'cors'
 import _ from 'lodash'
 import * as db from './database'
@@ -17,6 +18,11 @@ const app = express()
 const port = process.env.PORT
 
 app.use(cors())
+app.use(session({
+  secret: 'woosh splash',
+  resave: false,
+  saveUninitialized: true
+}))
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
 
@@ -414,6 +420,42 @@ app.delete('/api/teams/:id', async (req, res) => {
 app.get('/api/teams-sport/', async(req, res) => {
     const teams = await teamStorage.getJoinTeamSport();
     res.send(teams.rows);
+})
+
+app.post('/api/sessions', async (req, res) => {
+  const identity = await userStorage.authenticate(req.body)
+
+  if (identity == null)
+    return res
+      .status(401)
+      .end();
+
+  await new Promise((resolve, reject) => {
+    req.session.regenerate((err) => {
+      req.session.identity = identity
+      resolve()
+    })
+  })
+
+  res
+    .status(200)
+    .json(identity)
+})
+
+app.delete('/api/sessions', async (req, res) => {
+  await new Promise((resolve, reject) => {
+    req.session.destroy((err) => {
+      resolve()
+    })
+  })
+
+  res
+    .status(204)
+    .end()
+})
+
+app.get('/api/ping', async(req, res) => {
+  res.json(req.session.identity)
 })
 
 app.start = async () => {
