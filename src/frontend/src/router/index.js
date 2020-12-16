@@ -10,6 +10,7 @@ import MainPage from '../views/MainPage.vue'
 import MainPageComponent from '../components/MainPage.vue'
 import ArticlesLeague from '../components/ArticlesLeague.vue'
 import ArticlesSport from '../components/ArticlesSport.vue'
+import NewsPage from '../views/NewsPage.vue'
 
 Vue.use(VueRouter)
 
@@ -70,6 +71,12 @@ const routes = [
         path: 'articles/sport/:id_sport',
         name: 'sport_articles',
         component: ArticlesSport,
+        props: true
+      },
+      {
+        path: 'article/:id_article',
+        name: 'news_page',
+        component: NewsPage,
         props: true
       }
     ]

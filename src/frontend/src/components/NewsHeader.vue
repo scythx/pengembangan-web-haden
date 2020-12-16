@@ -1,6 +1,6 @@
 <template>
     <nav>
-        <v-toolbar app-bar app color="#1A2634">
+        <v-app-bar fixed app-bar app color="#1A2634">
             <v-app-bar-nav-icon light class="white--text" @click="drawer = !drawer"></v-app-bar-nav-icon>
             <v-toolbar-title class="white--text">
                 <img src="../assets/harden-logo.svg" alt="" @click="onHardenLogoClick">
@@ -12,9 +12,9 @@
             <v-btn icon flat color="#FFCC00">
                 <v-icon>mdi-scoreboard-outline</v-icon>
             </v-btn>
-        </v-toolbar>
+        </v-app-bar>
         
-        <v-navigation-drawer color="#234A75" v-model="drawer" app bottom temporary>
+        <v-navigation-drawer color="#234A75" v-model="drawer" app left temporary>
         <v-list nav dense>
             <v-list-item v-for="(link, idx) in links" :key="link.text" @click="onSidebarItemClick(idx, link.text)" active-class="blue--text text--darken-3">
                 <v-list-item-action>
@@ -36,13 +36,13 @@ export default {
         return {
             drawer: false,
             links: [
-                { icon: 'mdi-basketball-hoop-outline', text: 'NBA'},
-                { icon: 'mdi-football', text: 'NFL'},
-                { icon: 'mdi-baseball-bat', text: 'MLB'},
-                { icon: 'mdi-football-helmet', text: 'NCAAF'},
-                { icon: 'mdi-soccer', text: 'Soccer'},
-                { icon: 'mdi-mixed-martial-arts', text: 'MMA'},
-                { icon: 'mdi-tennis', text: 'Tennis'}
+                { icon: 'mdi-basketball-hoop-outline', text: 'Basketball', route: '/articles/sports/1'},
+                { icon: 'mdi-football', text: 'American Football', route: '/articles/sports/2'},
+                { icon: 'mdi-baseball-bat', text: 'Baseball', route: '/articles/sports/3'},
+                { icon: 'mdi-football-helmet', text: 'NCAAF', route: '/articles//sports/4'},
+                { icon: 'mdi-soccer', text: 'Soccer', route: '/articles/sports/5'},
+                { icon: 'mdi-mixed-martial-arts', text: 'MMA', route: '/articles/sports/6'},
+                { icon: 'mdi-tennis', text: 'Tennis', route: '/articles/sports/7'}
             ],
             sports:[],
             leagues:[]
@@ -61,15 +61,16 @@ export default {
         },
         onSidebarItemClick(index, name){
             //name : league name or sport name
-            //NBA, NFL, MLB, NCAAF -> leagues
-            //soccer, MMA, tennis -> sports
+            //NCAAF -> leagues
+            //Basketball, Baseball, American Football, soccer, MMA, tennis -> sports
             
-            if(index > 3){ //karena index ke 4, 5 6 itu termasuk sport
+            if(index == 3){ //karena index ke 4, 5 6 itu termasuk sport
                 var i = 0;
-                while(i < this.sports.length){
-                    if(name == this.sports[i].name){
-                        if (this.$route.path !== '/articles/sport/'+this.sports[i].id_sport){
-                            this.$router.push('/articles/sport/'+this.sports[i].id_sport)
+                while(i < this.leagues.length){
+                    if(name == this.leagues[i].name){
+                        if (this.$route.path !== '/articles/league/'+this.leagues[i].id_league){
+                            this.$router.push('/articles/league/'+this.leagues[i].id_league)
+                            this.$router.go()
                         }
                     }
                     i++
@@ -77,10 +78,11 @@ export default {
             }
             else{
                 var i = 0;
-                while(i < this.leagues.length){
-                    if(name == this.leagues[i].name){
-                        if (this.$route.path !== '/articles/league/'+this.leagues[i].id_league){
-                            this.$router.push('/articles/league/'+this.leagues[i].id_league)
+                while(i < this.sports.length){
+                    if(name == this.sports[i].name){
+                        if (this.$route.path !== '/articles/sport/'+this.sports[i].id_sport){
+                            this.$router.push('/articles/sport/'+this.sports[i].id_sport)
+                            this.$router.go()
                         }
                     }
                     i++

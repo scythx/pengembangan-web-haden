@@ -11,7 +11,7 @@
                 v-for="(article, id) in articles_league"
                 :key="id"
                 ripple
-                @click="onArticleClick"
+                @click="onArticleClick(article.id_article)"
                 class="tile"
                 dense
                 style="margin-bottom:1%"
@@ -47,8 +47,11 @@ export default {
         }
     },
     methods:{
-        onArticleClick(){
-            
+        onArticleClick(id){
+            if (this.$route.path !== '/article/'+id){
+                this.$router.push('/article/'+id)
+                this.$router.go()
+            }
         }
     },
     mounted() {
