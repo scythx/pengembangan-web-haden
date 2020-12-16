@@ -1,19 +1,24 @@
 <template>
     <div>
-        <NewsDetail :id_article="this.id_article"/>
+        <NewsHeader />
+        <NewsDetail />
         <Newsletter />
+        <Footer />
     </div>
 </template>
 
 <script>
+import NewsHeader from '@/components/NewsHeader'
 import NewsDetail from '@/components/NewsDetail'
 import Newsletter from '@/components/Newsletter'
+import Footer from '@/components/Footer'
 
 export default {
-    props:['id_article'],
     components: {
+        NewsHeader,
         NewsDetail,
-        Newsletter
+        Newsletter,
+        Footer
     }
 }
 </script>

@@ -27,5 +27,4 @@ export default {
 .newsletter {
     background-color: #222831;
 }
-
 </style>
