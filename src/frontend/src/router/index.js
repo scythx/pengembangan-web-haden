@@ -10,6 +10,7 @@ import MainPage from '../views/MainPage.vue'
 import MainPageComponent from '../components/MainPage.vue'
 import ArticlesLeague from '../components/ArticlesLeague.vue'
 import ArticlesSport from '../components/ArticlesSport.vue'
+import NewsPage from '../views/NewsPage.vue'
 
 Vue.use(VueRouter)
 
@@ -85,6 +86,11 @@ const routes = [
     component: () => import(
       /* webpackChunkName: "register" */
       '../views/Register.vue')
+  },
+  {
+    path: '/article/:id',
+    name: 'news_page',
+    component: NewsPage
   }
 ]
 
