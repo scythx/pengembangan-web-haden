@@ -8,7 +8,8 @@ import CategoriesPage from '../components/CategoriesPage.vue'
 import Stats from '../components/Dashboard.vue'
 import MainPage from '../views/MainPage.vue'
 import MainPageComponent from '../components/MainPage.vue'
-import ThumbnailDetail from '../components/ThumbnailDetail'
+import ArticlesLeague from '../components/ArticlesLeague.vue'
+import ArticlesSport from '../components/ArticlesSport.vue'
 
 Vue.use(VueRouter)
 
@@ -61,8 +62,14 @@ const routes = [
       },
       {
         path: 'articles/league/:id_league',
-        name: 'thumbnail_detail',
-        component: ThumbnailDetail,
+        name: 'league_articles',
+        component: ArticlesLeague,
+        props: true
+      },
+      {
+        path: 'articles/sport/:id_sport',
+        name: 'sport_articles',
+        component: ArticlesSport,
         props: true
       }
     ]

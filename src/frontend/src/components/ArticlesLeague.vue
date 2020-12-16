@@ -37,7 +37,7 @@
 import http from "@/http"
 
 export default {
-    name:'ThumbnailDetail',
+    name:'ArticlesLeague',
     props:['id_league'],
     data(){
         return{
