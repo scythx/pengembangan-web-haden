@@ -61,15 +61,16 @@ export default {
         },
         onSidebarItemClick(index, name){
             //name : league name or sport name
-            //NBA, NFL, MLB, NCAAF -> leagues
-            //soccer, MMA, tennis -> sports
+            //NCAAF -> leagues
+            //Basketball, Baseball, American Football, soccer, MMA, tennis -> sports
             
-            if(index > 3){ //karena index ke 4, 5 6 itu termasuk sport
+            if(index == 3){ //karena index ke 4, 5 6 itu termasuk sport
                 var i = 0;
-                while(i < this.sports.length){
-                    if(name == this.sports[i].name){
-                        if (this.$route.path !== '/articles/sport/'+this.sports[i].id_sport){
-                            this.$router.push('/articles/sport/'+this.sports[i].id_sport)
+                while(i < this.leagues.length){
+                    if(name == this.leagues[i].name){
+                        if (this.$route.path !== '/articles/league/'+this.leagues[i].id_league){
+                            this.$router.push('/articles/league/'+this.leagues[i].id_league)
+                            this.$router.go()
                         }
                     }
                     i++
@@ -77,10 +78,11 @@ export default {
             }
             else{
                 var i = 0;
-                while(i < this.leagues.length){
-                    if(name == this.leagues[i].name){
-                        if (this.$route.path !== '/articles/league/'+this.leagues[i].id_league){
-                            this.$router.push('/articles/league/'+this.leagues[i].id_league)
+                while(i < this.sports.length){
+                    if(name == this.sports[i].name){
+                        if (this.$route.path !== '/articles/sport/'+this.sports[i].id_sport){
+                            this.$router.push('/articles/sport/'+this.sports[i].id_sport)
+                            this.$router.go()
                         }
                     }
                     i++

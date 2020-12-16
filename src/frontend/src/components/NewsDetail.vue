@@ -19,43 +19,39 @@
                     src="https://picsum.photos/id/11/500/300">
                 </v-img>
                 <v-col class="text-left my-auto mx-3 amber--text accent-3">
-                   Hello
+                   {{article.author}}
                 </v-col>
                 <v-spacer></v-spacer>
                 <v-col class="text-right my-auto mx-3 amber--text accent-3">
-                    dd/mm/yy
+                    {{article.date_published.substring(0,10)}}
                 </v-col>
             </v-row>
         </v-container>
         <v-container class="white--text">
-            {{ article.text }}
+            {{ article.content }}
         </v-container>
     </div>
 </template>
 
 <script>
-import axios from 'axios'
+import http from "@/http"
 
 export default {
     name: 'NewsDetail',
+    props:['id_article'],
     data() {
         return {
-            newsId: 1,
-            article: {
-                title: "Lorem ipsum dolor sit amet",
-                text: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed urna magna, finibus vitae efficitur quis, sagittis ac metus. Aliquam tincidunt eget lorem et consectetur. Suspendisse ut lacus dui. Nullam sed malesuada eros. Praesent hendrerit at quam at dictum. Sed non efficitur leo. Aliquam placerat elit vitae purus sagittis, sit amet suscipit velit fringilla. Etiam sodales elit vel ornare eleifend. Suspendisse potenti. Ut non turpis sed urna porttitor tincidunt. Vivamus sit amet eros fermentum arcu ultrices auctor vitae in ante. Nam sapien nisl, ullamcorper eu ante a, consequat bibendum libero. Pellentesque eu sapien efficitur sem aliquet consequat a eu velit. Nullam a orci risus. Nulla tempus lorem sed sapien dapibus tempus. Aliquam erat volutpat."
-            }
+            article: {}
         }
     },
     methods: {
-        async load() {
-            const response = await axios.get('/articles/' + newsId)
-            this.article = response.data
-            console.log(this.article)
-        }
     },
     async mounted() {
-        this.load()
+        http.get('/articles/' + this.id_article)
+        .then((response) => {
+            const articles = response['data']
+            this.article = articles[0]
+        })
     }
 }
 

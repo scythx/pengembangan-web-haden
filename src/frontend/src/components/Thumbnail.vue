@@ -46,7 +46,7 @@
         <span id="lihatsemua" class="font-weight-light"
         :style="$vuetify.breakpoint.lg ? 'font-size:1vw' : 'font-size:2vw'">Lihat Semua</span>
         </v-btn>
-        <hr>
+        <hr v-if="index < 2">
         </v-list>
     </div>
   </div>
@@ -77,10 +77,17 @@ export default {
       }
     },
     onArticleClick(id){
+      if (this.$route.path !== '/article/'+id){
+        this.$router.push('/article/'+id)
+        this.$router.go()
+      }
     },
     onLihatSemuaClick(id){
-      if (this.$route.path !== '/articles/league/'+id)
+      if (this.$route.path !== '/articles/league/'+id){
         this.$router.push('/articles/league/'+id)
+        this.$router.go()
+      }
+        
     }
   },
   mounted(){
