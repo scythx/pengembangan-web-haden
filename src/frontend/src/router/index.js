@@ -73,8 +73,19 @@ const routes = [
         props: true
       }
     ]
+  },
+  {
+    path: '/login',
+    component: () => import(
+      /* webpackChunkName: "login" */
+      '../views/Login.vue')
+  },
+  {
+    path: '/register',
+    component: () => import(
+      /* webpackChunkName: "register" */
+      '../views/Register.vue')
   }
-
 ]
 
 const router = new VueRouter({
