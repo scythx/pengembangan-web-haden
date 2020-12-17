@@ -115,7 +115,11 @@ CREATE TABLE IF NOT EXISTS user_fav_team(
     id_fav_team bigserial NOT NULL,
     user_id integer NOT NULL,
     team_id integer NOT NULL,
-    CONSTRAINT user_fav_team_pkey PRIMARY KEY (id_fav_team)
+    CONSTRAINT user_fav_team_pkey PRIMARY KEY (id_fav_team));
+
+CREATE TABLE IF NOT EXISTS newsletter_subscribers (
+  email VARCHAR(320) NOT NULL,
+  PRIMARY KEY (email)
 );
 
 INSERT INTO
