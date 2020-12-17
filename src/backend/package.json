@@ -7,6 +7,8 @@
     "bcrypt": "^5.0.0",
     "connect-history-api-fallback": "^1.6.0",
     "cors": "^2.8.5",
+    "db-migrate": "^0.11.11",
+    "db-migrate-pg": "^1.2.2",
     "express": "^4.17.1",
     "express-session": "^1.17.1",
     "lodash": "^4.17.20",
