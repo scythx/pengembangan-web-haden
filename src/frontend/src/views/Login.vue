@@ -36,7 +36,7 @@
           :loading="loginBtn.loading"
           @click="login({email, password})">Masuk</v-btn>
         <v-divider dark></v-divider>
-        <p class="text-center white--text caption">Belum punya akun? <a href="">Daftar di sini.</a> </p>
+        <p class="text-center white--text caption">Belum punya akun? <a @click="onRegisterClick">Daftar di sini.</a> </p>
       </v-form>
     </v-container>
   </div>
@@ -72,6 +72,9 @@
        this
          .$store
          .dispatch('authentication/login', {email, password})
+     },
+     onRegisterClick() {
+       this.$router.push({path: '/register'})
      }
    },
    watch: {
@@ -83,8 +86,20 @@
        }
      },
      identity (newValue, oldValue) {
-       if (newValue !== undefined)
-         this.$router.replace({path: this.$route.query.redirect || '/'})
+       if (newValue === undefined)
+         return
+
+       this
+         .$http
+         .get(`/users/${newValue['id']}/is_writer`)
+         .then((res) => {
+           if (res.data == true) {
+             this.$router.replace({path: '/dashboard'})
+           }
+           else {
+             this.$router.replace({path: this.$route.query.redirect || '/'})
+           }
+         })
      }
    }
  }

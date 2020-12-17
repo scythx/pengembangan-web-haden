@@ -30,7 +30,7 @@ const module = {
           commit('SET_AUTHENTICATING', false)
         })
     },
-    logout (context) {
+    logout ({commit}) {
       http.delete('/sessions')
 
       commit('SET_IDENTITY', undefined)

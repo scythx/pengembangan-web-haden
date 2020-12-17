@@ -69,3 +69,17 @@ export async function updateOne(userId, fullname, email, password, isSubsribed, 
 export async function deleteOne(userId) {
     db.query(`DELETE FROM ${TABLE_NAME} WHERE id_user = $1;`, [userId])
 }
+
+export const isWriter = async (userId) => {
+  const user = await
+    db
+      .query(`SELECT
+                *
+              FROM
+                ${TABLE_NAME}
+              WHERE
+                id_user = $1;`,
+              [userId])
+
+  return user.rows[0]['is_writer']
+}
