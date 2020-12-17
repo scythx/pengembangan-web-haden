@@ -350,6 +350,10 @@ app.get('/api/users/:id/', async (req, res) => {
     res.send(await user.rows)
 })
 
+app.get('/api/users/:id/is_writer', async (req, res) => {
+  res.send(await userStorage.isWriter(req.params.id) || false)
+})
+
 app.post('/api/users/', async (req, res) => {
     const fullname = req.body.fullname
     const email = req.body.email

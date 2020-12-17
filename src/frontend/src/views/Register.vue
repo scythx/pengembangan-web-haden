@@ -66,7 +66,7 @@
            email,
            password,
            "is_subscribed_newsletter": false,
-           "is_writer": true
+           "is_writer": false
          })
          .then((response) => {
            //
