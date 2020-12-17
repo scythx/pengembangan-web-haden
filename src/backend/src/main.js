@@ -15,6 +15,7 @@ import * as sequence from './db-sequence'
 import * as favSportStorage from './userfavoritesport-storage'
 import * as favLeagueStorage from './userfavoriteleague-storage'
 import * as favTeamStorage from './userfavoriteteam-storage'
+import * as newsletterSubscribers from './model/newsletter-subscribers'
 
 const history = require('connect-history-api-fallback')
 const app = express()
@@ -364,6 +365,10 @@ app.post('/api/users/', async (req, res) => {
     const isSubscirbedNewsletter = req.body.is_subscribed_newsletter
     const isWriter = req.body.is_writer
 
+    if (isWriter == true) {
+        await newsletterSubscribers.insert({email: email})
+    }
+
     await userStorage.createOne(fullname, email, password, isSubscirbedNewsletter, isWriter)
     res.status(201).send()
 })
@@ -552,6 +557,16 @@ app.delete('/api/sessions', async (req, res) => {
 
 app.get('/api/ping', async(req, res) => {
   res.json(req.session.identity)
+})
+
+app.post('/api/newsletter_subscribers', async (req, res) => {
+  await newsletterSubscribers.insert({email: req.body.email})
+  res.end()
+})
+
+app.post('/api/actions/broadcast', async (req, res) => {
+  await newsletterSubscribers.broadcast()
+  res.end()
 })
 
 app.start = async () => {

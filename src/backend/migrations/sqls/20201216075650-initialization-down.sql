@@ -1,1 +1,23 @@
-/* Replace with your SQL commands */
+DROP SEQUENCE IF EXISTS "articleId_sequence";
+
+DROP SEQUENCE IF EXISTS "leagueId_sequence";
+
+DROP SEQUENCE IF EXISTS "sportId_sequence";
+
+DROP SEQUENCE IF EXISTS "teamId_sequence";
+
+DROP TABLE IF EXISTS article;
+
+DROP TABLE IF EXISTS match;
+
+DROP TABLE IF EXISTS team;
+
+DROP TABLE IF EXISTS league;
+
+DROP TABLE IF EXISTS sport;
+
+DROP TABLE IF EXISTS images;
+
+DROP TABLE IF EXISTS users;
+
+DROP TABLE IF EXISTS newsletter_subscribers;
