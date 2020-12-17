@@ -9,7 +9,7 @@
       <h1 id="title" class="h1 font-weight-light"
       :style="$vuetify.breakpoint.lg ? 'font-size:3vw' : 'font-size:5vw'">Top Headlines</h1>
       <v-list-item
-            v-for="(item, index) in topheadline.slice(0,5)"
+            v-for="(item, index) in articles.slice(0,5)"
             :key="index"
             ripple
             @click="onArticleClick(item.id_article)"
@@ -24,12 +24,13 @@
                 :style="$vuetify.breakpoint.lg ? 'font-size:1.5vw' : 'font-size:2.5vw'">
               </h1>
           </v-list-item-content>
+           <!--Temporary disable until ckeditor adapter finished src="images[index].url" -->
           <v-img
-              :src="images[index].url"
+              src="https://picsum.photos/id/11/500/300"
               style="margin-left:1%"
-              :max-width="$vuetify.breakpoint.lg ? '30%' : '40%'"
-          >
+              :max-width="$vuetify.breakpoint.lg ? '30%' : '40%'" >
           </v-img>
+
         </v-list-item>
         <hr>
     </v-list>
@@ -37,16 +38,13 @@
 </template>
 
 <script>
-import http from "@/http"
+ import http from "@/http"
 
-export default {
-  name: 'Topheadline',
-  components: {},
+ export default {
+  props: ["articles"],
   data(){
       return{
-        articles: [],
-        topheadline:[],
-        images:[],
+//        images:[],
         attrs: {
           boilerplate: true,
           elevation: 2,
@@ -62,22 +60,10 @@ export default {
     }
   },
   mounted(){
-    http.get('/articles')
-      .then((response) => {
-        this.articles = response['data']
-        var i = 0
-        while(i < this.articles.length){
-          if(this.articles[i].is_headline){
-            this.topheadline.push(this.articles[i])
-          }
-          i++;
-        }
-    })
-
-    http.get('/images')
-      .then((response) => {
-        this.images = response['data']
-    })
+//    http.get('/images')
+//      .then((response) => {
+//        this.images = response['data']
+//    })
   }
 }
 </script>
