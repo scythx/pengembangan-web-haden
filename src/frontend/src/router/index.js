@@ -92,13 +92,7 @@ const routes = [
     component: () => import(
       /* webpackChunkName: "register" */
       '../views/Register.vue')
-  },
-  {
-    path: '/article/:id',
-    name: 'news_page',
-    component: NewsPage
   }
-
 ]
 
 const router = new VueRouter({
