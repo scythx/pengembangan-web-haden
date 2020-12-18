@@ -11,7 +11,6 @@ import * as userStorage from './user-storage'
 import * as sportStorage from './sport-storage'
 import * as leagueStorage from './league-storage'
 import * as teamStorage from './team'
-import * as sequence from './db-sequence'
 
 const history = require('connect-history-api-fallback')
 const app = express()
@@ -246,7 +245,7 @@ app.put('/api/leagues-sport/', async (req, res) => {
     res.status(200).send()
 })
 
-app.get('/api/articles', function (req, res, next) {
+app.get('/api/articles', function (req, res) {
     db.query(`SELECT * FROM article`,
                 function (err, result) {
         if (err) {
@@ -257,7 +256,7 @@ app.get('/api/articles', function (req, res, next) {
     });
 });
 
-app.get('/api/articles/:articleId', function (req, res, next) {
+app.get('/api/articles/:articleId', function (req, res) {
     db.query(`SELECT * FROM public.article WHERE id_article = ${req.params.articleId}`,
                 function (err, result) {
         if (err) {
@@ -268,7 +267,7 @@ app.get('/api/articles/:articleId', function (req, res, next) {
     });
 });
 
-app.get('/api/articles/sports/:sport', function (req, res, next) {
+app.get('/api/articles/sports/:sport', function (req, res) {
     db.query(`SELECT * FROM public.article WHERE id_sport = ${req.params.sport}`,
                 function (err, result) {
         if (err) {
@@ -279,7 +278,7 @@ app.get('/api/articles/sports/:sport', function (req, res, next) {
     });
 });
 
-app.get('/api/articles/leagues/:league', function (req, res, next) {
+app.get('/api/articles/leagues/:league', function (req, res) {
     db.query(`SELECT * FROM public.article WHERE id_league = ${req.params.league}`,
                 function (err, result) {
         if (err) {
@@ -290,7 +289,7 @@ app.get('/api/articles/leagues/:league', function (req, res, next) {
     });
 });
 
-app.get('/api/articles/teams/:team', function (req, res, next) {
+app.get('/api/articles/teams/:team', function (req, res) {
     db.query(`SELECT * FROM public.article WHERE id_team = ${req.params.team}`,
                 function (err, result) {
         if (err) {
@@ -301,12 +300,12 @@ app.get('/api/articles/teams/:team', function (req, res, next) {
     });
 });
 
-app.post('/api/articles/', function(req, res, next) {
+app.post('/api/articles/', function(req, res) {
     db.query(`INSERT INTO article(
-        title, content, date_published, is_headline)
-        VALUES ($1, $2, NOW(), $3);`,
-        [req.body.title, req.body.content, req.body.is_headline],
-        function (err, result) {
+        thumbnail, title, id_author, content, date_published, is_headline, id_sport, id_league, id_team)
+        VALUES ($1, $2, $3, $4, NOW(), $5, $6, $7, $8);`,
+        [req.body.thumbnail, req.body.title, req.body.id_author, req.body.content, req.body.is_headline, req.body.id_sport, req.body.id_league, req.body.id_team],
+        function (err) {
         if (err) {
             console.log(err);
             res.status(400).send(err);
@@ -316,10 +315,10 @@ app.post('/api/articles/', function(req, res, next) {
 });
 
 app.put('/api/articles/:articleId', function(req, res, next) {
-    db.query(`UPDATE public.article SET title=${req.body.title}, content=${req.body.content}, date_published=${req.body.date},
+    db.query(`UPDATE public.article SET thumbnail=${req.body.thumbnail}, title=${req.body.title}, id_author=${req.body.id_author}, content=${req.body.content}, date_published=${req.body.date},
                 is_headline=${req.body.is_headline}, id_sport=${req.body.id_sport}, id_league=${req.body.id_league}, id_team=${req.body.id_team}
 	            WHERE id_article=${req.params.articleId};`,
-                function (err, result) {
+                function (err) {
         if (err) {
             console.log(err);
             res.status(400).send(err);
@@ -330,7 +329,7 @@ app.put('/api/articles/:articleId', function(req, res, next) {
 
 app.delete('/api/articles/:articleId', function(req, res, next) {
     db.query(`DELETE FROM article WHERE id_article=${req.params.articleId}`,
-        function (err, result) {
+        function (err) {
         if (err) {
             console.log(err);
             res.status(400).send(err);
@@ -468,7 +467,6 @@ app.start = async () => {
         await teamStorage.createTable()
         await matchesStorage.createTable()
         await articleStorage.createTable()
-        //await sequence.createSequence()
 
         const server = app.listen(port, () => {
             console.log(`app listening at http://localhost:${port}`)
