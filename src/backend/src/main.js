@@ -457,6 +457,10 @@ app.post('/api/fav-sports/', async (req, res) => {
 })
 
 //DELETE FAV-SPORT (TESTED)
+app.delete('/api/fav-sports/:id_fav', async (req, res) => {
+    await favSportStorage.deleteOne(req.params.id_fav)
+    res.status(200).send()
+});
 app.delete('/api/fav-sports/', async (req, res) => {
     const id_user = req.body.id_user
     const id_sport = req.body.id_sport
@@ -487,6 +491,10 @@ app.post('/api/fav-leagues/', async (req, res) => {
 })
 
 //DELETE FAV-LEAGUE (TESTED)
+app.delete('/api/fav-leagues/:id_fav', async (req, res) => {
+    await favLeagueStorage.deleteOne(req.params.id_fav)
+    res.status(200).send()
+});
 app.delete('/api/fav-leagues/', async (req, res) => {
     const id_user = req.body.id_user
     const id_league = req.body.id_league
@@ -507,7 +515,7 @@ app.get('/api/fav-teams/:user_id/', async (req, res) => {
     res.send(await favTeams.rows)
 })
 
-//CREATE FAV-SPORT (TESTED)
+//CREATE FAV-TEAM (TESTED)
 app.post('/api/fav-teams/', async (req, res) => {
     const id_user = req.body.id_user
     const id_team = req.body.id_team
@@ -515,7 +523,11 @@ app.post('/api/fav-teams/', async (req, res) => {
     res.status(201).send()
 })
 
-//DELETE FAV-SPORT (TESTED)
+//DELETE FAV-TEAM (TESTED)
+app.delete('/api/fav-teams/:id_fav', async (req, res) => {
+    await favTeamStorage.deleteOne(req.params.id_fav)
+    res.status(200).send()
+});
 app.delete('/api/fav-teams/', async (req, res) => {
     const id_user = req.body.id_user
     const id_team = req.body.id_team
