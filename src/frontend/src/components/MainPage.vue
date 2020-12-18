@@ -1,9 +1,6 @@
 <template>
  <div>
-   <UserArticle
-     :title="firstTopHeadline.title"
-     description="Lorem ipsum dolor sit amet consectetur adipisicing elit. Unde ipsa nemo laborum?"
-     src="https://picsum.photos/id/11/500/300"/>
+   <UserArticle :article="firstTopHeadline" />
    <Topheadline
      :articles="restTopHeadline"/>
    <Thumbnail/>
@@ -25,7 +22,7 @@
      Newsletter
    },
    data: () => ({
-     articles: []
+     articles: [],
    }),
    computed: {
      topHeadline: function () {
