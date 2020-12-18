@@ -1,103 +1,64 @@
 <template>
-    <div class="news-detail black-base">
-        <!--  top conatiner -->
-        <section id="#top-container" class="py-3">
-            <h1 class="news-heading gray-text my-5">{{ article.title }}</h1>
-            <img class="news-image my-5" src="http://placehold.it/950x500?text=News Image" alt="">
-        </section>
-
-        <!-- news author and timestamp -->
-        <section id="#author">
-            <div class="container my-3">
-                <div class="row">
-                    <div class="news-author col-6 ">
-                        <img class="author-profile" src="http://placehold.it/50x50?text=Auth" alt="">
-                        <p class="author-name px-3 amber--text accent-3">Auth<!-- {{ article.author }} --></p>
-                    </div>
-                    <v-spacer></v-spacer>
-                    <p class="news-date white--text">{{ article.date_published }}</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- news text -->
-        <section class="news-text py-3">
-            <p class="main-content grey--text lighten-4">{{ article.content }}</p>
-        </section>
-
+    <div class="news-detail black-base p-3">
+        <v-container>
+            <h1 class="news-heading white--text my-3">{{ article.title }}</h1>
+            <v-img
+                contain
+                lazy-src="https://picsum.photos/id/11/10/6"
+                max-height="400"
+                src="https://picsum.photos/id/11/500/300"
+                class="img-fluid"
+            ></v-img>
+        </v-container>
+        <v-container>
+            <v-row no-gutters>
+                <v-img class="rounded-circle d-inline-block"
+                    max-width="50"
+                    max-height="50"
+                    :aspect-ratio="1/1"
+                    src="https://picsum.photos/id/11/500/300">
+                </v-img>
+                <v-col class="text-left my-auto mx-3 amber--text accent-3">
+                   {{article.author}}
+                </v-col>
+                <v-spacer></v-spacer>
+                <v-col class="text-right my-auto mx-3 amber--text accent-3">
+                    {{article.date_published.substring(0,10)}}
+                </v-col>
+            </v-row>
+        </v-container>
+        <v-container class="white--text">
+            {{ article.content }}
+        </v-container>
     </div>
 </template>
 
 <script>
-import axios from 'axios'
+import http from "@/http"
+
 export default {
     name: 'NewsDetail',
+    props:['id_article'],
     data() {
         return {
-            newsId: 1,
             article: {}
         }
     },
     methods: {
-        async load() {
-            const response = await axios.get('/articles/' + newsId)
-            this.article = response.data
-            console.log(this.article)
-        }
     },
     async mounted() {
-        this.load()
+        http.get('/articles/' + this.id_article)
+        .then((response) => {
+            const articles = response['data']
+            this.article = articles[0]
+        })
     }
 }
 
 </script>
 
 <style scoped>
-    section {
-        padding: 0% 10%;
-    }
-
     .black-base {
-        background-color: #222831;
+        background-color: #222831;    
     }
-
-    .news-date {
-        text-align: right;
-    } 
-
-    .news-detail {
-        padding: 0 10%;
-    }
-
-    .news-image {
-        width: 100%;
-        margin: 0 auto;
-        display: block;
-    }
-
-    .author-name {
-        display: inline-block;
-        vertical-align: middle
-    }
-
-    .author-profile {
-        border-radius: 50%;
-        padding: 3%;
-        display: inline-block;
-        vertical-align: middle
-    }
-
-    .main-content {
-        font-family: serif;
-        font-weight: lighter;
-        font-size: 1.20rem;
-    }
-
-    .news-heading {
-        /* font family */
-        font-family: Arial, Helvetica, sans-serif;
-        font-weight: 500;
-        font-size: 2.5rem;
-    }
-
 </style>

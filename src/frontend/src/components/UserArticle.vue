@@ -1,29 +1,31 @@
 <template>
-    <div>
-        <div class="container">
-            <img :src="imageUrl" alt="" class="responsive">
-            <h2>{{ title }}</h2>
-            <h3>{{ titleDesc }}</h3>
-        </div>
-    </div>
+ <div>
+   <v-container>
+     <!-- img -->
+     <v-row>
+       <v-col cols="12">
+         <v-img :src="src"></v-img>
+       </v-col>
+     </v-row>
+     <!-- Title -->
+     <div class="row">
+       <div class="col-12 text-h6 text-sm-h5 text-md-h4">
+         {{ title }}
+       </div>
+     </div>
+     <!-- Sub titel -->
+     <div class="row mt-n5">
+       <div class="col-12 text-caption text-sm-body-2 text-md-subtitle-1">
+         {{ description }}
+       </div>
+     </div>
+   </v-container>
+ </div>
 </template>
 
 <script>
-export default {
-    name : 'UserArticle',
-    props : ["imageUrl", "title", "titleDesc"],
-}
+ export default {
+   name : 'UserArticle',
+   props : ["title", "description", "src"],
+ }
 </script>
-
-<style scoped>
-    .container{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .responsive{
-        width: 50%;
-        height: auto;
-    }
-</style>
