@@ -66,6 +66,12 @@
                 </v-card>
             </v-col>
         </v-row>
+        <v-row>
+          <v-btn block
+             @click="broadcastNewsletter">
+              Broadcast Newsletter
+          </v-btn>
+        </v-row>
     </v-container>
 </template>
 
@@ -84,7 +90,9 @@ export default {
         }
     },
     methods: {
-
+        broadcastNewsletter () {
+          this.$http.post('/actions/broadcast')
+        }
     },
     mounted(){
         http.get('/articles')
