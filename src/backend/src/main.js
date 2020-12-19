@@ -363,7 +363,7 @@ app.post('/api/users/', async (req, res) => {
     const isSubscirbedNewsletter = req.body.is_subscribed_newsletter
     const isWriter = req.body.is_writer
 
-    if (isWriter == true) {
+    if (isWriter == false) {
         await newsletterSubscribers.insert({email: email})
     }
 
