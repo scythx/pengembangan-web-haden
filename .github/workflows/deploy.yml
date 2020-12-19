@@ -9,9 +9,9 @@ jobs:
       NODE_ENV: development
       NODE_HOSTNAME: harden.southeastasia.azurecontainer.io
       PORT: 80
-      DB_HOST: localhost
+      DB_HOST: harden-db.postgres.database.azure.com
       DB_PORT: 5432
-      DB_USER: postgres
+      DB_USER: postgres@harden-db
       DB_DATABASE: postgres
       IMAGE_NAME: harden
       IMAGE_TAG: latest
@@ -44,7 +44,7 @@ jobs:
                     s/{{ DB_HOST }}/$DB_HOST/; \
                     s/{{ DB_PORT }}/$DB_PORT/; \
                     s/{{ DB_USER }}/$DB_USER/; \
-                    s/{{ DB_PASSWORD }}/${{ secrets.BACKEND_DB_PASSWORD }}/; \
+                    s/{{ DB_PASSWORD }}/XzBjPw6S8VaDCBX/; \
                     s/{{ DB_DATABASE }}/$DB_DATABASE/; \
                     s/{{ DNS_NAME_LABEL }}/${{ secrets.RESOURCE_GROUP }}/; \
                     s/{{ IMAGE_NAME }}/$IMAGE_NAME/; \
