@@ -115,19 +115,31 @@ export default {
         if (this.active_id > -1) {
             //Edit
             http.put(`/sports/${this.active_id}`, {
-			    'name' : this.editedItem.name
-		    })
+			        'name' : this.editedItem.name
+            })
+            
+            //send event to google analytics
+            this.$gtag.event('edit_sport', {
+              'event_category' : 'Admin',
+              'event_label' : 'Edit existing sport'
+            })
         } 
         else {
             //CREATE
             try{
-			http.post('/sports/', {
-				'name' : this.editedItem.name
-			})
-		    }
-		    catch(err){
-			console.log(err)
-		    }
+			        http.post('/sports/', {
+				        'name' : this.editedItem.name
+              })
+              
+              //send event to google analytics
+                this.$gtag.event('add_sport', {
+                  'event_category' : 'Admin',
+                  'event_label' : 'Add new sport'
+                })
+		        }
+		        catch(err){
+			        console.log(err)
+		        }
         }
         this.close()
         window.location.reload()
@@ -161,6 +173,12 @@ export default {
         http.delete(`sports/${this.active_id}`)
         this.dialogDelete = false
         window.location.reload()
+
+        //send event to google analytics
+        this.$gtag.event('delete_sport', {
+            'event_category' : 'Admin',
+            'event_label' : 'Delete existing sport'
+        })
 	}
 }
 

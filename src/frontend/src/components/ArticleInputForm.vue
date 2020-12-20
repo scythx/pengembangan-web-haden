@@ -105,6 +105,13 @@ export default {
         this.article.content = "";
         this.article.is_header = false;
       });
+
+      //send event to google analytics
+      this.$gtag.event('add_article', {
+        'event_category' : 'Admin',
+        'event_label' : 'Add new article',
+        'value' : 1
+      })
     },
     onEditorInput(data, event, editor) {
       this.article.title = editor.plugins.get("Title").getTitle();

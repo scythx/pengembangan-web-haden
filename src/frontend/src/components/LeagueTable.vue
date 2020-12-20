@@ -140,7 +140,13 @@ export default {
                     'sportId' : this.editedItem.sport_id,
                     'name' : this.editedItem.name,
                     'country' : this.editedItem.country
-			    })
+                })
+                
+                //send event to google analytics
+                this.$gtag.event('edit_league', {
+                  'event_category' : 'Admin',
+                  'event_label' : 'Edit existing league'
+                })
             }
             catch(err){
                 console.log(err)
@@ -154,7 +160,13 @@ export default {
                     'name' : this.editedItem.name,
                     'sportId' : this.editedItem.sport_id,
                     'country' : this.editedItem.country
-			    })
+                })
+                
+                //send event to google analytics
+                this.$gtag.event('add_league', {
+                  'event_category' : 'Admin',
+                  'event_label' : 'Add new league'
+                })
             }
             catch(err){
                 console.log(err)
@@ -187,6 +199,12 @@ export default {
             http.delete(`leagues/${this.active_id}`)
             this.dialogDelete = false
             window.location.reload()
+
+            //send event to google analytics
+            this.$gtag.event('delete_league', {
+              'event_category' : 'Admin',
+              'event_label' : 'Delete existing league'
+            })
         }
     }
 }
