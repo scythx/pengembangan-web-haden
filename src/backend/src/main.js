@@ -76,7 +76,6 @@ app.post('/api/images', async (request, response) => {
     const filename = request.body['name']
     const extension = path.extname(filename)
     const name = path.basename(filename, extension)
-
     response.status(200)
             .json(await imageStorage.insert({
         'name': name,
@@ -249,8 +248,11 @@ app.put('/api/leagues-sport/', async (req, res) => {
 })
 
 app.get('/api/articles', function (req, res) {
-    db.query(`SELECT * FROM article`,
-                function (err, result) {
+    db.query(`SELECT article.*, users.fullname
+                FROM article
+                LEFT JOIN users
+                ON id_author = id_user`,
+        function (err, result) {
         if (err) {
             console.log(err);
             res.status(400).send(err);
@@ -260,7 +262,7 @@ app.get('/api/articles', function (req, res) {
 });
 
 app.get('/api/articles/:articleId', function (req, res) {
-    db.query(`SELECT * FROM public.article WHERE id_article = ${req.params.articleId}`,
+    db.query(`SELECT * FROM article WHERE id_article = ${req.params.articleId}`,
                 function (err, result) {
         if (err) {
             console.log(err);
@@ -271,7 +273,7 @@ app.get('/api/articles/:articleId', function (req, res) {
 });
 
 app.get('/api/articles/sports/:sport', function (req, res) {
-    db.query(`SELECT * FROM public.article WHERE id_sport = ${req.params.sport}`,
+    db.query(`SELECT * FROM article WHERE id_sport = ${req.params.sport}`,
                 function (err, result) {
         if (err) {
             console.log(err);
@@ -282,7 +284,7 @@ app.get('/api/articles/sports/:sport', function (req, res) {
 });
 
 app.get('/api/articles/leagues/:league', function (req, res) {
-    db.query(`SELECT * FROM public.article WHERE id_league = ${req.params.league}`,
+    db.query(`SELECT * FROM article WHERE id_league = ${req.params.league}`,
                 function (err, result) {
         if (err) {
             console.log(err);
@@ -293,7 +295,7 @@ app.get('/api/articles/leagues/:league', function (req, res) {
 });
 
 app.get('/api/articles/teams/:team', function (req, res) {
-    db.query(`SELECT * FROM public.article WHERE id_team = ${req.params.team}`,
+    db.query(`SELECT * FROM article WHERE id_team = ${req.params.team}`,
                 function (err, result) {
         if (err) {
             console.log(err);
@@ -318,7 +320,7 @@ app.post('/api/articles/', function(req, res) {
 });
 
 app.put('/api/articles/:articleId', function(req, res, next) {
-    db.query(`UPDATE public.article SET thumbnail=${req.body.thumbnail}, title=${req.body.title}, id_author=${req.body.id_author}, content=${req.body.content}, date_published=${req.body.date},
+    db.query(`UPDATE article SET thumbnail=${req.body.thumbnail}, title=${req.body.title}, id_author=${req.body.id_author}, content=${req.body.content}, date_published=${req.body.date},
                 is_headline=${req.body.is_headline}, id_sport=${req.body.id_sport}, id_league=${req.body.id_league}, id_team=${req.body.id_team}
 	            WHERE id_article=${req.params.articleId};`,
                 function (err) {

@@ -8,7 +8,7 @@ export async function createTable(){
         title text COLLATE pg_catalog."default",
         id_author integer,
         content text COLLATE pg_catalog."default",
-        date_published date,
+        date_published text COLLATE pg_catalog."default",
         is_headline boolean,
         id_sport integer,
         id_league integer,

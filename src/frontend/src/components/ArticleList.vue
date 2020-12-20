@@ -1,97 +1,72 @@
 <template>
   <div class="container">
-    <div class="container m-2 " style="padding">
-      <h2 class="align-self-center m-2" style="float: left;">Articles</h2>
-      <button
-        class="btn btn-success"
-        style="float: right; position: relative; top: 10px; right: 10px;"
-        @click="add()"
-      >
-        + Add New
-      </button>
-    </div>
-    <div class="container">
-      <table class="table table-bordered">
-        <tr>
-          <th>Title</th>
-          <th>Authors</th>
-          <th>Categories</th>
-          <th>Date Published</th>
-          <th>Action</th>
-        </tr>
-        <tr v-for="article in articles" :key="article.id_article">
-          <th>{{ article.title }}</th>
-          <td>{{ article.user_id }}</td>
-          <td>
-            <ul class="list-unstyled">
-              <li>{{ article.id_sport }}</li>
-              <li>{{ article.id_league }}</li>
-              <li>{{ article.id_team }}</li>
-            </ul>
-          </td>
-          <td>{{ article.date_published }}</td>
-          <td>
-            <button
-              class="btn btn-sm btn-info edit mr-1"
-              @click="edit(article)"
-            >
-              Edit
-            </button>
-            <button
-              type="button"
-              class="btn btn-sm btn-danger delete"
-              data-toggle="modal"
-              data-target="#articleDelete"
-              @click="toBeDeleted(article)"
-            >
-              Delete
-            </button>
-          </td>
-        </tr>
-      </table>
-    </div>
-    <div
-      class="modal fade"
-      id="articleDelete"
-      tabindex="-1"
-      role="dialog"
-      aria-labelledby="exampleModalLabel"
-      aria-hidden="true"
+    <v-data-table
+      :headers="headers"
+      :items="articles"
+      sort-by="calories"
+      class="elevation-1"
     >
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Delete Article</h5>
-            <button
-              type="button"
-              class="close"
-              data-dismiss="modal"
-              aria-label="Close"
-            >
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            Are you sure about that?
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-dismiss="modal"
-            >
-              Close
-            </button>
-            <button type="button" class="btn btn-danger" @click="del()">
-              Yeah, delete it!
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="main-content">
-      <router-view></router-view>
-    </div>
+      <template v-slot:top>
+        <v-toolbar flat>
+          <v-toolbar-title>Articles</v-toolbar-title>
+          <v-divider class="mx-4" inset vertical></v-divider>
+          <v-spacer></v-spacer>
+          <v-dialog v-model="dialog" max-width="500px">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on" @click="add()">
+                + Add New
+              </v-btn>
+            </template>
+          </v-dialog>
+          <v-dialog v-model="dialogDelete" max-width="600px">
+            <v-card>
+              <v-card-title class="headline"
+                >Are you sure you want to delete this article?</v-card-title
+              >
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="blue darken-1" text @click="closeDelete"
+                  >Cancel</v-btn
+                >
+                <v-btn color="blue darken-1" text @click="deleteItemConfirm"
+                  >OK</v-btn
+                >
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-toolbar>
+      </template>
+
+      <template v-slot:item.author="{ item }">
+        {{ item.fullname }}
+      </template>
+
+      <template v-slot:item.sport="{ item }">
+        {{ item.id_sport }}
+        {{ item.id_team }}
+        {{ item.id_league }}
+      </template>
+
+      <template v-slot:item.date_published="{ item }">
+        {{ item.date_published | formatDate }}
+      </template>
+
+      <template v-slot:item.actions="{ item }">
+        <v-icon small class="mr-2" @click="">
+          mdi-pencil
+        </v-icon>
+        <v-icon small @click="deleteItem(item)">
+          mdi-delete
+        </v-icon>
+      </template>
+
+      <template v-slot:no-data>
+        <v-btn color="primary" @click="">
+          Reset
+        </v-btn>
+      </template>
+    </v-data-table>
   </div>
 </template>
 
@@ -101,9 +76,52 @@ import "bootstrap/dist/css/bootstrap.css";
 export default {
   data() {
     return {
+      users: undefined,
       articles: undefined,
       articleDeleted: undefined,
+      dialog: false,
+      dialogDelete: false,
+      headers: [
+        {
+          text: "Title",
+          align: "start",
+          value: "title",
+        },
+        { text: "Authors", value: "author" },
+        { text: "Categories", value: "sport", sortable: false },
+        { text: "Date Published", value: "date_published" },
+        { text: "Actions", value: "actions", sortable: false },
+      ],
+      desserts: [],
+      editedIndex: -1,
+      editedItem: {
+        name: "",
+        calories: 0,
+        fat: 0,
+        carbs: 0,
+        protein: 0,
+      },
+      defaultItem: {
+        name: "",
+        calories: 0,
+        fat: 0,
+        carbs: 0,
+        protein: 0,
+      },
     };
+  },
+  computed: {
+    formTitle() {
+      return this.editedIndex === -1 ? "New Item" : "Edit Item";
+    },
+  },
+  watch: {
+    dialog(val) {
+      val || this.close();
+    },
+    dialogDelete(val) {
+      val || this.closeDelete();
+    },
   },
   mounted() {
     this.load();
@@ -118,6 +136,25 @@ export default {
         .catch((err) => {
           console.log(err);
         });
+      http
+        .get("/users")
+        .then((res) => {
+          this.users = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+    getName(id) {
+      http
+        .get("/users/" + id)
+        .then((res) => {
+          this.user = res.data;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+      console.log(user);
     },
     add() {
       if (this.$route.path !== "/dashboard/add_article")
@@ -129,9 +166,7 @@ export default {
     },
     del() {
       return http
-        .delete(
-          "/articles/" + this.articleDeleted.id_article
-        )
+        .delete("/articles/" + this.articleDeleted.id_article)
         .then((res) => {
           this.load();
           this.articleDeleted = undefined;
@@ -139,6 +174,46 @@ export default {
     },
     toBeDeleted(article) {
       this.articleDeleted = article;
+    },
+    deleteItem(article) {
+      this.articleDeleted = article;
+      this.dialogDelete = true;
+    },
+
+    deleteItemConfirm() {
+      return http
+        .delete("/articles/" + this.articleDeleted.id_article)
+        .then((res) => {
+          this.load();
+          this.articleDeleted = undefined;
+          this.closeDelete();
+          this.load()
+        });
+    },
+
+    close() {
+      this.dialog = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+
+    closeDelete() {
+      this.dialogDelete = false;
+      this.$nextTick(() => {
+        this.editedItem = Object.assign({}, this.defaultItem);
+        this.editedIndex = -1;
+      });
+    },
+
+    save() {
+      if (this.editedIndex > -1) {
+        Object.assign(this.desserts[this.editedIndex], this.editedItem);
+      } else {
+        this.desserts.push(this.editedItem);
+      }
+      this.close();
     },
   },
 };
