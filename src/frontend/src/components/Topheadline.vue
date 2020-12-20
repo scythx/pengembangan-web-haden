@@ -6,6 +6,7 @@
       color="#222831"
       width="auto"
     >
+      <hr>
       <h1 id="title" class="h1 font-weight-light"
       :style="$vuetify.breakpoint.lg ? 'font-size:3vw' : 'font-size:5vw'">Top Headlines</h1>
       <v-list-item
@@ -26,7 +27,7 @@
           </v-list-item-content>
            <!--Temporary disable until ckeditor adapter finished src="images[index].url" -->
           <v-img
-              src="https://picsum.photos/id/11/500/300"
+              :src="item.thumbnail"
               style="margin-left:1%"
               :max-width="$vuetify.breakpoint.lg ? '30%' : '40%'" >
           </v-img>

@@ -3,7 +3,7 @@
    <UserArticle :article="firstTopHeadline" />
    <Topheadline
      :articles="restTopHeadline"/>
-   <Thumbnail/>
+   <Thumbnail :articles="this.articles"/>
    <Newsletter/>
  </div>
 </template>

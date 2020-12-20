@@ -17,7 +17,7 @@
                 style="margin-bottom:1%"
             >
                 <v-img
-                    :src="images[id].url"
+                    :src="article.thumbnail"
                         style="margin-right:1%"
                     :max-width="$vuetify.breakpoint.lg ? '30%' : '40%'">
                 </v-img>
