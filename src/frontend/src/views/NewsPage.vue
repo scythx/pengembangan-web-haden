@@ -10,7 +10,7 @@ import NewsDetail from '@/components/NewsDetail'
 import Newsletter from '@/components/Newsletter'
 
 export default {
-    props:['id_article'],
+    props: ['id_article'],
     components: {
         NewsDetail,
         Newsletter

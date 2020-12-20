@@ -11,6 +11,11 @@ import * as userStorage from './user-storage'
 import * as sportStorage from './sport-storage'
 import * as leagueStorage from './league-storage'
 import * as teamStorage from './team'
+import * as sequence from './db-sequence'
+import * as favSportStorage from './userfavoritesport-storage'
+import * as favLeagueStorage from './userfavoriteleague-storage'
+import * as favTeamStorage from './userfavoriteteam-storage'
+import * as newsletterSubscribers from './model/newsletter-subscribers'
 
 const history = require('connect-history-api-fallback')
 const app = express()
@@ -351,12 +356,20 @@ app.get('/api/users/:id/', async (req, res) => {
     res.send(await user.rows)
 })
 
+app.get('/api/users/:id/is_writer', async (req, res) => {
+  res.send(await userStorage.isWriter(req.params.id) || false)
+})
+
 app.post('/api/users/', async (req, res) => {
     const fullname = req.body.fullname
     const email = req.body.email
     const password = req.body.password
     const isSubscirbedNewsletter = req.body.is_subscribed_newsletter
     const isWriter = req.body.is_writer
+
+    if (isWriter == true) {
+        await newsletterSubscribers.insert({email: email})
+    }
 
     await userStorage.createOne(fullname, email, password, isSubscirbedNewsletter, isWriter)
     res.status(201).send()
@@ -423,6 +436,107 @@ app.get('/api/teams-sport/', async(req, res) => {
     res.send(teams.rows);
 })
 
+/*FAVORITE-SPORT*/
+//GET ALL FAV-SPORTS (TESTED)
+app.get('/api/fav-sports/', async (req, res) => {
+    const favSports = await favSportStorage.getAll()
+    res.send(await favSports.rows)
+})
+
+//GET FAV-SPORT BY USER ID (TESTED)
+app.get('/api/fav-sports/:user_id/', async (req, res) => {
+    const favSports = await favSportStorage.getOneByUser(req.params.user_id)
+    res.send(await favSports.rows)
+})
+
+//CREATE FAV-SPORT (TESTED)
+app.post('/api/fav-sports/', async (req, res) => {
+    const id_user = req.body.id_user
+    const id_sport = req.body.id_sport
+
+    await favSportStorage.createOne(id_user, id_sport)
+    res.status(201).send()
+})
+
+//DELETE FAV-SPORT (TESTED)
+app.delete('/api/fav-sports/:id_fav', async (req, res) => {
+    await favSportStorage.deleteOne(req.params.id_fav)
+    res.status(200).send()
+});
+app.delete('/api/fav-sports/', async (req, res) => {
+    const id_user = req.body.id_user
+    const id_sport = req.body.id_sport
+    await favSportStorage.deleteOneByUserIdandSportId(id_user, id_sport)
+    res.status(200).send()
+});
+
+/*FAVORITE-LEAGUE*/
+//GET ALL FAV-LEAGUE (TESTED)
+app.get('/api/fav-leagues/', async (req, res) => {
+    const favLeagues = await favLeagueStorage.getAll()
+    res.send(await favLeagues.rows)
+})
+
+//GET FAV-LEAGUE BY USER ID (TESTED)
+app.get('/api/fav-leagues/:user_id/', async (req, res) => {
+    const favLeagues = await favLeagueStorage.getOneByUser(req.params.user_id)
+    res.send(await favLeagues.rows)
+})
+
+//CREATE FAV-LEAGUE (TESTED)
+app.post('/api/fav-leagues/', async (req, res) => {
+    const id_user = req.body.id_user
+    const id_league = req.body.id_league
+
+    await favLeagueStorage.createOne(id_user, id_league)
+    res.status(201).send()
+})
+
+//DELETE FAV-LEAGUE (TESTED)
+app.delete('/api/fav-leagues/:id_fav', async (req, res) => {
+    await favLeagueStorage.deleteOne(req.params.id_fav)
+    res.status(200).send()
+});
+app.delete('/api/fav-leagues/', async (req, res) => {
+    const id_user = req.body.id_user
+    const id_league = req.body.id_league
+    await favLeagueStorage.deleteOneByUserIdandLeagueId(id_user, id_league)
+    res.status(200).send()
+});
+
+/*FAVORITE-TEAM*/
+//GET ALL FAV-TEAM (TESTED)
+app.get('/api/fav-teams/', async (req, res) => {
+    const favTeams = await favTeamStorage.getAll()
+    res.send(await favTeams.rows)
+})
+
+//GET FAV-TEAM BY USER ID (TESTED)
+app.get('/api/fav-teams/:user_id/', async (req, res) => {
+    const favTeams = await favTeamStorage.getOneByUser(req.params.user_id)
+    res.send(await favTeams.rows)
+})
+
+//CREATE FAV-TEAM (TESTED)
+app.post('/api/fav-teams/', async (req, res) => {
+    const id_user = req.body.id_user
+    const id_team = req.body.id_team
+    await favTeamStorage.createOne(id_user, id_team)
+    res.status(201).send()
+})
+
+//DELETE FAV-TEAM (TESTED)
+app.delete('/api/fav-teams/:id_fav', async (req, res) => {
+    await favTeamStorage.deleteOne(req.params.id_fav)
+    res.status(200).send()
+});
+app.delete('/api/fav-teams/', async (req, res) => {
+    const id_user = req.body.id_user
+    const id_team = req.body.id_team
+    await favTeamStorage.deleteOneByUserIdandTeamId(id_user, id_team)
+    res.status(200).send()
+});
+
 app.post('/api/sessions', async (req, res) => {
   const identity = await userStorage.authenticate(req.body)
 
@@ -459,6 +573,16 @@ app.get('/api/ping', async(req, res) => {
   res.json(req.session.identity)
 })
 
+app.post('/api/newsletter_subscribers', async (req, res) => {
+  await newsletterSubscribers.insert({email: req.body.email})
+  res.end()
+})
+
+app.post('/api/actions/broadcast', async (req, res) => {
+  await newsletterSubscribers.broadcast()
+  res.end()
+})
+
 app.start = async () => {
     try {
         await sportStorage.createTable()
@@ -469,6 +593,10 @@ app.start = async () => {
         await teamStorage.createTable()
         await matchesStorage.createTable()
         await articleStorage.createTable()
+        await favSportStorage.createTable()
+        await favLeagueStorage.createTable()
+        await favTeamStorage.createTable()
+        //await sequence.createSequence()
 
         const server = app.listen(port, () => {
             console.log(`app listening at http://localhost:${port}`)

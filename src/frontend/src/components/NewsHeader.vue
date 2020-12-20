@@ -6,7 +6,8 @@
                 <img src="../assets/harden-logo.svg" alt="" @click="onHardenLogoClick">
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn icon flat color="#FFCC00">
+            <v-btn icon flat color="#FFCC00"
+              @click="onProfileClick">
                 <v-icon>mdi-account-circle</v-icon>
             </v-btn>
             <v-btn icon flat color="#FFCC00">
@@ -49,8 +50,8 @@ export default {
         }
     },
     methods: {
-        onProfileClick(){
-            
+        onProfileClick() {
+          this.$router.push({path: '/login', query: {redirect: this.$route.path}})
         },
         onScoreClick(){
 

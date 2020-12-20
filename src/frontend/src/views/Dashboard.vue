@@ -133,7 +133,8 @@
             </v-list-item-title>
           </v-list-item>
 
-          <v-list-item class="p-2 ">
+          <v-list-item class="p-2 "
+            @click="onLogoutClick">
             <v-img
             class="ml-3"
             width="18%"
@@ -163,6 +164,11 @@ export default {
         group: null,
         }
     },
+   computed: {
+     identity: function() {
+       return this.$store.state.authentication.identity
+     }
+   },
     methods: {
         onMediaMenuClick() {
         if (this.$route.path !== '/dashboard/gallery')
@@ -186,8 +192,21 @@ export default {
             console.log("Got HEre")
             if (this.$route.path !== '/dashboard/categories')
                 this.$router.push('/dashboard/categories')
+        },
+        onLogoutClick() {
+          this
+            .$store
+            .dispatch('authentication/logout')
         }
     },
+   watch: {
+     identity (newValue, oldValue) {
+       if (newValue !== undefined)
+         return
+
+       this.$router.replace({path: '/'})
+     }
+   },
   mounted() {
   }
 }
