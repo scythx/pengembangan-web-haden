@@ -11,6 +11,8 @@ import MainPageComponent from '../components/MainPage.vue'
 import ArticlesLeague from '../components/ArticlesLeague.vue'
 import ArticlesSport from '../components/ArticlesSport.vue'
 import NewsPage from '../views/NewsPage.vue'
+import Profile from '../components/Profile.vue'
+import AddEditFav from '../components/AddEditFav.vue'
 
 Vue.use(VueRouter)
 
@@ -77,6 +79,18 @@ const routes = [
         path: 'article/:id_article',
         name: 'news_page',
         component: NewsPage,
+        props: true
+      },
+      {
+        path: 'profile',
+        name: 'profile_page',
+        component: Profile,
+        props: true,
+      },
+      {
+        path: 'profile/add_edit_favorite',
+        name: 'addeditfavorite',
+        component: AddEditFav,
         props: true
       }
     ]

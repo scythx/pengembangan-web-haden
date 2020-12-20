@@ -27,12 +27,22 @@ export const broadcast = async () => {
             FROM
               newsletter_subscribers;`)
 
+  const headline = await db
+    .query(`SELECT title FROM article WHERE is_headline = 'true' LIMIT 5;`)
+
+  const items = headline
+    .rows
+    .map((article) => `<li>${article.title}</li>`)
+    .join('')
+
+  const content = `Todays headline:<br><ol>${items}</ol>`
+
   return Promise.all(queryResult.rows.map(async (result) => {
-    return await smtp.sendMail({
+    return smtp.sendMail({
       from: '"Harden Newsletter" <newsharden@gmail.com>',
       to: result.email,
       subject: 'Harden daily newsletter',
-      html: "Howdy y'all, today to read:"
+      html: content
     })
   }))
 }

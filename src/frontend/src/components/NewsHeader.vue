@@ -49,9 +49,28 @@ export default {
             leagues:[]
         }
     },
+    computed: {
+      identity: function() {
+        return this.$store.state.authentication.identity
+      }
+    },
     methods: {
         onProfileClick() {
-          this.$router.push({path: '/login', query: {redirect: this.$route.path}})
+          if (this.identity === undefined) {
+            this.$router.push({path: '/login', query: {redirect: this.$route.path}})
+          }
+
+          this
+            .$http
+            .get(`/users/${this.identity['id']}/is_writer`)
+            .then((res) => {
+              if (res.data == true) {
+                this.$router.push({path: '/dashboard'})
+              }
+              else {
+                // TODO: route to user profile
+              }
+            })
         },
         onScoreClick(){
 

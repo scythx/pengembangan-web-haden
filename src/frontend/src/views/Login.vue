@@ -74,7 +74,7 @@
          .dispatch('authentication/login', {email, password})
      },
      onRegisterClick() {
-       this.$router.push({path: '/register'})
+       this.$router.replace({path: '/register'})
      }
    },
    watch: {

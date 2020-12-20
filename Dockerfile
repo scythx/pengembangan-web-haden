@@ -1,5 +1,9 @@
 FROM node:15.2.1-alpine3.10 as build
 
+RUN apk --no-cache add --virtual native-deps \
+    g++ gcc libgcc libstdc++ linux-headers make python2 && \
+    npm install --quiet node-gyp -g
+
 WORKDIR /usr/src/backend
 COPY src/backend/package*.json ./
 RUN npm ci
