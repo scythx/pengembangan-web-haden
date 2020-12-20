@@ -11,39 +11,37 @@ import * as userStorage from './user-storage'
 import * as sportStorage from './sport-storage'
 import * as leagueStorage from './league-storage'
 import * as teamStorage from './team'
-import * as sequence from './db-sequence'
 import * as favSportStorage from './userfavoritesport-storage'
 import * as favLeagueStorage from './userfavoriteleague-storage'
 import * as favTeamStorage from './userfavoriteteam-storage'
 import * as newsletterSubscribers from './model/newsletter-subscribers'
 
-const history = require('connect-history-api-fallback')
 const app = express()
 const port = process.env.PORT
 
 app.use(cors())
+app.use(express.urlencoded({extended: false}))
+app.use(express.json())
 app.use(session({
   secret: 'woosh splash',
   resave: false,
   saveUninitialized: true
 }))
-app.use(express.urlencoded({extended: false}))
-app.use(express.json())
 
-// const staticMiddleware = express.static(__dirname + '/public')
-// app.use(staticMiddleware)
-// app.use(history({
-//     disableDotRule: true,
-//     verbose: true
-// }))
-// app.use(staticMiddleware)
+const staticFileMiddleware = express.static(__dirname + '/public')
+app.use(staticFileMiddleware)
 
-// app.get('/', function (req, res) {
-//     res.render(path.join(__dirname + '/public/index.html'));
-// })
-
-const staticMiddleware = express.static(__dirname + '/public')
-app.use(staticMiddleware)
+if (port == 80) {
+  const history = require('connect-history-api-fallback');
+  app.use(history({
+    disableDotRule: true,
+    verbose: true
+  }))
+  app.use(staticFileMiddleware);
+  app.get('/', function (req, res) {
+    res.render(path.join(__dirname + '/public/index.html'));
+  })
+}
 
 app.delete('/api/images/:imageId', async (request, response) => {
     imageStorage.remove(Number(request.params['imageId']))
@@ -250,7 +248,7 @@ app.put('/api/leagues-sport/', async (req, res) => {
     res.status(200).send()
 })
 
-app.get('/api/articles', function (req, res, next) {
+app.get('/api/articles', function (req, res) {
     db.query(`SELECT * FROM article`,
                 function (err, result) {
         if (err) {
@@ -261,7 +259,7 @@ app.get('/api/articles', function (req, res, next) {
     });
 });
 
-app.get('/api/articles/:articleId', function (req, res, next) {
+app.get('/api/articles/:articleId', function (req, res) {
     db.query(`SELECT * FROM public.article WHERE id_article = ${req.params.articleId}`,
                 function (err, result) {
         if (err) {
@@ -272,7 +270,7 @@ app.get('/api/articles/:articleId', function (req, res, next) {
     });
 });
 
-app.get('/api/articles/sports/:sport', function (req, res, next) {
+app.get('/api/articles/sports/:sport', function (req, res) {
     db.query(`SELECT * FROM public.article WHERE id_sport = ${req.params.sport}`,
                 function (err, result) {
         if (err) {
@@ -283,7 +281,7 @@ app.get('/api/articles/sports/:sport', function (req, res, next) {
     });
 });
 
-app.get('/api/articles/leagues/:league', function (req, res, next) {
+app.get('/api/articles/leagues/:league', function (req, res) {
     db.query(`SELECT * FROM public.article WHERE id_league = ${req.params.league}`,
                 function (err, result) {
         if (err) {
@@ -294,7 +292,7 @@ app.get('/api/articles/leagues/:league', function (req, res, next) {
     });
 });
 
-app.get('/api/articles/teams/:team', function (req, res, next) {
+app.get('/api/articles/teams/:team', function (req, res) {
     db.query(`SELECT * FROM public.article WHERE id_team = ${req.params.team}`,
                 function (err, result) {
         if (err) {
@@ -305,12 +303,12 @@ app.get('/api/articles/teams/:team', function (req, res, next) {
     });
 });
 
-app.post('/api/articles/', function(req, res, next) {
+app.post('/api/articles/', function(req, res) {
     db.query(`INSERT INTO article(
-        title, content, date_published, is_headline)
-        VALUES ($1, $2, NOW(), $3);`,
-        [req.body.title, req.body.content, req.body.is_headline],
-        function (err, result) {
+        thumbnail, title, id_author, content, date_published, is_headline, id_sport, id_league, id_team)
+        VALUES ($1, $2, $3, $4, NOW(), $5, $6, $7, $8);`,
+        [req.body.thumbnail, req.body.title, req.body.id_author, req.body.content, req.body.is_headline, req.body.id_sport, req.body.id_league, req.body.id_team],
+        function (err) {
         if (err) {
             console.log(err);
             res.status(400).send(err);
@@ -320,10 +318,10 @@ app.post('/api/articles/', function(req, res, next) {
 });
 
 app.put('/api/articles/:articleId', function(req, res, next) {
-    db.query(`UPDATE public.article SET title=${req.body.title}, content=${req.body.content}, date_published=${req.body.date},
+    db.query(`UPDATE public.article SET thumbnail=${req.body.thumbnail}, title=${req.body.title}, id_author=${req.body.id_author}, content=${req.body.content}, date_published=${req.body.date},
                 is_headline=${req.body.is_headline}, id_sport=${req.body.id_sport}, id_league=${req.body.id_league}, id_team=${req.body.id_team}
 	            WHERE id_article=${req.params.articleId};`,
-                function (err, result) {
+                function (err) {
         if (err) {
             console.log(err);
             res.status(400).send(err);
@@ -334,7 +332,7 @@ app.put('/api/articles/:articleId', function(req, res, next) {
 
 app.delete('/api/articles/:articleId', function(req, res, next) {
     db.query(`DELETE FROM article WHERE id_article=${req.params.articleId}`,
-        function (err, result) {
+        function (err) {
         if (err) {
             console.log(err);
             res.status(400).send(err);
@@ -365,7 +363,7 @@ app.post('/api/users/', async (req, res) => {
     const isSubscirbedNewsletter = req.body.is_subscribed_newsletter
     const isWriter = req.body.is_writer
 
-    if (isWriter == true) {
+    if (isWriter == false) {
         await newsletterSubscribers.insert({email: email})
     }
 
@@ -457,6 +455,10 @@ app.post('/api/fav-sports/', async (req, res) => {
 })
 
 //DELETE FAV-SPORT (TESTED)
+app.delete('/api/fav-sports/:id_fav', async (req, res) => {
+    await favSportStorage.deleteOne(req.params.id_fav)
+    res.status(200).send()
+});
 app.delete('/api/fav-sports/', async (req, res) => {
     const id_user = req.body.id_user
     const id_sport = req.body.id_sport
@@ -487,6 +489,10 @@ app.post('/api/fav-leagues/', async (req, res) => {
 })
 
 //DELETE FAV-LEAGUE (TESTED)
+app.delete('/api/fav-leagues/:id_fav', async (req, res) => {
+    await favLeagueStorage.deleteOne(req.params.id_fav)
+    res.status(200).send()
+});
 app.delete('/api/fav-leagues/', async (req, res) => {
     const id_user = req.body.id_user
     const id_league = req.body.id_league
@@ -507,7 +513,7 @@ app.get('/api/fav-teams/:user_id/', async (req, res) => {
     res.send(await favTeams.rows)
 })
 
-//CREATE FAV-SPORT (TESTED)
+//CREATE FAV-TEAM (TESTED)
 app.post('/api/fav-teams/', async (req, res) => {
     const id_user = req.body.id_user
     const id_team = req.body.id_team
@@ -515,7 +521,11 @@ app.post('/api/fav-teams/', async (req, res) => {
     res.status(201).send()
 })
 
-//DELETE FAV-SPORT (TESTED)
+//DELETE FAV-TEAM (TESTED)
+app.delete('/api/fav-teams/:id_fav', async (req, res) => {
+    await favTeamStorage.deleteOne(req.params.id_fav)
+    res.status(200).send()
+});
 app.delete('/api/fav-teams/', async (req, res) => {
     const id_user = req.body.id_user
     const id_team = req.body.id_team

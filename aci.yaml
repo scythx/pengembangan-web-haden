@@ -3,16 +3,6 @@ location: southeast asia
 name: harden
 properties:
   containers:
-  - name: postgres
-    properties:
-      image: postgres
-      environmentVariables:
-        - name: "POSTGRES_PASSWORD"
-          secureValue: {{ DB_PASSWORD }}
-      resources:
-        requests:
-          cpu: 0.5
-          memoryInGb: 0.2
   - name: backend
     properties:
       image: {{ REGISTRY_LOGIN_SERVER }}/{{ IMAGE_NAME }}:{{ IMAGE_TAG }}
