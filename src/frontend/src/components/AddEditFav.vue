@@ -1,15 +1,7 @@
 <template>
     <div id="container">
         <v-container
-        class="p-3">
-            <v-text-field
-                dark
-                outlined
-                label="Search"
-                prepend-inner-icon="mdi-magnify"
-                color="#FFCC00"
-            ></v-text-field>
-            
+        class="p-3">            
             <v-card
             class="mx-auto mt-2"
             color="#1C3856"
@@ -227,10 +219,9 @@ import http from "@/http"
 
 export default {
     name: "AddEditFav",
-    props: ['id_user'],
     data() {
         return{
-            user:1,
+            id_user:null,
             favSports:[],
             favLeagues:[],
             favTeams:[],
@@ -243,35 +234,35 @@ export default {
         }
     },
     methods: {
-        onUnfollowSportClick(id){
-            http.delete('/fav-sports/'+id)
+        async onUnfollowSportClick(id){
+            await http.delete('/fav-sports/'+id)
             window.location.reload()
         },
-        onUnfollowLeagueClick(id){
-            http.delete('/fav-leagues/'+id)
+        async onUnfollowLeagueClick(id){
+            await http.delete('/fav-leagues/'+id)
             window.location.reload()
         },
-        onUnfollowTeamClick(id){
-            http.delete('/fav-teams/'+id)
+        async onUnfollowTeamClick(id){
+            await http.delete('/fav-teams/'+id)
             window.location.reload()
         },
-        onFollowSportClick(id){
-            http.post('/fav-sports/',{
-                'id_user':this.user,
+        async onFollowSportClick(id){
+            await http.post('/fav-sports/',{
+                'id_user':this.id_user,
                 'id_sport':id
             })
             window.location.reload()
         },
-        onFollowLeagueClick(id){
-            http.post('/fav-leagues/',{
-                'id_user':this.user,
+        async onFollowLeagueClick(id){
+            await http.post('/fav-leagues/',{
+                'id_user':this.id_user,
                 'id_league':id
             })
             window.location.reload()
         },
-        onFollowTeamClick(id){
-            http.post('/fav-teams/',{
-                'id_user':this.user,
+        async onFollowTeamClick(id){
+            await http.post('/fav-teams/',{
+                'id_user':this.id_user,
                 'id_team':id
             })
             window.location.reload()
@@ -305,17 +296,18 @@ export default {
         }
     },
     mounted() {
-        http.get('/fav-sports/'+this.user)
+        this.id_user = this.$store.state.authentication.identity.id
+        http.get('/fav-sports/'+this.id_user)
         .then((response) => {
             this.favSports = response['data']
         })
 
-        http.get('/fav-leagues/'+this.user)
+        http.get('/fav-leagues/'+this.id_user)
         .then((response) => {
             this.favLeagues = response['data']
         })
 
-        http.get('/fav-teams/'+this.user)
+        http.get('/fav-teams/'+this.id_user)
         .then((response) => {
             this.favTeams = response['data']
         })

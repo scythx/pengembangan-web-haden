@@ -4,7 +4,7 @@
      <!-- img -->
      <v-row>
        <v-col cols="12">
-         <v-img src="https://picsum.photos/id/11/500/300"></v-img>
+         <v-img :src="article.thumbnail"></v-img>
        </v-col>
      </v-row>
      

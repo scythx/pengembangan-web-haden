@@ -69,6 +69,7 @@ export default {
               }
               else {
                 // TODO: route to user profile
+                this.$router.push({path: '/profile'})
               }
             })
         },
@@ -78,6 +79,7 @@ export default {
         onHardenLogoClick(){
         if (this.$route.path !== '/')
             this.$router.push('/')
+            this.$router.go()
         },
         onSidebarItemClick(index, name){
             //name : league name or sport name

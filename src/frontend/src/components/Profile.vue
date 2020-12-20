@@ -3,7 +3,7 @@
         <v-container
         class="p-3">
             <h1 class="font-weight-light white--text"
-            :style="$vuetify.breakpoint.lg ? 'font-size:3vw' : 'font-size:7vw'">Welcome, Juned !</h1>
+            :style="$vuetify.breakpoint.lg ? 'font-size:3vw' : 'font-size:7vw'">Welcome, {{this.username}}</h1>
 
             <div
             class="d-flex justify-space-between"
@@ -154,10 +154,10 @@ import http from "@/http"
 
 export default {
     name: "Profile",
-    props: ['id_user'],
     data() {
         return{
-            user:1,
+            id_user:null,
+            username:null,
             favSports:[],
             favLeagues:[],
             favTeams:[],
@@ -170,28 +170,30 @@ export default {
         onAddFavoriteClick(){
             if (this.$route.path !== '/profile/add_edit_favorite'){
                 this.$router.push('/profile/add_edit_favorite')
-                this.$router.go()
             }
         },
         onEditClick(){
             if (this.$route.path !== '/profile/add_edit_favorite'){
                 this.$router.push('/profile/add_edit_favorite')
-                this.$router.go()
             }
         },
         onSignoutClick(){
-
+            this
+            .$store
+            .dispatch('authentication/logout')
+            this.$router.push('/')
+            this.$router.go()
         },
-        onUnfollowSportClick(id){
-            http.delete('/fav-sports/'+id)
+        async onUnfollowSportClick(id){
+            await http.delete('/fav-sports/'+id)
+            this.mounted()
+        },
+        async onUnfollowLeagueClick(id){
+            await http.delete('/fav-leagues/'+id)
             window.location.reload()
         },
-        onUnfollowLeagueClick(id){
-            http.delete('/fav-leagues/'+id)
-            window.location.reload()
-        },
-        onUnfollowTeamClick(id){
-            http.delete('/fav-teams/'+id)
+        async onUnfollowTeamClick(id){
+            await http.delete('/fav-teams/'+id)
             window.location.reload()
         },
         getSportName(id){
@@ -223,17 +225,26 @@ export default {
         }
     },
     mounted() {
-        http.get('/fav-sports/'+this.user)
+        this.id_user = this.$store.state.authentication.identity.id
+
+        http.get('/users/'+this.id_user)
+        .then((response) => {
+            
+            var user = response['data']
+            this.username = user[0].fullname
+        })
+
+        http.get('/fav-sports/'+this.id_user)
         .then((response) => {
             this.favSports = response['data']
         })
 
-        http.get('/fav-leagues/'+this.user)
+        http.get('/fav-leagues/'+this.id_user)
         .then((response) => {
             this.favLeagues = response['data']
         })
 
-        http.get('/fav-teams/'+this.user)
+        http.get('/fav-teams/'+this.id_user)
         .then((response) => {
             this.favTeams = response['data']
         })
@@ -252,6 +263,8 @@ export default {
         .then((response) => {
             this.teams = response['data']
         })
+
+        
     },
 }
 </script>

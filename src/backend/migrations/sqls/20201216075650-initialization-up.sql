@@ -158,6 +158,7 @@ INSERT INTO league
 VALUES
   (1, 'NBA', 'United States'),
   (2, 'NFL', 'United States'),
+  (2, 'NCAAF', 'United States'),
   (4, 'MLB', 'United States'),
   (3, 'Premier League', 'England'),
   (3, 'UEFA Champions League', 'Europe');
