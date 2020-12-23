@@ -83,7 +83,7 @@ const getById = async (id) => {
     return {
         'id': queryResult.rows['id'],
         'name': queryResult.rows[0]['name'] + queryResult.rows[0]['extension'],
-        'url': queryResult.rows[0]['unique_name'] + queryResult.rows[0]['extension']
+        'url': `http://${process.env.NODE_HOSTNAME}:${process.env.PORT}/assets/`+queryResult.rows[0]['unique_name'] + queryResult.rows[0]['extension']
     }
 }
 
