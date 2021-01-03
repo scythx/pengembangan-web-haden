@@ -1,7 +1,6 @@
 <template>
     <div class="newsletter p-3">
         <v-container>
-            <v-divider class="white"></v-divider>
             <h2 class="white--text">{{ joinHead }}</h2>
             <p class="white--text lighten-5">{{ joinText }}</p>
             <div class="input-group">

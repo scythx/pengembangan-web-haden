@@ -6,9 +6,9 @@
             width="auto"
         >
             <h1 id="title" class="h1 font-weight-light"
-            :style="$vuetify.breakpoint.lg ? 'font-size:3vw' : 'font-size:5vw'">{{league_name}}</h1>
+            :style="$vuetify.breakpoint.lg ? 'font-size:3vw' : 'font-size:5vw'">{{team_name}}</h1>
             <v-list-item
-                v-for="(article, id) in articles_league"
+                v-for="(article, id) in articles_team"
                 :key="id"
                 ripple
                 @click="onArticleClick(article.id_article)"
@@ -37,12 +37,12 @@
 import http from "@/http"
 
 export default {
-    name:'ArticlesLeague',
-    props:['id_league'],
+    name:'ArticleTeam',
+    props:['id_team'],
     data(){
         return{
-            articles_league:[],
-            league_name:null,
+            articles_team:[],
+            team_name:null,
             images:[]
         }
     },
@@ -55,15 +55,15 @@ export default {
         }
     },
     mounted() {
-        http.get('/articles/leagues/' + this.id_league)
+        http.get('/articles/teams/' + this.id_team)
         .then((response) => {
-            this.articles_league = response['data']
+            this.articles_team = response['data']
         })
 
-        http.get('/leagues/' + this.id_league)
+        http.get('/teams/' + this.id_team)
         .then((response) => {
-            const league = response['data']
-            this.league_name = league[0].name
+            const team = response['data']
+            this.team_name = team[0].name
         })
 
         http.get('/images')

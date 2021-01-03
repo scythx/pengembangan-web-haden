@@ -6,7 +6,7 @@
                 contain
                 lazy-src="https://picsum.photos/id/11/10/6"
                 max-height="400"
-                src="https://picsum.photos/id/11/500/300"
+                :src="article.thumbnail"
                 class="img-fluid"
             ></v-img>
         </v-container>
@@ -54,7 +54,7 @@ export default {
         })
     }
 }
-
+    
 </script>
 
 <style scoped>

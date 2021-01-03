@@ -11,39 +11,37 @@ import * as userStorage from './user-storage'
 import * as sportStorage from './sport-storage'
 import * as leagueStorage from './league-storage'
 import * as teamStorage from './team'
-import * as sequence from './db-sequence'
 import * as favSportStorage from './userfavoritesport-storage'
 import * as favLeagueStorage from './userfavoriteleague-storage'
 import * as favTeamStorage from './userfavoriteteam-storage'
 import * as newsletterSubscribers from './model/newsletter-subscribers'
 
-const history = require('connect-history-api-fallback')
 const app = express()
 const port = process.env.PORT
 
 app.use(cors())
+app.use(express.urlencoded({extended: false}))
+app.use(express.json())
 app.use(session({
   secret: 'woosh splash',
   resave: false,
   saveUninitialized: true
 }))
-app.use(express.urlencoded({extended: false}))
-app.use(express.json())
 
-// const staticMiddleware = express.static(__dirname + '/public')
-// app.use(staticMiddleware)
-// app.use(history({
-//     disableDotRule: true,
-//     verbose: true
-// }))
-// app.use(staticMiddleware)
+const staticFileMiddleware = express.static(__dirname + '/public')
+app.use(staticFileMiddleware)
 
-// app.get('/', function (req, res) {
-//     res.render(path.join(__dirname + '/public/index.html'));
-// })
-
-const staticMiddleware = express.static(__dirname + '/public')
-app.use(staticMiddleware)
+if (port == 80) {
+  const history = require('connect-history-api-fallback');
+  app.use(history({
+    disableDotRule: true,
+    verbose: true
+  }))
+  app.use(staticFileMiddleware);
+  app.get('/', function (req, res) {
+    res.render(path.join(__dirname + '/public/index.html'));
+  })
+}
 
 app.delete('/api/images/:imageId', async (request, response) => {
     imageStorage.remove(Number(request.params['imageId']))
@@ -367,7 +365,7 @@ app.post('/api/users/', async (req, res) => {
     const isSubscirbedNewsletter = req.body.is_subscribed_newsletter
     const isWriter = req.body.is_writer
 
-    if (isWriter == true) {
+    if (isWriter == false) {
         await newsletterSubscribers.insert({email: email})
     }
 

@@ -10,6 +10,7 @@ import MainPage from '../views/MainPage.vue'
 import MainPageComponent from '../components/MainPage.vue'
 import ArticlesLeague from '../components/ArticlesLeague.vue'
 import ArticlesSport from '../components/ArticlesSport.vue'
+import ArticlesTeam from '../components/ArticlesTeam.vue'
 import NewsPage from '../views/NewsPage.vue'
 import Profile from '../components/Profile.vue'
 import AddEditFav from '../components/AddEditFav.vue'
@@ -73,6 +74,12 @@ const routes = [
         path: 'articles/sport/:id_sport',
         name: 'sport_articles',
         component: ArticlesSport,
+        props: true
+      },
+      {
+        path: 'articles/team/:id_team',
+        name: 'team_articles',
+        component: ArticlesTeam,
         props: true
       },
       {
