@@ -186,15 +186,24 @@ export default {
         },
         async onUnfollowSportClick(id){
             await http.delete('/fav-sports/'+id)
-            this.mounted()
+            http.get('/fav-sports/'+this.id_user)
+            .then((response) => {
+                this.favSports = response['data']
+            })
         },
         async onUnfollowLeagueClick(id){
             await http.delete('/fav-leagues/'+id)
-            window.location.reload()
+            http.get('/fav-leagues/'+this.id_user)
+            .then((response) => {
+                this.favLeagues = response['data']
+            })
         },
         async onUnfollowTeamClick(id){
             await http.delete('/fav-teams/'+id)
-            window.location.reload()
+            http.get('/fav-teams/'+this.id_user)
+            .then((response) => {
+                this.favTeams = response['data']
+            })
         },
         getSportName(id){
             var i = 0

@@ -236,36 +236,198 @@ export default {
     methods: {
         async onUnfollowSportClick(id){
             await http.delete('/fav-sports/'+id)
-            window.location.reload()
+            await http.get('/fav-sports/'+this.id_user)
+            .then((response) => {
+                this.favSports = response['data']
+            })
+            await http.get('/sports')
+            .then((response) => {
+                this.sportsList = response['data']
+                this.sports = []
+                var i = 0
+                var j = 0
+                var exist = false
+                while(i < this.sportsList.length){
+                    j = 0
+                    while(j < this.favSports.length && !exist){
+                        if(this.sportsList[i].id_sport == this.favSports[j].sport_id){
+                            exist = true
+                        }
+
+                        j++
+                    }
+                    if(!exist){
+                        this.sports.push(this.sportsList[i])
+                    }
+
+                    i++
+                    exist = false
+                }
+            })
         },
         async onUnfollowLeagueClick(id){
             await http.delete('/fav-leagues/'+id)
-            window.location.reload()
+            await http.get('/fav-leagues/'+this.id_user)
+            .then((response) => {
+                this.favLeagues = response['data']
+            })
+            await http.get('/leagues')
+            .then((response) => {
+                this.leaguesList = response['data']
+                this.leagues = []
+                var i = 0
+                var j = 0
+                var exist = false
+                while(i < this.leaguesList.length){
+                    j = 0
+                    while(j < this.favLeagues.length && !exist){
+                        if(this.leaguesList[i].id_league == this.favLeagues[j].league_id){
+                            exist = true
+                        }
+
+                        j++
+                    }
+                    if(!exist){
+                        this.leagues.push(this.leaguesList[i])
+                    }
+
+                    i++
+                    exist = false
+                }
+            })
         },
         async onUnfollowTeamClick(id){
             await http.delete('/fav-teams/'+id)
-            window.location.reload()
+            await http.get('/fav-teams/'+this.id_user)
+            .then((response) => {
+                this.favTeams = response['data']
+            })
+            await http.get('/teams')
+            .then((response) => {
+                this.teamsList = response['data']
+                this.teams = []
+                var i = 0
+                var j = 0
+                var exist = false
+                while(i < this.teamsList.length){
+                    j = 0
+                    while(j < this.favTeams.length && !exist){
+                        if(this.teamsList[i].id_team == this.favTeams[j].team_id){
+                            exist = true
+                        }
+
+                        j++
+                    }
+                    if(!exist){
+                        this.teams.push(this.teamsList[i])
+                    }
+
+                    i++
+                    exist = false
+                }
+            })
         },
         async onFollowSportClick(id){
             await http.post('/fav-sports/',{
                 'id_user':this.id_user,
                 'id_sport':id
             })
-            window.location.reload()
+            await http.get('/fav-sports/'+this.id_user)
+            .then((response) => {
+                this.favSports = response['data']
+            })
+            await http.get('/sports')
+            .then((response) => {
+                this.sportsList = response['data']
+                this.sports = []
+                var i = 0
+                var j = 0
+                var exist = false
+                while(i < this.sportsList.length){
+                    j = 0
+                    while(j < this.favSports.length && !exist){
+                        if(this.sportsList[i].id_sport == this.favSports[j].sport_id){
+                            exist = true
+                        }
+
+                        j++
+                    }
+                    if(!exist){
+                        this.sports.push(this.sportsList[i])
+                    }
+
+                    i++
+                    exist = false
+                }
+            })
         },
         async onFollowLeagueClick(id){
             await http.post('/fav-leagues/',{
                 'id_user':this.id_user,
                 'id_league':id
             })
-            window.location.reload()
+            await http.get('/fav-leagues/'+this.id_user)
+            .then((response) => {
+                this.favLeagues = response['data']
+            })
+            await http.get('/leagues')
+            .then((response) => {
+                this.leaguesList = response['data']
+                this.leagues = []
+                var i = 0
+                var j = 0
+                var exist = false
+                while(i < this.leaguesList.length){
+                    j = 0
+                    while(j < this.favLeagues.length && !exist){
+                        if(this.leaguesList[i].id_league == this.favLeagues[j].league_id){
+                            exist = true
+                        }
+
+                        j++
+                    }
+                    if(!exist){
+                        this.leagues.push(this.leaguesList[i])
+                    }
+
+                    i++
+                    exist = false
+                }
+            })
         },
         async onFollowTeamClick(id){
             await http.post('/fav-teams/',{
                 'id_user':this.id_user,
                 'id_team':id
             })
-            window.location.reload()
+            await http.get('/fav-teams/'+this.id_user)
+            .then((response) => {
+                this.favTeams = response['data']
+            })
+            await http.get('/teams')
+            .then((response) => {
+                this.teamsList = response['data']
+                this.teams = []
+                var i = 0
+                var j = 0
+                var exist = false
+                while(i < this.teamsList.length){
+                    j = 0
+                    while(j < this.favTeams.length && !exist){
+                        if(this.teamsList[i].id_team == this.favTeams[j].team_id){
+                            exist = true
+                        }
+
+                        j++
+                    }
+                    if(!exist){
+                        this.teams.push(this.teamsList[i])
+                    }
+
+                    i++
+                    exist = false
+                }
+            })
         },
         getSportName(id){
             var i = 0
