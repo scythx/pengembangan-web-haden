@@ -18,6 +18,7 @@ import * as newsletterSubscribers from './model/newsletter-subscribers'
 
 const app = express()
 const port = process.env.PORT
+var compression = require('compression')
 
 app.use(cors({
   origin: 'http://localhost:8080',
@@ -25,7 +26,7 @@ app.use(cors({
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   optionsSuccessStatus: 204
 }))
-
+app.use(compression())
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
 app.use(session({
