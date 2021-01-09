@@ -31,5 +31,8 @@ new Vue({
   router,
   store,
   vuetify,
+  beforeCreate() {
+    this.$store.dispatch('authentication/initialize')
+  },
   render: h => h(App)
 }).$mount('#app')

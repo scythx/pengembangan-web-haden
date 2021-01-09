@@ -58,6 +58,8 @@ export default {
         onProfileClick() {
           if (this.identity === undefined) {
             this.$router.push({path: '/login', query: {redirect: this.$route.path}})
+
+            return
           }
 
           this
