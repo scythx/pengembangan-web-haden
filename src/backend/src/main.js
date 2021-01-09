@@ -18,7 +18,9 @@ import * as newsletterSubscribers from './model/newsletter-subscribers'
 
 const app = express()
 const port = process.env.PORT
+var compression = require('compression')
 
+app.use(compression())
 app.use(cors())
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
