@@ -19,7 +19,13 @@ import * as newsletterSubscribers from './model/newsletter-subscribers'
 const app = express()
 const port = process.env.PORT
 
-app.use(cors())
+app.use(cors({
+  origin: 'http://localhost:8080',
+  credentials: true,
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  optionsSuccessStatus: 204
+}))
+
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
 app.use(session({
@@ -365,11 +371,23 @@ app.post('/api/users/', async (req, res) => {
     const isSubscirbedNewsletter = req.body.is_subscribed_newsletter
     const isWriter = req.body.is_writer
 
+    const result = await
+    db.query('SELECT COUNT(*) as count FROM users WHERE email = $1', [email])
+
+    if (result.rows[0].count !== 0) {
+        res.status(422).json({
+            'email': 'Email is already used'
+        })
+
+        return
+    }
+
+    await userStorage.createOne(fullname, email, password, isSubscirbedNewsletter, isWriter)
+
     if (isWriter == false) {
         await newsletterSubscribers.insert({email: email})
     }
 
-    await userStorage.createOne(fullname, email, password, isSubscirbedNewsletter, isWriter)
     res.status(201).send()
 })
 
@@ -536,6 +554,21 @@ app.delete('/api/fav-teams/', async (req, res) => {
 });
 
 app.post('/api/sessions', async (req, res) => {
+    console.log(req.session)
+
+    if (!_.isUndefined(req.session.identity)) {
+    res.status(200).json(req.session.identity)
+    return
+  }
+
+  if (_.isUndefined(req.body['email']) ||
+      _.isUndefined(req.body['password'])) {
+    res
+      .status(401)
+      .end()
+    return
+  }
+
   const identity = await userStorage.authenticate(req.body)
 
   if (identity == null)

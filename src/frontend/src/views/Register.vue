@@ -78,7 +78,7 @@
    }),
    computed: {
      authenticating: function () {
-       return this.$store.state.authentication.authenticating
+       return this.$store.state.authentication.isAuthenticating
      },
      identity: function() {
        return this.$store.state.authentication.identity
@@ -101,7 +101,14 @@
            //
          })
          .catch((error) => {
+           if (error.response &&
+               error.response.status === 422) {
+             alert(error.response.data.email)
+           }
            //
+         })
+         .then((response) => {
+             this.registerBtn.loading = false
          })
      },
      onLoginClick() {
@@ -126,21 +133,24 @@
          this.loginBtn.loading = false
        }
      },
-     identity (newValue, oldValue) {
-       if (newValue === undefined)
-         return
+     identity: {
+       immediate: true,
+       handler: function (newValue, oldValue) {
+         if (newValue === undefined)
+           return;
 
-       this
-         .$http
-         .get(`/users/${newValue['id']}/is_writer`)
-         .then((res) => {
-           if (res.data == true) {
-             this.$router.replace({path: '/dashboard'})
-           }
-           else {
-             this.$router.replace({path: this.$route.query.redirect || '/'})
-           }
-         })
+         this
+           .$http
+           .get(`/users/${newValue['id']}/is_writer`)
+           .then((res) => {
+             if (res.data == true) {
+               this.$router.replace({path: '/dashboard'})
+             }
+             else {
+               this.$router.replace({path: this.$route.query.redirect || '/'})
+             }
+           })
+       }
      }
    }
  }
