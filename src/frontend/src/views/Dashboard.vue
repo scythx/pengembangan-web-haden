@@ -192,14 +192,20 @@ export default {
         }
     },
    watch: {
-     identity (newValue, oldValue) {
-       if (newValue !== undefined)
-         return
+     identity: {
+       immediate: true,
+       handler: function (newValue, oldValue) {
+         if (newValue !== undefined)
+           return
 
-       this.$router.replace({path: '/'})
+         this.$router.replace({path: '/'})
+       }
      }
    },
   mounted() {
+    if (this.$store.state.authentication.identity === undefined)
+      return;
+
     this.userid = this.$store.state.authentication.identity.id
 
     http.get('/users/'+this.userid)
