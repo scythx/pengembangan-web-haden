@@ -20,10 +20,6 @@ const app = express()
 const port = process.env.PORT
 var compression = require('compression')
 
-<<<<<<< HEAD
-app.use(compression())
-app.use(cors())
-=======
 app.use(cors({
   origin: 'http://localhost:8080',
   credentials: true,
@@ -31,7 +27,6 @@ app.use(cors({
   optionsSuccessStatus: 204
 }))
 app.use(compression())
->>>>>>> upstream/main
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
 app.use(session({
