@@ -1,16 +1,6 @@
 <template>
     <div class="news-detail black-base p-3">
         <v-container>
-            <h1 class="news-heading white--text my-3">{{ article.title }}</h1>
-            <v-img
-                contain
-                lazy-src="https://picsum.photos/id/11/10/6"
-                max-height="400"
-                :src="article.thumbnail"
-                class="img-fluid"
-            ></v-img>
-        </v-container>
-        <v-container>
             <v-row no-gutters>
                 <v-img class="rounded-circle d-inline-block"
                     max-width="50"
@@ -27,8 +17,10 @@
                 </v-col>
             </v-row>
         </v-container>
-        <v-container class="white--text">
-            {{ article.content }}
+        <v-container>
+            <h1 class="news-heading white--text my-3">{{ article.title }}</h1>
+        </v-container>
+        <v-container id="content" class="white--text">
         </v-container>
     </div>
 </template>
@@ -51,6 +43,10 @@ export default {
         .then((response) => {
             const articles = response['data']
             this.article = articles[0]
+        })
+        .then(() =>{
+            var content = document.querySelector("#content");
+            content.innerHTML = this.article.content
         })
     }
 }
