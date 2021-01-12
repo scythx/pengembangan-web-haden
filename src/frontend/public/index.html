@@ -6,8 +6,41 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <title><%= htmlWebpackPlugin.options.title %></title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
+
+    <!-- Preconnect the font file origin -->
+    <link rel="preconnect" 
+          href="https://fonts.googleapis.com"
+          crossorigin />
+    <link rel="preconnect" 
+          href="https://cdn.jsdelivr.net">
+    
+    <!-- Preload the font styleshee asynchornously with low priority -->
+    <link rel="preload" 
+          as="style"
+          href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900" >
+    
+    <link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900"
+          media="print" onload="this.media='all'">
+    
+    <link rel="preload" 
+          as="style"
+          href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
+    
+    <link rel="stylesheet" 
+          href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css"
+          media="print" onload="this.media='all'">
+
+
+    <nonscript>
+      <link rel="stylesheet" 
+            href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900">
+      <link rel="stylesheet" 
+            href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
+    </nonscript>
+
+    
+
   </head>
   <body>
     <noscript>
