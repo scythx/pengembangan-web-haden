@@ -85,7 +85,7 @@ export default {
   data() {
     return {
       article: {
-        id_author: 0,
+        id_author: undefined,
         title: "",
         content: "",
         data: "",
@@ -110,7 +110,6 @@ export default {
           ParagraphPlugin,
           Image,
           ImageUpload,
-          //SimpleUploadAdapter,
         ],
         extraPlugins: [this.uploader],
         title: {
@@ -130,10 +129,6 @@ export default {
           ],
         },
         placeholder: "Type your content here.",
-        //simpleUpload: {
-        //  // The URL that the images are uploaded to.
-        //  uploadUrl: "http://localhost:8081/api/images",
-        //},
       },
     };
   },
@@ -149,6 +144,7 @@ export default {
       };
     },
     add() {
+      this.article.id_author = this.$store.state.authentication.identity.id
       const domparser = new DOMParser();
       let el = domparser.parseFromString(this.article.data, "text/html");
       try {
@@ -156,6 +152,8 @@ export default {
       } catch {
         this.article.thumbnail = "null";
       }
+      
+      console.log(this.article)
       http.post("/articles/", this.article).then((res) => {
         this.onListArticleMenuClick()
       });

@@ -1,8 +1,13 @@
 <template>
   <div class="container">
+    <div>
+      {{contoh}}
+    </div>
     <v-data-table
       :headers="headers"
       :items="articles"
+      :loading="articleLoad"
+      loading-text="Loading articles... Please wait"
       sort-by="calories"
       class="elevation-1"
     >
@@ -13,7 +18,14 @@
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn color="primary" dark class="mb-2" v-bind="attrs" v-on="on" @click="add()">
+              <v-btn
+                color="primary"
+                dark
+                class="mb-2"
+                v-bind="attrs"
+                v-on="on"
+                @click="add()"
+              >
                 + Add New
               </v-btn>
             </template>
@@ -38,14 +50,22 @@
         </v-toolbar>
       </template>
 
+      <template v-slot:item.title="{ item }">
+        <h6>{{ item.title }}</h6>
+      </template>
+
       <template v-slot:item.author="{ item }">
         {{ item.fullname }}
       </template>
 
       <template v-slot:item.sport="{ item }">
-        {{ item.id_sport }}
-        {{ item.id_team }}
-        {{ item.id_league }}
+        <div class="my-2">
+          <ul>
+            <li>Sport: {{ item.id_sport }}</li>
+            <li>Team: {{ item.id_team }}</li>
+            <li>League: {{ item.id_league }}</li>
+          </ul>
+        </div>
       </template>
 
       <template v-slot:item.date_published="{ item }">
@@ -62,9 +82,9 @@
       </template>
 
       <template v-slot:no-data>
-        <v-btn color="primary" @click="">
-          Reset
-        </v-btn>
+        <p>
+          There is no article to load.
+        </p>
       </template>
     </v-data-table>
   </div>
@@ -76,6 +96,7 @@ import "bootstrap/dist/css/bootstrap.css";
 export default {
   data() {
     return {
+      contoh: "<h1>halo</h1>",
       users: undefined,
       articles: undefined,
       articleDeleted: undefined,
@@ -93,21 +114,7 @@ export default {
         { text: "Actions", value: "actions", sortable: false },
       ],
       desserts: [],
-      editedIndex: -1,
-      editedItem: {
-        name: "",
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0,
-      },
-      defaultItem: {
-        name: "",
-        calories: 0,
-        fat: 0,
-        carbs: 0,
-        protein: 0,
-      },
+      articleLoad: true,
     };
   },
   computed: {
@@ -122,6 +129,9 @@ export default {
     dialogDelete(val) {
       val || this.closeDelete();
     },
+    load(){
+
+    }
   },
   mounted() {
     this.load();
@@ -131,7 +141,19 @@ export default {
       http
         .get("/articles")
         .then((res) => {
-          this.articles = res.data;
+          this.articles = res.data
+          for(var i = 0; i < this.articles.length; i++){
+            this.articles[i].sportName = ""
+          }
+        })
+        .then(() =>{
+          for (var i = 0; i < this.articles.length; i++){
+            this.articles[i].sportName = "hehe boi"
+            //console.log(this.articles[i])
+          }
+        })
+        .then(() =>{
+          this.articleLoad = false
         })
         .catch((err) => {
           console.log(err);
@@ -144,7 +166,7 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    },
+    }, 
     getName(id) {
       http
         .get("/users/" + id)
@@ -187,7 +209,7 @@ export default {
           this.load();
           this.articleDeleted = undefined;
           this.closeDelete();
-          this.load()
+          this.load();
         });
     },
 
