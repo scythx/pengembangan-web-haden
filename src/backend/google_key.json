@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "hardenga",
+  "private_key_id": "38f68306fab6e27dde4bec79713855bce5ab658e",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCXTm7Co+QmAW36\nCzQzinxhUftC0qZZPkhyyAG/BNESZac/9bWUu8pml6Ta+dadhw4UJfNhJV1tK1y3\nKWQaIlDW6xtxEIrL3JNCsHkeGnnA42H7dp4z/dJiWlWOxHdVr/UdH8baxC2wNRqR\nQOc0n/Dz6oZrX4w0Wcp2OKpurJr7fRak2wvVuQcviTct9pybtx0A2EIr3QqHHS9q\nspiRXVHUhdnnlyvCvzVzaxWKM198S48BzZBh9ZvV24Qw5fht644v07GKx1j6HJU1\nWbisBOy8mNFOOT5zdSAnkoFucKewx6E1cuh7MGEfgZeK5musBpXC/wHBxXT36cu4\nl3Xfp1SpAgMBAAECggEADXFhKIHkf0vujXdOsqrsf2kH6IP2q5nRA1b/G2Lo1bhF\nB8sOJaIZoCEmUHOUvHeHVLBFKK29LeSFtEWafd1BTsGiCoWXD026963eKkKH7A9H\ntqPEooc77ekWDj0pAmqZCHa49YQrMFXyKlLt4nW4tAhzhjlS/O5irTuTnjRPq2WV\naH9N+Ypbui6o4AytIG7/qYyWOdZ+Y9yqF1kpIdqq2EWjknuWnyeF0JY0HGPKT+dE\nZiWU/JP1/jpr6F1a4A6nrAuVNl1UPIBxfRdlK5/bhWNYBQhnYBlG9BzJkLdHMSX9\nwxAW2hcLf2r2WoZNLZxDGrfQ7uqQBmh3/ARFflF2kQKBgQDF0Z69Iqo/36qgYPyq\nAp2fgDhp/zZSPu1UoHvuCw2fXZOFBf78Z5deEA85tvWsRaKVRGAT5kwM+y96uDy8\nWsr71bsehFRDbQTGxzPlndQV6IfhqtpR6H4ehut4xxzWSNGdOiYRe5FBUYo5Q3M0\nTyj6rUKHYeXEj5ZvkPR9/va/dwKBgQDDzr++ziBPLD1r400yclhjCkG1TiauNndY\neUpIfoYCLYf/werK7yOi+cfeDlX3wWgCeJPc4QksgiKmzl5okKCN5S3Mcn6TrsU9\nCkbJmhM22q6B4de5lCPGteKE+3iE4uWXQEZdrGm1eWJzUUUJHUGzKiAXXCToszjg\nCCVGqxjU3wKBgAZDY85DOba6AzH+wCE14f251o9smDC0c1k5l5Lq4KyKDvCoRvGA\n6ib9RS4jn9WrgsFNH+mhYgkLLu6oxKuGCGU+2CTYNb7IxdzxU7BSdfOXoC3B9hWf\n0dZvmScCzuPt/E0JGUl2axvxU/oKK6ydUQPW1oNo0xiNH0s7ALK4juFzAoGADczl\nkMIgXtQkZBU6HKMYfap8ZRXj/gVStgaeaKuaME8bNbhqHvFp1pO6NXlXL8YO2ZW7\n/iZSKjPl01HaL4558mZDqxQqvafkuN+fi5fzYLta70aGmMrLFrc9Bthebyc6vUVH\ncFS1gpfSi4Qf1HueZM1EQ8E3zLrM+GU6k1d9wYsCgYAZ9R4CL2VqaZe5NsDDgvM+\nvvnhFklpQxwJ6cJFOQ8JLvuQPEXMkO2l0sVJhPOJ2rx10ZvNx9jCYdfiuubO1Irw\n3tP5ezX4gmTaD/SGsn6xb+7fXD2PvFv9+GMBmcz1HaPW3yClip9+1Zzno2luUW+X\nmXlkjYMFxr0PZmfICFvCMw==\n-----END PRIVATE KEY-----\n",
+  "client_email": "apiga-954@hardenga.iam.gserviceaccount.com",
+  "client_id": "108521393354190522956",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/apiga-954%40hardenga.iam.gserviceaccount.com"
+}

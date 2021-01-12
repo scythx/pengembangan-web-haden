@@ -621,6 +621,29 @@ app.post('/api/actions/broadcast', async (req, res) => {
   res.end()
 })
 
+// https://your-domain/accessTokens will return access tokens such as google access tokens
+app.get("/accessTokens", (req,res) => {
+
+    let {google} = require('googleapis');
+    let privateKey = require("./google_key.json");
+  
+    // configure a JWT auth client
+    let jwtClient = new google.auth.JWT(
+      privateKey.client_email,
+      null,
+      privateKey.private_key,
+      'https://www.googleapis.com/auth/analytics.readonly');
+  
+      jwtClient.authorize(function (err, token) {
+      if (err) {
+        console.log(err);
+        return res.status(500).send('Error');
+      } else {
+        return res.send(token.access_token);
+      }
+    });
+  })
+  
 app.start = async () => {
     try {
         await sportStorage.createTable()
