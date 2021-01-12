@@ -313,14 +313,20 @@ app.get('/api/articles/teams/:team', function (req, res) {
 });
 
 app.post('/api/articles/', function(req, res) {
+    console.log("INSERTING NEW ARTICLE")
+    console.log(req.body)
     db.query(`INSERT INTO article(
         thumbnail, title, id_author, content, date_published, is_headline, id_sport, id_league, id_team)
         VALUES ($1, $2, $3, $4, NOW(), $5, $6, $7, $8);`,
-        [req.body.thumbnail, req.body.title, req.body.id_author, req.body.content, req.body.is_headline, req.body.id_sport, req.body.id_league, req.body.id_team],
+        [req.body.thumbnail, req.body.title, req.body.id_author, req.body.content, req.body.is_headline, req.body.sport_id, req.body.league_id, req.body.team_id],
         function (err) {
         if (err) {
             console.log(err);
             res.status(400).send(err);
+            console.log("INSERT FAILED")
+        }
+        else{
+            console.log("INSERT SUCCESS")
         }
     })
     res.send()
