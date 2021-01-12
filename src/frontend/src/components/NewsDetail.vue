@@ -52,6 +52,12 @@ export default {
             const articles = response['data']
             this.article = articles[0]
         })
+
+        //send event to google analytics
+        this.$gtag.event('view_article', {
+              'event_category' : 'User',
+              'event_label' : 'User read article'
+        })
     }
 }
     

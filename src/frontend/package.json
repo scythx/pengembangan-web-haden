@@ -32,7 +32,7 @@
     "@ckeditor/ckeditor5-typing": "^24.0.0",
     "@ckeditor/ckeditor5-vue": "^1.0.3",
     "@ckeditor/ckeditor5-vue2": "^1.0.5",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "bootstrap": "^4.5.3",
     "core-js": "^3.6.5",
     "dayjs": "^1.9.7",
