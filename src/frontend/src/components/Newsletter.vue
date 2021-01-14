@@ -32,6 +32,12 @@ export default {
           .then((res) => {
             alert('Thanks for following us ' + email + '!')
           })
+
+          //send event to google analytics
+          this.$gtag.event('subscribe_newsletter', {
+              'event_category' : 'User',
+              'event_label' : 'Subscribe for newsletter'
+          })
       }
     }
 }

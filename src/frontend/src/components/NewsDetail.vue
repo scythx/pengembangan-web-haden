@@ -48,6 +48,11 @@ export default {
             var content = document.querySelector("#content");
             content.innerHTML = this.article.content
         })
+
+        //send event to google analytics
+        this.$gtag.event('view_article', {
+              'event_category' : 'User',
+              'event_label' : 'User read article'
     }
 }
     
