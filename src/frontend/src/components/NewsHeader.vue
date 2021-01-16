@@ -10,7 +10,7 @@
               @click="onProfileClick">
                 <v-icon>mdi-account-circle</v-icon>
             </v-btn>
-            <v-btn icon flat color="#FFCC00">
+            <v-btn icon text color="#FFCC00">
                 <v-icon>mdi-scoreboard-outline</v-icon>
             </v-btn>
         </v-app-bar>
