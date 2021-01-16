@@ -40,7 +40,6 @@ export default {
                 { icon: 'mdi-basketball-hoop-outline', text: 'Basketball', route: '/articles/sports/1'},
                 { icon: 'mdi-football', text: 'American Football', route: '/articles/sports/2'},
                 { icon: 'mdi-baseball-bat', text: 'Baseball', route: '/articles/sports/3'},
-                { icon: 'mdi-football-helmet', text: 'NCAAF', route: '/articles//sports/4'},
                 { icon: 'mdi-soccer', text: 'Soccer', route: '/articles/sports/5'},
                 { icon: 'mdi-mixed-martial-arts', text: 'MMA', route: '/articles/sports/6'},
                 { icon: 'mdi-tennis', text: 'Tennis', route: '/articles/sports/7'}
