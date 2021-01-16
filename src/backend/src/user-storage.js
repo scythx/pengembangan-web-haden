@@ -48,6 +48,11 @@ export async function getAll() {
     return users
 }
 
+export async function getSubscriber() {
+  const users = await db.query(`SELECT * FROM ${TABLE_NAME} WHERE is_subscribed_newsletter = True;`)
+  return users
+}
+
 export async function getOne(userId) {
     const user = await db.query(`SELECT * FROM ${TABLE_NAME}
         WHERE id_user = $1;`, [userId])

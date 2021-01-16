@@ -50,6 +50,9 @@ if (port == 80) {
   })
 }
 
+const google_key = require('./google_key.json')
+const {google} = require('googleapis')
+
 app.delete('/api/images/:imageId', async (request, response) => {
     imageStorage.remove(Number(request.params['imageId']))
 
@@ -362,6 +365,11 @@ app.get('/api/users/', async (req, res) => {
     res.send(await users.rows)
 })
 
+app.get('/api/subscribers/', async(req, res) => {
+    const users = await userStorage.getSubscriber()
+    res.send(await users.rows) 
+})
+
 app.get('/api/users/:id/', async (req, res) => {
     const user = await userStorage.getOne(req.params.id)
     res.send(await user.rows)
@@ -375,19 +383,19 @@ app.post('/api/users/', async (req, res) => {
     const fullname = req.body.fullname
     const email = req.body.email
     const password = req.body.password
-    const isSubscirbedNewsletter = req.body.is_subscribed_newsletter
-    const isWriter = req.body.is_writer
+    const isSubscirbedNewsletter = true
+    const isWriter = false
 
     const result = await
     db.query('SELECT COUNT(*) as count FROM users WHERE email = $1', [email])
 
-    if (result.rows[0].count !== 0) {
-        res.status(422).json({
-            'email': 'Email is already used'
-        })
+    // if (result.rows[0].count !== 0) {
+    //     res.status(422).json({
+    //         'email': 'Email is already used'
+    //     })
 
-        return
-    }
+    //     return
+    // }
 
     await userStorage.createOne(fullname, email, password, isSubscirbedNewsletter, isWriter)
 
@@ -622,16 +630,12 @@ app.post('/api/actions/broadcast', async (req, res) => {
 })
 
 // https://your-domain/accessTokens will return access tokens such as google access tokens
-app.get("/accessTokens", (req,res) => {
-
-    let {google} = require('googleapis');
-    let privateKey = require("./google_key.json");
-  
+app.get("/api/accessGoogleTokens", (req, res) => {
     // configure a JWT auth client
     let jwtClient = new google.auth.JWT(
-      privateKey.client_email,
+      google_key.client_email,
       null,
-      privateKey.private_key,
+      google_key.private_key,
       'https://www.googleapis.com/auth/analytics.readonly');
   
       jwtClient.authorize(function (err, token) {
