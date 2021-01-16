@@ -53,9 +53,10 @@ export default {
         this.$gtag.event('view_article', {
               'event_category' : 'User',
               'event_label' : 'User read article'
+        })
     }
 }
-    
+
 </script>
 
 <style scoped>
