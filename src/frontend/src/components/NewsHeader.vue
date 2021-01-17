@@ -107,13 +107,13 @@ export default {
             }
         }
     },
-    mounted() {
-        http.get('/sports')
+    async mounted() {
+        await http.get('/sports')
         .then((response) => {
             this.sports = response['data']
         })
 
-        http.get('/leagues')
+        await http.get('/leagues')
         .then((response) => {
             this.leagues = response['data']
         })

@@ -457,24 +457,24 @@ export default {
             }
         }
     },
-    mounted() {
+    async mounted() {
         this.id_user = this.$store.state.authentication.identity.id
-        http.get('/fav-sports/'+this.id_user)
+        await http.get('/fav-sports/'+this.id_user)
         .then((response) => {
             this.favSports = response['data']
         })
 
-        http.get('/fav-leagues/'+this.id_user)
+        await http.get('/fav-leagues/'+this.id_user)
         .then((response) => {
             this.favLeagues = response['data']
         })
 
-        http.get('/fav-teams/'+this.id_user)
+        await http.get('/fav-teams/'+this.id_user)
         .then((response) => {
             this.favTeams = response['data']
         })
 
-        http.get('/sports')
+        await http.get('/sports')
         .then((response) => {
             this.sportsList = response['data']
             
@@ -499,7 +499,7 @@ export default {
             }
         })
 
-        http.get('/leagues')
+        await http.get('/leagues')
         .then((response) => {
             this.leaguesList = response['data']
 
@@ -524,7 +524,7 @@ export default {
             }
         })
 
-        http.get('/teams')
+        await http.get('/teams')
         .then((response) => {
             this.teamsList = response['data']
 

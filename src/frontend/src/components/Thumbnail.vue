@@ -34,6 +34,12 @@
                     v-text="article.title"
                     class="h4 font-weight-light"
                     :style="$vuetify.breakpoint.lg ? 'font-size:1.5vw' : 'font-size:2.5vw'"></h1>
+                    <p
+                    v-if="$vuetify.breakpoint.lg"
+                    class="font-weight-light white--text"
+                    :style="'font-size:1vw'">
+                    {{article.content | textPreview}}
+                    </p>
                 </v-list-item-content>
                 
             </v-list-item>
@@ -85,6 +91,12 @@
                     v-text="article.title"
                     class="h4 font-weight-light"
                     :style="$vuetify.breakpoint.lg ? 'font-size:1.5vw' : 'font-size:2.5vw'"></h1>
+                    <p
+                    v-if="$vuetify.breakpoint.lg"
+                    class="font-weight-light white--text"
+                    :style="'font-size:1vw'">
+                    {{article.content | textPreview}}
+                    </p>
                 </v-list-item-content>
                 
             </v-list-item>
@@ -136,6 +148,12 @@
                     v-text="article.title"
                     class="h4 font-weight-light"
                     :style="$vuetify.breakpoint.lg ? 'font-size:1.5vw' : 'font-size:2.5vw'"></h1>
+                    <p
+                    v-if="$vuetify.breakpoint.lg"
+                    class="font-weight-light white--text"
+                    :style="'font-size:1vw'">
+                    {{article.content | textPreview}}
+                    </p>
                 </v-list-item-content>
                 
             </v-list-item>
@@ -189,6 +207,12 @@
                   v-text="article.title"
                   class="h4 font-weight-light"
                   :style="$vuetify.breakpoint.lg ? 'font-size:1.5vw' : 'font-size:2.5vw'"></h1>
+                  <p
+                  v-if="$vuetify.breakpoint.lg"
+                  class="font-weight-light white--text"
+                  :style="'font-size:1vw'">
+                  {{article.content | textPreview}}
+                  </p>
               </v-list-item-content>
               
           </v-list-item>
@@ -293,17 +317,16 @@ export default {
     }
   },
   async mounted(){
-    if(this.$store.state.authentication.identity != undefined){
-      http.get('/sports')
+    await http.get('/sports')
       .then((response) => {
         this.sports = response['data']})
-      http.get('/leagues')
+      await http.get('/leagues')
       .then((response) => {
         this.leagues = response['data']})
-      http.get('/teams')
+      await http.get('/teams')
       .then((response) => {
         this.teams = response['data']})
-        
+    if(this.$store.state.authentication.identity != undefined){        
 
       var id = this.$store.state.authentication.identity.id
       await http.get('/fav-sports/'+id)
@@ -397,33 +420,28 @@ export default {
       })
     }
     else{
-      
-      await http.get('/leagues')
-      .then((response) => {
-        this.leagues = response['data']
-        let temp = new Array()
-        var i = 0, j = 0
+      let temp = new Array()
+      var i = 0, j = 0
 
-        while(i < this.leagues.length){
-          while(j < this.articles.length){
-            if(this.leagues[i].id_league == this.articles[j].id_league){
-                temp.push(this.articles[j])
-            }
-            j++
+      while(i < this.leagues.length){
+        while(j < this.articles.length){
+          if(this.leagues[i].id_league == this.articles[j].id_league){
+              temp.push(this.articles[j])
           }
-
-          if(temp.length > 0){
-            var obj = new Object()
-            obj.id_league = this.leagues[i].id_league
-            obj.articles = temp
-            this.mapped.push(obj)
-            temp = new Array()
-          }
-
-          i++
-          j = 0
+          j++
         }
-      })
+
+        if(temp.length > 0){
+          var obj = new Object()
+          obj.id_league = this.leagues[i].id_league
+          obj.articles = temp
+          this.mapped.push(obj)
+          temp = new Array()
+        }
+
+        i++
+        j = 0
+      }
     }
   }
 }

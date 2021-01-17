@@ -238,50 +238,50 @@ export default {
             }
         }
     },
-   created () {
+   async created () {
      if (this.identity === undefined) {
-       this.$router.replace({path: '/'})
+       await this.$router.replace({path: '/'})
        return
      }
-
-     http
+    this.id_user = this.identity.id
+     await http
        .get('/users/'+this.id_user)
        .then((response) => {
          var user = response['data']
          this.username = user[0].fullname
        })
 
-     http
+     await http
        .get('/fav-sports/'+this.id_user)
        .then((response) => {
          this.favSports = response['data']
        })
 
-     http
+     await http
        .get('/fav-leagues/'+this.id_user)
        .then((response) => {
          this.favLeagues = response['data']
        })
 
-     http
+     await http
        .get('/fav-teams/'+this.id_user)
        .then((response) => {
          this.favTeams = response['data']
        })
 
-     http
+     await http
        .get('/sports')
        .then((response) => {
          this.sports = response['data']
        })
 
-     http
+     await http
        .get('/leagues')
        .then((response) => {
          this.leagues = response['data']
        })
 
-     http
+     await http
        .get('/teams')
        .then((response) => {
          this.teams = response['data']
