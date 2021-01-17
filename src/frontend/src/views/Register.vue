@@ -48,7 +48,7 @@
          block
          elevation="2"
          :loading="registerBtn.loading"
-         @click="onRegisterClick">Masuk</v-btn>
+         @click="onRegisterClick">Daftar</v-btn>
        <v-divider dark></v-divider>
        <p class="text-center white--text caption">Sudah punya akun? <a @click="onLoginClick">Login di sini.</a> </p>
      </v-form>
