@@ -6,11 +6,11 @@
                 <img src="../assets/harden-logo.svg" alt="" @click="onHardenLogoClick">
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn icon flat color="#FFCC00"
+            <v-btn icon text color="#FFCC00"
               @click="onProfileClick">
                 <v-icon>mdi-account-circle</v-icon>
             </v-btn>
-            <v-btn icon flat color="#FFCC00">
+            <v-btn icon text color="#FFCC00">
                 <v-icon>mdi-scoreboard-outline</v-icon>
             </v-btn>
         </v-app-bar>
