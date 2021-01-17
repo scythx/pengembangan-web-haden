@@ -55,26 +55,20 @@ export default {
       }
     },
     methods: {
-        onProfileClick() {
-          if (this.identity === undefined) {
-            this.$router.push({path: '/login', query: {redirect: this.$route.path}})
+      onProfileClick() {
+        if (this.identity === undefined) {
+          this.$router.push({path: '/login', query: {redirect: this.$route.path}})
 
-            return
-          }
+          return
+        }
 
-          this
-            .$http
-            .get(`/users/${this.identity['id']}/is_writer`)
-            .then((res) => {
-              if (res.data == true) {
-                this.$router.push({path: '/dashboard'})
-              }
-              else {
-                // TODO: route to user profile
-                this.$router.push({path: '/profile'})
-              }
-            })
-        },
+        if (this.identity.is_writer) {
+          this.$router.push({path: '/dashboard'})
+        }
+        else {
+          this.$router.push({path: '/profile'})
+        }
+      },
         onScoreClick(){
 
         },

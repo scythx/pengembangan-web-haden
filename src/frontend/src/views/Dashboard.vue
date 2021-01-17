@@ -1,5 +1,5 @@
-<template>
-<v-card
+<template >
+<v-card v-if="identity"
     class="mx-auto overflow-hidden"
     height="100%"
     width="100%"
@@ -26,7 +26,7 @@
           <v-icon
           large
           class="mr-2">mdi-account</v-icon>
-          {{username}}
+          {{ identity.fullname  }}
       </v-btn>
     </v-app-bar>
 
@@ -150,7 +150,6 @@ export default {
     data(){
         return{
           userid:null,
-          username:null,
           selectedItem: 1,
           drawer: false,
           group: null,
@@ -194,26 +193,13 @@ export default {
    watch: {
      identity: {
        immediate: true,
-       handler: function (newValue, oldValue) {
-         if (newValue !== undefined)
+       handler: function (value) {
+         if (value !== undefined && value.is_writer)
            return
 
          this.$router.replace({path: '/'})
        }
      }
-   },
-  mounted() {
-    if (this.$store.state.authentication.identity === undefined)
-      return;
-
-    this.userid = this.$store.state.authentication.identity.id
-
-    http.get('/users/'+this.userid)
-    .then((response) => {
-        
-        var user = response['data']
-        this.username = user[0].fullname
-    })
-  }
+   }
 }
 </script>
