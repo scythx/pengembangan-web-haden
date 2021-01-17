@@ -6,11 +6,11 @@
                 <img src="../assets/harden-logo.svg" alt="" @click="onHardenLogoClick">
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn icon flat color="#FFCC00"
+            <v-btn icon text color="#FFCC00"
               @click="onProfileClick">
                 <v-icon>mdi-account-circle</v-icon>
             </v-btn>
-            <v-btn icon flat color="#FFCC00">
+            <v-btn icon text color="#FFCC00">
                 <v-icon>mdi-scoreboard-outline</v-icon>
             </v-btn>
         </v-app-bar>
@@ -54,26 +54,20 @@ export default {
       }
     },
     methods: {
-        onProfileClick() {
-          if (this.identity === undefined) {
-            this.$router.push({path: '/login', query: {redirect: this.$route.path}})
+      onProfileClick() {
+        if (this.identity === undefined) {
+          this.$router.push({path: '/login', query: {redirect: this.$route.path}})
 
-            return
-          }
+          return
+        }
 
-          this
-            .$http
-            .get(`/users/${this.identity['id']}/is_writer`)
-            .then((res) => {
-              if (res.data == true) {
-                this.$router.push({path: '/dashboard'})
-              }
-              else {
-                // TODO: route to user profile
-                this.$router.push({path: '/profile'})
-              }
-            })
-        },
+        if (this.identity.is_writer) {
+          this.$router.push({path: '/dashboard'})
+        }
+        else {
+          this.$router.push({path: '/profile'})
+        }
+      },
         onScoreClick(){
 
         },

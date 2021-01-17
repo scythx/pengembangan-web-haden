@@ -383,19 +383,21 @@ app.post('/api/users/', async (req, res) => {
     const fullname = req.body.fullname
     const email = req.body.email
     const password = req.body.password
-    const isSubscirbedNewsletter = true
-    const isWriter = false
+    const isSubscirbedNewsletter = req.body.is_subscribed_newsletter
+    const isWriter = req.body.is_writer
 
     const result = await
     db.query('SELECT COUNT(*) as count FROM users WHERE email = $1', [email])
 
-    // if (result.rows[0].count !== 0) {
-    //     res.status(422).json({
-    //         'email': 'Email is already used'
-    //     })
 
-    //     return
-    // }
+    if (Number(result.rows[0].count) !== 0) {
+        res.status(422).json({
+            'email': 'Email is already used'
+        })
+
+
+         return
+     }
 
     await userStorage.createOne(fullname, email, password, isSubscirbedNewsletter, isWriter)
 
@@ -569,38 +571,36 @@ app.delete('/api/fav-teams/', async (req, res) => {
 });
 
 app.post('/api/sessions', async (req, res) => {
-    console.log(req.session)
-
     if (!_.isUndefined(req.session.identity)) {
-    res.status(200).json(req.session.identity)
-    return
-  }
+        res.status(200).json(req.session.identity)
+        return
+    }
 
-  if (_.isUndefined(req.body['email']) ||
-      _.isUndefined(req.body['password'])) {
-    res
-      .status(401)
-      .end()
-    return
-  }
+    if (_.isUndefined(req.body['email']) ||
+        _.isUndefined(req.body['password'])) {
+        res
+            .status(401)
+            .end()
+        return
+    }
 
-  const identity = await userStorage.authenticate(req.body)
+    const identity = await userStorage.authenticate(req.body)
 
-  if (identity == null)
-    return res
-      .status(401)
-      .end();
+    if (identity == null)
+        return res
+        .status(401)
+        .end();
 
-  await new Promise((resolve, reject) => {
-    req.session.regenerate((err) => {
-      req.session.identity = identity
-      resolve()
+    await new Promise((resolve, reject) => {
+        req.session.regenerate((err) => {
+            req.session.identity = identity
+            resolve()
+        })
     })
-  })
 
-  res
-    .status(200)
-    .json(identity)
+    res
+        .status(200)
+        .json(identity)
 })
 
 app.delete('/api/sessions', async (req, res) => {
