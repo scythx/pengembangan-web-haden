@@ -27,6 +27,15 @@ Vue.filter('formatDate', function(value) {
   }
 });
 
+Vue.filter('textPreview', function(value) {
+  if (value) {
+      const domparser = new DOMParser();
+      let el = domparser.parseFromString(value, "text/html");
+      var text = el.getElementsByTagName("p")[0].innerHTML
+      return _.unescape(text);
+  }
+});
+
 new Vue({
   router,
   store,
