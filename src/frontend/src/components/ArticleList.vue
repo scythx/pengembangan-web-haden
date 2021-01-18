@@ -153,7 +153,7 @@ export default {
             else{
               this.articles[i].sportName = ""
             }
-            if(this.articles[i].teamName){
+            if(this.articles[i].id_team){
               await http.get("/teams/" + this.articles[i].id_team).then((res) => {
                 this.articles[i].teamName = res.data[0].name
               })
@@ -161,7 +161,7 @@ export default {
             else{
               this.articles[i].teamName = ""
             }
-            if(this.articles[i].leagueName){
+            if(this.articles[i].id_league){
                 await http.get("/leagues/" + this.articles[i].id_league).then((res) => {
                 this.articles[i].leagueName = res.data[0].name
               })
@@ -205,14 +205,6 @@ export default {
       //call vue edit article page
       console.log(article.id_article);
     },
-    del() {
-      return http
-        .delete("/articles/" + this.articleDeleted.id_article)
-        .then((res) => {
-          this.load();
-          this.articleDeleted = undefined;
-        });
-    },
     toBeDeleted(article) {
       this.articleDeleted = article;
     },
@@ -225,10 +217,10 @@ export default {
       return http
         .delete("/articles/" + this.articleDeleted.id_article)
         .then((res) => {
-          this.load();
           this.articleDeleted = undefined;
           this.closeDelete();
           this.load();
+          //location.reload();
         });
     },
 
