@@ -1,8 +1,8 @@
 <template>
     <div class="news-detail black-base p-3">
         <!-- title sama gambar urang pindahin ke paling atas-->
-        <v-container>	
-            <h1 class="news-heading white--text my-3">{{ article.title }}</h1>	
+        <v-container>
+            <h1 class="news-heading white--text">{{ article.title }}</h1>
             <v-img	
                 contain	
                 lazy-src="https://picsum.photos/id/11/10/6"	
@@ -28,13 +28,8 @@
                 </v-col>
             </v-row>
         </v-container>
-        <!--
-        <v-container>
-            <h1 class="news-heading white--text my-3">{{ article.title }}</h1>
-        </v-container>
-        <v-container id="content" class="white--text">-->
-        <v-container class="white--text">
-            {{ article.content | textPreview }}
+        <v-container id="content" class="white--text">
+            {{ article.content }}
         </v-container>
     </div>
 </template>
@@ -59,10 +54,15 @@ export default {
             const articles = response['data']
             this.article = articles[0]
         })
-        //.then(() =>{
-            //var content = document.querySelector("#content");
-            //content.innerHTML = this.article.content
-        //})
+        .then(() =>{
+            var content = document.querySelector("#content");
+            content.innerHTML = this.article.content
+        })
+        .then(()=>{
+            var content = document.querySelector("#content");
+            var element = content.getElementsByTagName("img")[0]
+            element.parentNode.removeChild(element);
+        })
 
         await http.get('/users/' + this.article.id_author)
         .then((response) => {

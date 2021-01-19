@@ -76,6 +76,7 @@ import Title from "@ckeditor/ckeditor5-heading/src/title.js";
 import Heading from "@ckeditor/ckeditor5-heading/src/heading";
 import Image from "@ckeditor/ckeditor5-image/src/image";
 import ImageUpload from "@ckeditor/ckeditor5-image/src/imageupload";
+import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment';
 //import SimpleUploadAdapter from "@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter";
 import UploadAdapter from "../uploadAdapter";
 export default {
@@ -110,6 +111,7 @@ export default {
           ParagraphPlugin,
           Image,
           ImageUpload,
+          Alignment
         ],
         extraPlugins: [this.uploader],
         title: {
@@ -121,6 +123,8 @@ export default {
             "|",
             "undo",
             "redo",
+            "|",
+            "alignment",
             "|",
             "bold",
             "italic",
@@ -153,7 +157,6 @@ export default {
         this.article.thumbnail = "null";
       }
       
-      console.log(this.article)
       http.post("/articles/", this.article).then((res) => {
         this.onListArticleMenuClick()
       });

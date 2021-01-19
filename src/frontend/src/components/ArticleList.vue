@@ -1,8 +1,5 @@
 <template>
   <div class="container">
-    <div>
-      {{contoh}}
-    </div>
     <v-data-table
       :headers="headers"
       :items="articles"
@@ -51,7 +48,9 @@
       </template>
 
       <template v-slot:item.title="{ item }">
-        <h6>{{ item.title }}</h6>
+        <div class="my-2" style="text-align:justify;">
+          <h6>{{ item.title | title }}</h6>
+        </div>
       </template>
 
       <template v-slot:item.author="{ item }">
@@ -61,9 +60,12 @@
       <template v-slot:item.sport="{ item }">
         <div class="my-2">
           <ul>
-            <li>Sport: {{ item.id_sport }}</li>
-            <li>Team: {{ item.id_team }}</li>
-            <li>League: {{ item.id_league }}</li>
+            <li v-if="item.sportName">Sport: {{ item.sportName }}</li>
+            <li v-else>Sport: <p class="font-weight-thin" style="display:inline">unselected</p></li>
+            <li v-if="item.teamName">Team: {{ item.teamName }}</li>
+            <li v-else>Team: <p class="font-weight-thin" style="display:inline">unselected</p></li>
+            <li v-if="item.leagueName">League: {{ item.leagueName }}</li>
+            <li v-else>League: <p class="font-weight-thin" style="display:inline">unselected</p></li>
           </ul>
         </div>
       </template>
@@ -82,7 +84,7 @@
       </template>
 
       <template v-slot:no-data>
-        <p>
+        <p class="mt-4">
           There is no article to load.
         </p>
       </template>
@@ -96,7 +98,6 @@ import "bootstrap/dist/css/bootstrap.css";
 export default {
   data() {
     return {
-      contoh: "<h1>halo</h1>",
       users: undefined,
       articles: undefined,
       articleDeleted: undefined,
@@ -105,13 +106,14 @@ export default {
       headers: [
         {
           text: "Title",
-          align: "start",
+          align: "left",
           value: "title",
+          width: "50%"
         },
-        { text: "Authors", value: "author" },
-        { text: "Categories", value: "sport", sortable: false },
-        { text: "Date Published", value: "date_published" },
-        { text: "Actions", value: "actions", sortable: false },
+        { text: "Authors", value: "author", width: "10%"},
+        { text: "Categories", value: "sport", sortable: false, width: "20%"},
+        { text: "Date Published", value: "date_published", width: "10%"},
+        { text: "Actions", value: "actions", sortable: false, width: "10%"},
       ],
       desserts: [],
       articleLoad: true,
@@ -129,31 +131,48 @@ export default {
     dialogDelete(val) {
       val || this.closeDelete();
     },
-    load(){
-
-    }
+    load() {},
   },
   mounted() {
     this.load();
   },
   methods: {
-    load() {
+     load() {
       http
         .get("/articles")
         .then((res) => {
-          this.articles = res.data
-          for(var i = 0; i < this.articles.length; i++){
-            this.articles[i].sportName = ""
+          this.articles = res.data;
+        })
+        .then(async () => {
+          for (var i = 0; i < this.articles.length; i++) {
+            if(this.articles[i].id_sport){
+              await http.get("/sports/" + this.articles[i].id_sport).then((res) => {
+                this.articles[i].sportName = res.data[0].name
+              })
+            }
+            else{
+              this.articles[i].sportName = ""
+            }
+            if(this.articles[i].id_team){
+              await http.get("/teams/" + this.articles[i].id_team).then((res) => {
+                this.articles[i].teamName = res.data[0].name
+              })
+            }
+            else{
+              this.articles[i].teamName = ""
+            }
+            if(this.articles[i].id_league){
+                await http.get("/leagues/" + this.articles[i].id_league).then((res) => {
+                this.articles[i].leagueName = res.data[0].name
+              })
+            }
+            else{
+              this.articles[i].leagueName = ""
+            }
           }
         })
-        .then(() =>{
-          for (var i = 0; i < this.articles.length; i++){
-            this.articles[i].sportName = "hehe boi"
-            //console.log(this.articles[i])
-          }
-        })
-        .then(() =>{
-          this.articleLoad = false
+        .then(() => {
+          this.articleLoad = false;
         })
         .catch((err) => {
           console.log(err);
@@ -166,7 +185,7 @@ export default {
         .catch((err) => {
           console.log(err);
         });
-    }, 
+    },
     getName(id) {
       http
         .get("/users/" + id)
@@ -186,14 +205,6 @@ export default {
       //call vue edit article page
       console.log(article.id_article);
     },
-    del() {
-      return http
-        .delete("/articles/" + this.articleDeleted.id_article)
-        .then((res) => {
-          this.load();
-          this.articleDeleted = undefined;
-        });
-    },
     toBeDeleted(article) {
       this.articleDeleted = article;
     },
@@ -206,10 +217,10 @@ export default {
       return http
         .delete("/articles/" + this.articleDeleted.id_article)
         .then((res) => {
-          this.load();
           this.articleDeleted = undefined;
           this.closeDelete();
           this.load();
+          //location.reload();
         });
     },
 
