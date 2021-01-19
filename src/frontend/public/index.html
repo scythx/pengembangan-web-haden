@@ -7,6 +7,7 @@
 
 
     <title><%= htmlWebpackPlugin.options.title %></title>
+    <link rel="icon" type="image" href="/favicon.ico"/>
 
     <!-- SEO Verify ownership  -->
     <meta name="google-site-verification" content="b3aUoCNh7zo_nH4fASlVSL6in5999H82x7FjvJcwJUg" />
@@ -43,10 +44,16 @@
             href="https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css">
     </nonscript>
 
-    
-
   </head>
   <body>
+      <script>
+      (function(w,d,s,g,js,fs){
+        g=w.gapi||(w.gapi={});g.analytics={q:[],ready:function(f){this.q.push(f);}};
+        js=d.createElement(s);fs=d.getElementsByTagName(s)[0];
+        js.src='https://apis.google.com/js/platform.js';
+        fs.parentNode.insertBefore(js,fs);js.onload=function(){g.load('analytics');};
+      }(window,document,'script'));
+      </script>
     <noscript>
       <strong>We're sorry but <%= htmlWebpackPlugin.options.title %> doesn't work properly without JavaScript enabled. Please enable it to continue.</strong>
     </noscript>

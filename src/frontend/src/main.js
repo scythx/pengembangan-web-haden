@@ -19,7 +19,7 @@ Vue.prototype.$http = http
 Vue.use(CKEditor);
 
 Vue.use(VueGtag, {
-  config: { id: "G-GT1G679Q41" }
+  config: { id: "UA-185690843-1" }
 }, router);
 
 Vue.filter('formatDate', function(value) {

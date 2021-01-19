@@ -50,6 +50,9 @@ if (port == 80) {
   })
 }
 
+const google_key = require('./google_key.json')
+const {google} = require('googleapis')
+
 app.delete('/api/images/:imageId', async (request, response) => {
     imageStorage.remove(Number(request.params['imageId']))
 
@@ -362,6 +365,11 @@ app.get('/api/users/', async (req, res) => {
     res.send(await users.rows)
 })
 
+app.get('/api/subscribers/', async(req, res) => {
+    const users = await userStorage.getSubscriber()
+    res.send(await users.rows) 
+})
+
 app.get('/api/users/:id/', async (req, res) => {
     const user = await userStorage.getOne(req.params.id)
     res.send(await user.rows)
@@ -381,13 +389,15 @@ app.post('/api/users/', async (req, res) => {
     const result = await
     db.query('SELECT COUNT(*) as count FROM users WHERE email = $1', [email])
 
-    if (result.rows[0].count !== 0) {
+
+    if (Number(result.rows[0].count) !== 0) {
         res.status(422).json({
             'email': 'Email is already used'
         })
 
-        return
-    }
+
+         return
+     }
 
     await userStorage.createOne(fullname, email, password, isSubscirbedNewsletter, isWriter)
 
@@ -561,38 +571,36 @@ app.delete('/api/fav-teams/', async (req, res) => {
 });
 
 app.post('/api/sessions', async (req, res) => {
-    console.log(req.session)
-
     if (!_.isUndefined(req.session.identity)) {
-    res.status(200).json(req.session.identity)
-    return
-  }
+        res.status(200).json(req.session.identity)
+        return
+    }
 
-  if (_.isUndefined(req.body['email']) ||
-      _.isUndefined(req.body['password'])) {
-    res
-      .status(401)
-      .end()
-    return
-  }
+    if (_.isUndefined(req.body['email']) ||
+        _.isUndefined(req.body['password'])) {
+        res
+            .status(401)
+            .end()
+        return
+    }
 
-  const identity = await userStorage.authenticate(req.body)
+    const identity = await userStorage.authenticate(req.body)
 
-  if (identity == null)
-    return res
-      .status(401)
-      .end();
+    if (identity == null)
+        return res
+        .status(401)
+        .end();
 
-  await new Promise((resolve, reject) => {
-    req.session.regenerate((err) => {
-      req.session.identity = identity
-      resolve()
+    await new Promise((resolve, reject) => {
+        req.session.regenerate((err) => {
+            req.session.identity = identity
+            resolve()
+        })
     })
-  })
 
-  res
-    .status(200)
-    .json(identity)
+    res
+        .status(200)
+        .json(identity)
 })
 
 app.delete('/api/sessions', async (req, res) => {
@@ -622,16 +630,12 @@ app.post('/api/actions/broadcast', async (req, res) => {
 })
 
 // https://your-domain/accessTokens will return access tokens such as google access tokens
-app.get("/accessTokens", (req,res) => {
-
-    let {google} = require('googleapis');
-    let privateKey = require("./google_key.json");
-  
+app.get("/api/accessGoogleTokens", (req, res) => {
     // configure a JWT auth client
     let jwtClient = new google.auth.JWT(
-      privateKey.client_email,
+      google_key.client_email,
       null,
-      privateKey.private_key,
+      google_key.private_key,
       'https://www.googleapis.com/auth/analytics.readonly');
   
       jwtClient.authorize(function (err, token) {
