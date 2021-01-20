@@ -87,21 +87,16 @@
      },
      identity: {
        immediate: true,
-       handler: function (newValue, oldValue) {
-         if (newValue === undefined)
+       handler: function (value) {
+         if (value === undefined)
            return;
 
-         this
-           .$http
-           .get(`/users/${newValue['id']}/is_writer`)
-           .then((res) => {
-             if (res.data == true) {
-               this.$router.replace({path: '/dashboard'})
-             }
-             else {
-               this.$router.replace({path: this.$route.query.redirect || '/'})
-             }
-           })
+         if (value.is_writer) {
+           this.$router.replace({path: '/dashboard'})
+         }
+         else {
+           this.$router.replace({path: this.$route.query.redirect || '/'})
+         }
        }
      }
    }
