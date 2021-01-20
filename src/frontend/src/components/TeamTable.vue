@@ -142,12 +142,6 @@ export default {
                     'team_name' : this.editedItem.name,
                     'team_country' : this.editedItem.country
                 })
-                
-                //send event to google analytics
-                this.$gtag.event('edit_team', {
-                  'event_category' : 'Admin',
-                  'event_label' : 'Edit existing team'
-                })
             }
             catch(err){
                 console.log(err)
@@ -160,12 +154,6 @@ export default {
                     'team_name' : this.editedItem.name,
                     'team_sport_id' : this.editedItem.sport_id,
                     'team_country' : this.editedItem.country
-                })
-
-                //send event to google analytics
-                this.$gtag.event('add_team', {
-                  'event_category' : 'Admin',
-                  'event_label' : 'Add new team'
                 })
             }
             catch(err){
@@ -199,12 +187,6 @@ export default {
             http.delete(`teams/${this.active_id}`)
             this.dialogDelete = false
             window.location.reload()
-
-            //send event to google analytics
-            this.$gtag.event('delete_team', {
-              'event_category' : 'Admin',
-              'event_label' : 'Delete existing team'
-            })
         }
 
     }

@@ -6,11 +6,11 @@
                 <img src="../assets/harden-logo.svg" alt="" @click="onHardenLogoClick">
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-btn icon flat color="#FFCC00"
+            <v-btn icon text color="#FFCC00"
               @click="onProfileClick">
                 <v-icon>mdi-account-circle</v-icon>
             </v-btn>
-            <v-btn icon flat color="#FFCC00">
+            <v-btn icon text color="#FFCC00">
                 <v-icon>mdi-scoreboard-outline</v-icon>
             </v-btn>
         </v-app-bar>
@@ -40,7 +40,6 @@ export default {
                 { icon: 'mdi-basketball-hoop-outline', text: 'Basketball', route: '/articles/sports/1'},
                 { icon: 'mdi-football', text: 'American Football', route: '/articles/sports/2'},
                 { icon: 'mdi-baseball-bat', text: 'Baseball', route: '/articles/sports/3'},
-                { icon: 'mdi-football-helmet', text: 'NCAAF', route: '/articles//sports/4'},
                 { icon: 'mdi-soccer', text: 'Soccer', route: '/articles/sports/5'},
                 { icon: 'mdi-mixed-martial-arts', text: 'MMA', route: '/articles/sports/6'},
                 { icon: 'mdi-tennis', text: 'Tennis', route: '/articles/sports/7'}
@@ -55,26 +54,20 @@ export default {
       }
     },
     methods: {
-        onProfileClick() {
-          if (this.identity === undefined) {
-            this.$router.push({path: '/login', query: {redirect: this.$route.path}})
+      onProfileClick() {
+        if (this.identity === undefined) {
+          this.$router.push({path: '/login', query: {redirect: this.$route.path}})
 
-            return
-          }
+          return
+        }
 
-          this
-            .$http
-            .get(`/users/${this.identity['id']}/is_writer`)
-            .then((res) => {
-              if (res.data == true) {
-                this.$router.push({path: '/dashboard'})
-              }
-              else {
-                // TODO: route to user profile
-                this.$router.push({path: '/profile'})
-              }
-            })
-        },
+        if (this.identity.is_writer) {
+          this.$router.push({path: '/dashboard'})
+        }
+        else {
+          this.$router.push({path: '/profile'})
+        }
+      },
         onScoreClick(){
 
         },
@@ -114,13 +107,13 @@ export default {
             }
         }
     },
-    mounted() {
-        http.get('/sports')
+    async mounted() {
+        await http.get('/sports')
         .then((response) => {
             this.sports = response['data']
         })
 
-        http.get('/leagues')
+        await http.get('/leagues')
         .then((response) => {
             this.leagues = response['data']
         })

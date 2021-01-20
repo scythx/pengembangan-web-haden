@@ -1,5 +1,5 @@
 <template>
-    <div id="container">
+    <div v-if="identity" id="container">
         <v-container
         class="p-3">
             <h1 class="font-weight-light white--text"
@@ -166,6 +166,11 @@ export default {
             teams:[]
         }
     },
+   computed: {
+     identity: function () {
+       return this.$store.state.authentication.identity
+     }
+   },
     methods: {
         onAddFavoriteClick(){
             if (this.$route.path !== '/profile/add_edit_favorite'){
@@ -233,49 +238,56 @@ export default {
             }
         }
     },
-    mounted() {
-        this.id_user = this.$store.state.authentication.identity.id
+   async created () {
+     if (this.identity === undefined) {
+       await this.$router.replace({path: '/'})
+       return
+     }
+    this.id_user = this.identity.id
+     await http
+       .get('/users/'+this.id_user)
+       .then((response) => {
+         var user = response['data']
+         this.username = user[0].fullname
+       })
 
-        http.get('/users/'+this.id_user)
-        .then((response) => {
-            
-            var user = response['data']
-            this.username = user[0].fullname
-        })
+     await http
+       .get('/fav-sports/'+this.id_user)
+       .then((response) => {
+         this.favSports = response['data']
+       })
 
-        http.get('/fav-sports/'+this.id_user)
-        .then((response) => {
-            this.favSports = response['data']
-        })
+     await http
+       .get('/fav-leagues/'+this.id_user)
+       .then((response) => {
+         this.favLeagues = response['data']
+       })
 
-        http.get('/fav-leagues/'+this.id_user)
-        .then((response) => {
-            this.favLeagues = response['data']
-        })
+     await http
+       .get('/fav-teams/'+this.id_user)
+       .then((response) => {
+         this.favTeams = response['data']
+       })
 
-        http.get('/fav-teams/'+this.id_user)
-        .then((response) => {
-            this.favTeams = response['data']
-        })
+     await http
+       .get('/sports')
+       .then((response) => {
+         this.sports = response['data']
+       })
 
-        http.get('/sports')
-        .then((response) => {
-            this.sports = response['data']
-        })
+     await http
+       .get('/leagues')
+       .then((response) => {
+         this.leagues = response['data']
+       })
 
-        http.get('/leagues')
-        .then((response) => {
-            this.leagues = response['data']
-        })
-
-        http.get('/teams')
-        .then((response) => {
-            this.teams = response['data']
-        })
-
-        
-    },
-}
+     await http
+       .get('/teams')
+       .then((response) => {
+         this.teams = response['data']
+       })
+   }
+ }
 </script>
 
 <style scoped>

@@ -48,7 +48,7 @@
          block
          elevation="2"
          :loading="registerBtn.loading"
-         @click="onRegisterClick">Masuk</v-btn>
+         @click="onRegisterClick">Daftar</v-btn>
        <v-divider dark></v-divider>
        <p class="text-center white--text caption">Sudah punya akun? <a @click="onLoginClick">Login di sini.</a> </p>
      </v-form>
@@ -135,21 +135,16 @@
      },
      identity: {
        immediate: true,
-       handler: function (newValue, oldValue) {
-         if (newValue === undefined)
+       handler: function (value) {
+         if (value === undefined)
            return;
 
-         this
-           .$http
-           .get(`/users/${newValue['id']}/is_writer`)
-           .then((res) => {
-             if (res.data == true) {
-               this.$router.replace({path: '/dashboard'})
-             }
-             else {
-               this.$router.replace({path: this.$route.query.redirect || '/'})
-             }
-           })
+         if (value.is_writer) {
+           this.$router.replace({path: '/dashboard'})
+         }
+         else {
+           this.$router.replace({path: this.$route.query.redirect || '/'})
+         }
        }
      }
    }

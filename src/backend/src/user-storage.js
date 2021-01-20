@@ -23,7 +23,7 @@ export async function deleteTable() {
 export const authenticate = async ({email, password}) => {
   const queryResult = await db
     .query(`SELECT
-              id_user, password_digest
+              id_user, password_digest, fullname, is_writer
             FROM
               users
             WHERE
@@ -39,13 +39,20 @@ export const authenticate = async ({email, password}) => {
     return null
 
   return {
-    'id': user['id_user']
+    'id': user['id_user'],
+    'fullname': user['fullname'],
+    'is_writer': user['is_writer']
   }
 }
 
 export async function getAll() {
     const users = await db.query(`SELECT * FROM ${TABLE_NAME};`)
     return users
+}
+
+export async function getSubscriber() {
+  const users = await db.query(`SELECT * FROM ${TABLE_NAME} WHERE is_subscribed_newsletter = True;`)
+  return users
 }
 
 export async function getOne(userId) {
