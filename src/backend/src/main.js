@@ -15,10 +15,29 @@ import * as favSportStorage from './userfavoritesport-storage'
 import * as favLeagueStorage from './userfavoriteleague-storage'
 import * as favTeamStorage from './userfavoriteteam-storage'
 import * as newsletterSubscribers from './model/newsletter-subscribers'
+import * as sitemap from './sitemap'
 
 const app = express()
 const port = process.env.PORT
 var compression = require('compression')
+const robots = require('express-robots-txt');
+
+
+// set public folder as static
+app.use(express.static('../../frontend/public'));
+
+// set up robots
+app.use(
+    robots({
+        UserAgent: "*",
+        Disallow: "",
+        Sitemap: "http://harden.southeastasia.azurecontainer.io/sitemap.xml",
+    })
+);
+
+// use sitemap
+app.use(sitemap.generateSitemap);
+
 
 app.use(cors({
   origin: 'http://localhost:8080',
