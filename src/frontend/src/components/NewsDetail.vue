@@ -36,7 +36,7 @@
 
 <script>
 import http from "@/http"
-
+import $ from 'jquery'
 export default {
     name: 'NewsDetail',
     props:['id_article'],
@@ -55,13 +55,21 @@ export default {
             this.article = articles[0]
         })
         .then(() =>{
+            var index = 0
             var content = document.querySelector("#content");
             content.innerHTML = this.article.content
-        })
-        .then(()=>{
+
             var content = document.querySelector("#content");
-            var element = content.getElementsByTagName("img")[0]
+            var element = content.getElementsByTagName("figure")[index]
             element.parentNode.removeChild(element);
+
+            var elements = content.getElementsByTagName("img")
+            if (elements[index]){
+                for(var i = 0; i < elements.length; i++){
+                    console.log(elements[i])
+                    $(elements[i]).css("max-width", "100%");
+                }
+            }
         })
 
         await http.get('/users/' + this.article.id_author)

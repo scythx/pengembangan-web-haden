@@ -43,7 +43,7 @@ Vue.filter('textPreview', function(value) {
       while(text.length < 30){
         text = text + el.getElementsByTagName("p")[i++].innerHTML
       }
-      return _.unescape(text + ".. Baca selengkapnya.");
+      return _.unescape(text.replace(/(<([^>]+)>)/gi, "") + ".. Baca selengkapnya.");
   }
 });
 
