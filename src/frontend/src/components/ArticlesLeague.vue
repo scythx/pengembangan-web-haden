@@ -24,9 +24,16 @@
                 <v-list-item-content>
                     <h1
                         v-text="article.title"
-                        class="h4 font-weight-light"
+                        class="h4"
                         :style="$vuetify.breakpoint.lg ? 'font-size:1.5vw' : 'font-size:2.5vw'">
                     </h1>
+                    <p
+                    v-if="$vuetify.breakpoint.lg"
+                    class="font-weight-light white--text"
+                    :style="'font-size:1vw'"
+                    >
+                        {{ article.content | textPreview }}
+                    </p>
                 </v-list-item-content>
             </v-list-item>
         </v-list>

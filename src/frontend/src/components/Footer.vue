@@ -13,12 +13,12 @@
         color="white"
         text
         rounded
-        class="my-2"
+        class="my-2 font-weight-light"
       >
         {{ link }}
       </v-btn>
       <v-col
-        class="py-3 text-center white--text"
+        class="py-3 text-center white--text font-weight-light"
         cols="12"
       >
         &copy; {{ new Date().getFullYear() }} — Harden News
