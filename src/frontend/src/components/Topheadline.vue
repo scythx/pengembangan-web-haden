@@ -3,7 +3,6 @@
     <v-list dense class="container" color="#222831" width="auto">
       <hr />
       <h1
-        id="title"
         class="h1 font-weight-light"
         :style="$vuetify.breakpoint.lg ? 'font-size:3vw' : 'font-size:5vw'"
       >
@@ -16,7 +15,7 @@
           cols="12"
         >
           <v-card color="rgb(0, 0, 0, 0)" outlined @click="onArticleClick(item.id_article)">
-            <div class="d-flex flex-no-wrap justify-space-between">
+            <div id="headline" class="d-flex flex-no-wrap justify-space-between">
               <div class="ma-2 my-3">
                 <h1
                   class="h4"
@@ -42,7 +41,7 @@
               <v-img
                 class="rounded-sm"
                 :src="item.thumbnail"
-                style="margin-left:1%"
+                style="margin:1%;"
                 :max-width="$vuetify.breakpoint.lg ? '30%' : '40%'"
               >
               </v-img>
@@ -124,4 +123,9 @@ hr {
   border-style: inset;
   border-width: 1px;
 }
+
+#headline:hover {
+  background-color: #203e5f;
+}
+
 </style>
