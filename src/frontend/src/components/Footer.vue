@@ -1,5 +1,6 @@
 <template>
-  <v-footer
+  <v-footer app
+    absolute
     color="#203E5F"
     padless
   >

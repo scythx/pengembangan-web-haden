@@ -124,22 +124,4 @@ const router = new VueRouter({
   routes
 })
 
-router.beforeEach((to, from, next) => {
-  if (store.state.authentication.identity === undefined &&
-      store.state.authentication.isAuthenticating) {
-    const unwatch = store.watch(
-      (state) => state.authentication.isAuthenticating,
-      (value) => {
-        if (value === true)
-          return
-
-        unwatch()
-        next()
-      })
-  }
-  else {
-    next()
-  }
-})
-
 export default router
