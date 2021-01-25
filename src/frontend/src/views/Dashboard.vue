@@ -22,7 +22,8 @@
         rounded
         disabled
         height="50px"
-        color="#1A2634">
+        color="#1A2634"
+        class="font-weight-light">
           <v-icon
           large
           class="mr-2">mdi-account</v-icon>

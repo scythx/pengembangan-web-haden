@@ -2,7 +2,7 @@
     <div class="news-detail black-base p-3">
         <!-- title sama gambar urang pindahin ke paling atas-->
         <v-container>
-            <h1 class="news-heading white--text">{{ article.title }}</h1>
+            <h1 class="news-heading white--text font-weight-light">{{ article.title }}</h1>
             <v-img	
                 contain	
                 lazy-src="https://picsum.photos/id/11/10/6"	
@@ -13,22 +13,19 @@
         </v-container>
         <v-container>
             <v-row no-gutters>
-                <v-img class="rounded-circle d-inline-block"
-                    max-width="50"
-                    max-height="50"
-                    :aspect-ratio="1/1"
-                    src="https://picsum.photos/id/11/500/300">
-                </v-img>
-                <v-col class="text-left my-auto mx-3 amber--text accent-3">
+                <v-icon 
+                x-large
+                color="#FFCC00">mdi-account-circle</v-icon>
+                <v-col class="text-left my-auto mx-3 amber--text accent-3 font-weight-light">
                    {{authorname}}
                 </v-col>
                 <v-spacer></v-spacer>
-                <v-col class="text-right my-auto mx-3 amber--text accent-3">
+                <v-col class="text-right my-auto mx-3 amber--text accent-3 font-weight-light">
                     {{article.date_published.substring(0,10) | formatDate}}
                 </v-col>
             </v-row>
         </v-container>
-        <v-container id="content" class="white--text">
+        <v-container id="content" class="white--text font-weight-light">
             {{ article.content }}
         </v-container>
     </div>
