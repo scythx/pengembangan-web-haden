@@ -14,11 +14,11 @@ properties:
         - name: "PORT"
           value: {{ PORT }}
         - name: "DB_HOST"
-          value: {{ DB_HOST }}
+          value: {{ DB_HOSTNAME }}
         - name: "DB_PORT"
           value: {{ DB_PORT }}
         - name: "DB_USER"
-          value: {{ DB_USER }}
+          value: {{ DB_USERNAME }}
         - name: "DB_DATABASE"
           value: {{ DB_DATABASE }}
         - name: "DB_PASSWORD"
@@ -31,7 +31,7 @@ properties:
           memoryInGb: 0.3
       volumeMounts:
       - mountPath: /usr/src/app/public/assets
-        name: filesharevolume
+        name: storageaccountsharevolume
   osType: Linux
   ipAddress:
     type: Public
@@ -40,9 +40,9 @@ properties:
       port: {{ PORT }}
     dnsNameLabel: {{ DNS_NAME_LABEL }}
   volumes:
-  - name: filesharevolume
+  - name: storageaccountsharevolume
     azureFile:
-      sharename: acishare
+      sharename: {{ STORAGE_ACCOUNT_SHARE_NAME }}
       storageAccountName: {{ STORAGE_ACCOUNT_NAME }}
       storageAccountKey: {{ STORAGE_ACCOUNT_KEY }}
   imageRegistryCredentials:

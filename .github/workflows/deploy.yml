@@ -7,12 +7,7 @@ jobs:
   deploy:
     env:
       NODE_ENV: development
-      NODE_HOSTNAME: harden.southeastasia.azurecontainer.io
       PORT: 80
-      DB_HOST: harden-db.postgres.database.azure.com
-      DB_PORT: 5432
-      DB_USER: postgres@harden-db
-      DB_DATABASE: postgres
       IMAGE_NAME: harden
       IMAGE_TAG: latest
     runs-on: ubuntu-latest
@@ -24,34 +19,61 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: 'Build and push image'
-        uses: azure/docker-login@v1
-        with:
-          login-server: ${{ secrets.REGISTRY_LOGIN_SERVER }}
-          username: ${{ secrets.REGISTRY_USERNAME }}
-          password: ${{ secrets.REGISTRY_PASSWORD }}
-      - run: |
-          docker build . -t ${{ secrets.REGISTRY_LOGIN_SERVER }}/$IMAGE_NAME:$IMAGE_TAG
-          docker push ${{ secrets.REGISTRY_LOGIN_SERVER }}/$IMAGE_NAME:$IMAGE_TAG
-
-      - name: 'Deploy'
+      - name: 'Clean up resources'
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            sed -i "s/{{ NODE_ENV }}/$NODE_ENV/; \
-                    s/{{ NODE_HOSTNAME }}/$NODE_HOSTNAME/; \
-                    s/{{ PORT }}/$PORT/; \
-                    s/{{ DB_HOST }}/$DB_HOST/; \
-                    s/{{ DB_PORT }}/$DB_PORT/; \
-                    s/{{ DB_USER }}/$DB_USER/; \
-                    s/{{ DB_PASSWORD }}/XzBjPw6S8VaDCBX/; \
-                    s/{{ DB_DATABASE }}/$DB_DATABASE/; \
+            az container delete \
+              --name harden \
+              --resource-group ${{ secrets.RESOURCE_GROUP }} \
+              --yes
+            az acr delete \
+              --name ${{ secrets.REGISTRY_NAME }} \
+              --resource-group ${{ secrets.RESOURCE_GROUP }} \
+              --yes
+
+      - name: 'Creare azure container registry'
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az acr create --resource-group ${{ secrets.RESOURCE_GROUP }} --name ${{ secrets.REGISTRY_NAME }} --sku Basic
+            registryId=$(az acr show \
+              --name ${{ secrets.REGISTRY_NAME }} \
+              --query id --output tsv)
+            az role assignment create \
+              --assignee ${{ secrets.REGISTRY_USERNAME }} \
+              --scope $registryId \
+              --role AcrPush
+
+      - name: 'Build and push image'
+        uses: azure/docker-login@v1
+        with:
+          login-server: ${{ secrets.REGISTRY_NAME }}.azurecr.io
+          username: ${{ secrets.REGISTRY_USERNAME }}
+          password: ${{ secrets.REGISTRY_PASSWORD }}
+      - run: |
+          docker build . -t ${{ secrets.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+          docker push ${{ secrets.REGISTRY_NAME }}.azurecr.io/${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+
+      - name: 'Deploy to Azure Container Instances'
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            sed -i "s/{{ NODE_ENV }}/${{ env.NODE_ENV }}/; \
+                    s/{{ NODE_HOSTNAME }}/${{ secrets.RESOURCE_GROUP }}.southeastasia.azurecontainer.io/; \
+                    s/{{ PORT }}/${{ env.PORT }}/; \
+                    s/{{ DB_HOSTNAME }}/${{ secrets.DB_HOSTNAME }}/; \
+                    s/{{ DB_PORT }}/${{ secrets.DB_PORT }}/; \
+                    s/{{ DB_USERNAME }}/${{ secrets.DB_USERNAME }}/; \
+                    s/{{ DB_PASSWORD }}/${{ secrets.DB_PASSWORD }}/; \
+                    s/{{ DB_DATABASE }}/${{ secrets.DB_DATABASE }}/; \
                     s/{{ DNS_NAME_LABEL }}/${{ secrets.RESOURCE_GROUP }}/; \
-                    s/{{ IMAGE_NAME }}/$IMAGE_NAME/; \
-                    s/{{ IMAGE_TAG }}/$IMAGE_TAG/; \
-                    s/{{ REGISTRY_LOGIN_SERVER }}/${{ secrets.REGISTRY_LOGIN_SERVER }}/; \
+                    s/{{ IMAGE_NAME }}/${{ env.IMAGE_NAME }}/; \
+                    s/{{ IMAGE_TAG }}/${{ env.IMAGE_TAG }}/; \
+                    s/{{ REGISTRY_LOGIN_SERVER }}/${{ secrets.REGISTRY_NAME }}.azurecr.io/; \
                     s/{{ REGISTRY_USERNAME }}/${{ secrets.REGISTRY_USERNAME }}/; \
                     s/{{ REGISTRY_PASSWORD }}/${{ secrets.REGISTRY_PASSWORD }}/; \
                     s/{{ STORAGE_ACCOUNT_NAME }}/${{ secrets.STORAGE_ACCOUNT_NAME }}/; \
-                    s/{{ STORAGE_ACCOUNT_KEY }}/${{ secrets.STORAGE_ACCOUNT_KEY }}/;" aci.yaml
-            az container create --resource-group harden --file aci.yaml
+                    s/{{ STORAGE_ACCOUNT_KEY }}/${{ secrets.STORAGE_ACCOUNT_KEY }}/; \
+                    s/{{ STORAGE_ACCOUNT_SHARE_NAME }}/${{ secrets.STORAGE_ACCOUNT_SHARE_NAME }}/;" aci.yaml
+            az container create --resource-group ${{ secrets.RESOURCE_GROUP }} --file aci.yaml

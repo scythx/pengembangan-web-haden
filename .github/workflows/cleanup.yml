@@ -18,5 +18,9 @@ jobs:
           inlineScript: |
             az container delete \
               --name harden \
-              --resource-group harden \
+              --resource-group ${{ secrets.RESOURCE_GROUP }} \
+              --yes
+            az acr delete \
+              --name ${{ secrets.REGISTRY_NAME }} \
+              --resource-group ${{ secrets.RESOURCE_GROUP }} \
               --yes
