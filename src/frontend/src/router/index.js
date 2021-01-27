@@ -4,6 +4,7 @@ import Dashboard from '../views/Dashboard.vue'
 import Gallery from '../components/Gallery.vue'
 import ArticleInputForm from '../components/ArticleInputForm.vue'
 import ArticleList from '../components/ArticleList.vue'
+import ArticleEdit from '../components/ArticleEdit.vue'
 import CategoriesPage from '../components/CategoriesPage.vue'
 import Stats from '../components/Dashboard.vue'
 import MainPage from '../views/MainPage.vue'
@@ -36,6 +37,12 @@ const routes = [
         props: true
       },
       {
+        path: '/dashboard/edit_article/:article_id',
+        name: 'edit_article',
+        component: ArticleInputForm,
+        props: true
+      },
+      {
         path: '/dashboard/list_article',
         name: 'list_article',
         component: ArticleList,
@@ -43,6 +50,10 @@ const routes = [
           {
             path: '/dashboard/add_article',
             component: ArticleInputForm
+          },
+          {
+            path: '/dashboard/edit_article/:article_id',
+            component: ArticleInputForm,
           },
         ]
       },
