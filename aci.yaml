@@ -3,6 +3,21 @@ location: southeast asia
 name: harden
 properties:
   containers:
+  - name: nginx
+    properties:
+      image: nginx
+      ports:
+      - port: 80
+        protocol: tcp
+      - port: 443
+        protocol: tcp
+      resources:
+        requests:
+          cpu: 0.1
+          memoryInGB: 0.1
+      volumeMounts:
+      - name: nginx-config
+        mountPath: /etc/nginx
   - name: backend
     properties:
       image: {{ REGISTRY_LOGIN_SERVER }}/{{ IMAGE_NAME }}:{{ IMAGE_TAG }}
@@ -12,7 +27,7 @@ properties:
         - name: "NODE_HOSTNAME"
           value: {{ NODE_HOSTNAME }}
         - name: "PORT"
-          value: {{ PORT }}
+          value: 8080
         - name: "DB_HOST"
           value: {{ DB_HOSTNAME }}
         - name: "DB_PORT"
@@ -23,12 +38,10 @@ properties:
           value: {{ DB_DATABASE }}
         - name: "DB_PASSWORD"
           secureValue: {{ DB_PASSWORD }}
-      ports:
-      - port: {{ PORT }}
       resources:
         requests:
-          cpu: 0.5
-          memoryInGb: 0.3
+          cpu: 0.9
+          memoryInGb: 0.9
       volumeMounts:
       - mountPath: /usr/src/app/public/assets
         name: storageaccountsharevolume
@@ -37,9 +50,16 @@ properties:
     type: Public
     ports:
     - protocol: tcp
-      port: {{ PORT }}
+      port: 80
+    - protocol: tcp
+      port: 443
     dnsNameLabel: {{ DNS_NAME_LABEL }}
   volumes:
+  - name: nginx-config
+    azureFile:
+      sharename: nginx-config
+      storageAccountName: {{ STORAGE_ACCOUNT_NAME }}
+      storageAccountKey: {{ STORAGE_ACCOUNT_KEY }}
   - name: storageaccountsharevolume
     azureFile:
       sharename: {{ STORAGE_ACCOUNT_SHARE_NAME }}

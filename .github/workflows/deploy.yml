@@ -61,7 +61,6 @@ jobs:
           inlineScript: |
             sed -i "s/{{ NODE_ENV }}/${{ env.NODE_ENV }}/; \
                     s/{{ NODE_HOSTNAME }}/${{ secrets.RESOURCE_GROUP }}.southeastasia.azurecontainer.io/; \
-                    s/{{ PORT }}/${{ env.PORT }}/; \
                     s/{{ DB_HOSTNAME }}/${{ secrets.DB_HOSTNAME }}/; \
                     s/{{ DB_PORT }}/${{ secrets.DB_PORT }}/; \
                     s/{{ DB_USERNAME }}/${{ secrets.DB_USERNAME }}/; \
