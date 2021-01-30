@@ -6,6 +6,7 @@ module.exports = {
     // The source of CKEditor is encapsulated in ES6 modules. By default, the code
     // from the node_modules directory is not transpiled, so you must explicitly tell
     // the CLI tools to transpile JavaScript files in all ckeditor5-* modules.
+    parallel: false,
     transpileDependencies: [
         /ckeditor5-[^/\\]+[/\\]src[/\\].+\.js$/,
     ],
