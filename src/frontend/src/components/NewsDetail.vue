@@ -21,7 +21,7 @@
                 </v-col>
                 <v-spacer></v-spacer>
                 <v-col class="text-right my-auto mx-3 amber--text accent-3 font-weight-light">
-                    {{article.date_published.substring(0,10) | formatDate}}
+                    {{article.date_published | formatDate}}
                 </v-col>
             </v-row>
         </v-container>

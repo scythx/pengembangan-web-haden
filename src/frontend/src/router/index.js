@@ -85,7 +85,7 @@ const routes = [
         props: true
       },
       {
-        path: 'article/:id_article',
+        path: 'article/:id_article/:title',
         name: 'news_page',
         component: NewsPage,
         props: true
