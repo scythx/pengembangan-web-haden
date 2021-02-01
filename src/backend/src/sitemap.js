@@ -30,7 +30,7 @@ async function getArticles(){
 }
 
 function fixedTitle(title){
-    title = title.replace(/-|;|,|:|'|"|’|‘|“|”/g, '');
+    title = title.replace(/-|;|,|:|'|"|’|‘|“|\?|”/g, '');
     title = title.replace(/\s+/g, '-');
     return title;
 }
