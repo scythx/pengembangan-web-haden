@@ -29,13 +29,19 @@ async function getArticles(){
     }
 }
 
+function fixedTitle(title){
+    title = title.replace(/-|;|,|:|'|"|’|‘|“|”/g, '');
+    title = title.replace(/\s+/g, '-');
+    return title;
+}
+
 async function getURLs(){
 
     const articles = await getArticles();
 
     // create list of dynamic url
-    const dynamicURLs = articles.map(article => `${dynamicPaths['articles']}/${article.id_article}`);
-    
+    const dynamicURLs = articles.map(article => `${dynamicPaths['articles']}/${article.id_article}/${fixedTitle(article.title)}`);
+
     // combine static + dynamic URL
     return staticURLs.concat(dynamicURLs);
 }
