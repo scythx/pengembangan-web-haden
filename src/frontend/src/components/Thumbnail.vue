@@ -22,7 +22,7 @@
               v-for="(article, id) in item.articles.slice(0, 2)"
               :key="id"
               ripple
-              @click="onArticleClick(article.id_article)"
+              @click="onArticleClick(article.id_article, article.title)"
               class="tile"
               dense
               style="margin-bottom:1%"
@@ -91,7 +91,7 @@
               v-for="(article, id) in item.articles.slice(0, 2)"
               :key="id"
               ripple
-              @click="onArticleClick(article.id_article)"
+              @click="onArticleClick(article.id_article, article.title)"
               class="tile"
               dense
               style="margin-bottom:1%"
@@ -160,7 +160,7 @@
               v-for="(article, id) in item.articles.slice(0, 2)"
               :key="id"
               ripple
-              @click="onArticleClick(article.id_article)"
+              @click="onArticleClick(article.id_article, article.title)"
               class="tile"
               dense
               style="margin-bottom:1%"
@@ -228,7 +228,7 @@
             v-for="(article, id) in item.articles.slice(0, 2)"
             :key="id"
             ripple
-            @click="onArticleClick(article.id_article)"
+            @click="onArticleClick(article.id_article, article.title)"
             class="tile"
             dense
             style="margin-bottom:1%"
@@ -331,9 +331,11 @@ export default {
         i++;
       }
     },
-    onArticleClick(id) {
-      if (this.$route.path !== "/article/" + id) {
-        this.$router.push("/article/" + id);
+    onArticleClick(id, title) {
+      title = title.replace(/-|;|,|:|'|"|’|‘|“|”/g, '');
+      title = title.replace(/\s+/g, '-');
+      if (this.$route.path !== "/article/" + id + "/" + title) {
+        this.$router.push("/article/" + id + "/" + title);
         this.$router.go();
       }
     },

@@ -12,7 +12,7 @@ import Newsletter from '@/components/Newsletter'
 import ShareButton from '@/components/ShareButton'
 
 export default {
-    props: ['id_article'],
+    props: ['id_article', 'title'],
     components: {
         NewsDetail,
         Newsletter,

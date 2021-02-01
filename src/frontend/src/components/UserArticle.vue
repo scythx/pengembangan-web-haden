@@ -1,6 +1,6 @@
 <template>
  <div id="container">
-   <v-container @click="onArticleClick(article.id_article)" class="tile">
+   <v-container @click="onArticleClick(article.id_article, article.title)" class="tile">
      <!-- img -->
      <v-row>
        <v-col cols="12">
@@ -24,12 +24,14 @@
    name : 'UserArticle',
    props : ["article"],
    methods:{
-       onArticleClick(id){
-           if(this.$route.path !== '/article/'+id){
-               this.$router.push('/article/'+id)
-               this.$$router.go()
-           }
-       }
+      onArticleClick(id, title) {
+      title = title.replace(/-|;|,|:|'|"|’|‘|“|”/g, '');
+      title = title.replace(/\s+/g, '-');
+      if (this.$route.path !== "/article/" + id + "/" + title) {
+        this.$router.push("/article/" + id + "/" + title);
+        this.$router.go();
+      }
+    }
    }
  }
 </script>
