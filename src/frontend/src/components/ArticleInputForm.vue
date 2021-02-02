@@ -1,8 +1,43 @@
 <template>
   <div class="container mt-4 my-2">
-    <h3>Add new article</h3>
+    <h3 v-if="article_id">Edit article</h3>
+    <h3 v-else>Add new article</h3>
     <h4 class="mt-3">Category</h4>
-    <div class="d-flex justify-start">
+    <div v-if="edit_category" class="d-flex justify-start">
+      <v-select
+        class="mr-2"
+        :items="sports"
+        name="sport-select"
+        item-text="name"
+        item-value="id_sport"
+        v-model="article.sport_id"
+        label="Sport"
+        dense
+        solo
+      ></v-select>
+      <v-select
+        :items="teams"
+        name="team-select"
+        item-text="name"
+        item-value="id_team"
+        v-model="article.team_id"
+        label="Team"
+        dense
+        solo
+      ></v-select>
+      <v-select
+        class="ml-2"
+        :items="leagues"
+        name="league-select"
+        item-text="name"
+        item-value="id_league"
+        v-model="article.league_id"
+        label="League"
+        dense
+        solo
+      ></v-select>
+    </div>
+    <div v-else class="d-flex justify-start">
       <v-select
         class="mr-2"
         :items="sports"
@@ -39,6 +74,16 @@
     <h4>Content</h4>
     <div class="mb-2">
       <ckeditor
+        v-if="article_id"
+        tag-name="textarea"
+        aria-label="With textarea"
+        :editor="editor"
+        :config="editorConfig"
+        @ready="onEditorReady"
+        @input="onEditorInput"
+      ></ckeditor>
+      <ckeditor
+        v-else
         tag-name="textarea"
         aria-label="With textarea"
         :editor="editor"
@@ -47,7 +92,10 @@
       ></ckeditor>
     </div>
     <div class="d-flex flex-row-reverse align-items-center">
-      <v-btn elevation="1" @click="add" color="primary" class="mx-2" medium
+      <v-btn v-if="article_id" elevation="1" @click="save" color="primary" class="mx-2" medium
+        >Save Changes</v-btn
+      >
+      <v-btn v-else elevation="1" @click="add" color="primary" class="mx-2" medium
         >Publish</v-btn
       >
       <div class="d-flex flex-row-reverse align-items-center">
@@ -64,7 +112,6 @@
 </template>
 
 <script>
-import $ from "jquery";
 import http from "@/http";
 import ClassicEditor from "@ckeditor/ckeditor5-editor-classic/src/classiceditor";
 import EssentialsPlugin from "@ckeditor/ckeditor5-essentials/src/essentials";
@@ -80,11 +127,16 @@ import Alignment from '@ckeditor/ckeditor5-alignment/src/alignment';
 //import SimpleUploadAdapter from "@ckeditor/ckeditor5-upload/src/adapters/simpleuploadadapter";
 import UploadAdapter from "../uploadAdapter";
 export default {
+  props:['article_id'],
   components: {
     ClassicEditor,
   },
   data() {
     return {
+      edit_category: false,
+      defaultSelected: {
+          id_sport: undefined
+        },
       article: {
         id_author: undefined,
         title: "",
@@ -100,6 +152,7 @@ export default {
       teams: undefined,
       leagues: undefined,
       editor: ClassicEditor,
+      editorData: '<p>Content of the editor.</p>',
       editorConfig: {
         plugins: [
           Title,
@@ -131,8 +184,7 @@ export default {
             "link",
             "imageUpload",
           ],
-        },
-        placeholder: "Type your content here.",
+        }
       },
     };
   },
@@ -147,6 +199,25 @@ export default {
         return new UploadAdapter(loader);
       };
     },
+    async onEditorReady(editor){
+      await http.get('/articles/' + this.article_id)
+      .then((response) => {
+          const articles = response['data']
+          this.article = articles[0]
+      })
+      .then(() => {
+          this.article.sport_id = String(this.article.id_sport);
+          this.article.league_id = String(this.article.id_league);
+          this.article.team_id = String(this.article.id_team);
+          this.edit_category = true;
+          editor.setData( '<h1>'+ this.article.title + '</h1>' + this.article.content );
+      })
+    },
+    save() {
+      http.put("/articles/"+this.article.id_article, this.article).then((res) => {
+        this.onListArticleMenuClick()
+      });
+    },
     add() {
       this.article.id_author = this.$store.state.authentication.identity.id
       const domparser = new DOMParser();
@@ -156,7 +227,7 @@ export default {
       } catch {
         this.article.thumbnail = "null";
       }
-      
+
       http.post("/articles/", this.article).then((res) => {
         this.onListArticleMenuClick()
       });

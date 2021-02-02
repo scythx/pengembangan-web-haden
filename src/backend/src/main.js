@@ -355,9 +355,10 @@ app.post('/api/articles/', function(req, res) {
 });
 
 app.put('/api/articles/:articleId', function(req, res, next) {
-    db.query(`UPDATE article SET thumbnail=${req.body.thumbnail}, title=${req.body.title}, id_author=${req.body.id_author}, content=${req.body.content}, date_published=${req.body.date},
-                is_headline=${req.body.is_headline}, id_sport=${req.body.id_sport}, id_league=${req.body.id_league}, id_team=${req.body.id_team}
-	            WHERE id_article=${req.params.articleId};`,
+    db.query(`UPDATE article SET thumbnail=$1, title=$2, id_author=$3, content=$4, date_published=$5,
+                is_headline=$6, id_sport=$7, id_league=$8, id_team=$9
+                WHERE id_article=${req.params.articleId};`,
+                [req.body.thumbnail, req.body.title, req.body.id_author, req.body.content, req.body.date_published, req.body.is_headline, req.body.sport_id, req.body.league_id, req.body.team_id],
                 function (err) {
         if (err) {
             console.log(err);

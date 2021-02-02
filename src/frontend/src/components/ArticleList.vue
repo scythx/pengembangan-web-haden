@@ -75,7 +75,7 @@
       </template>
 
       <template v-slot:item.actions="{ item }">
-        <v-icon small class="mr-2" @click="">
+        <v-icon small class="mr-2" @click="edit(item)">
           mdi-pencil
         </v-icon>
         <v-icon small @click="deleteItem(item)">
@@ -202,8 +202,8 @@ export default {
         this.$router.push("/dashboard/add_article");
     },
     edit(article) {
-      //call vue edit article page
-      console.log(article.id_article);
+      if (this.$route.path !== "/dashboard/edit_article/" + article.id_article)
+        this.$router.push("/dashboard/edit_article/" + article.id_article);
     },
     toBeDeleted(article) {
       this.articleDeleted = article;

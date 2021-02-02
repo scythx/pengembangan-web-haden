@@ -36,6 +36,12 @@ const routes = [
         props: true
       },
       {
+        path: '/dashboard/edit_article/:article_id',
+        name: 'edit_article',
+        component: ArticleInputForm,
+        props: true
+      },
+      {
         path: '/dashboard/list_article',
         name: 'list_article',
         component: ArticleList,
@@ -43,6 +49,10 @@ const routes = [
           {
             path: '/dashboard/add_article',
             component: ArticleInputForm
+          },
+          {
+            path: '/dashboard/edit_article/:article_id',
+            component: ArticleInputForm,
           },
         ]
       },
