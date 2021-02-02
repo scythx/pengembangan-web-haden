@@ -18,7 +18,7 @@ async function getArticles(){
     
     try{
         // get all article
-        const articles = await fetch('http://harden.southeastasia.azurecontainer.io/api/articles', {
+        const articles = await fetch('https://harden.southeastasia.azurecontainer.io/api/articles', {
             // set up appropriate header in order get access to API
             headers : {'Accept' : 'application/json'}
         });
@@ -30,7 +30,7 @@ async function getArticles(){
 }
 
 function fixedTitle(title){
-    title = title.replace(/-|;|,|:|'|"|’|‘|“|\?|”/g, '');
+    title = title.replace(/-|;|,|:|'|"|’|‘|“|\?|\&|”/g, '');
     title = title.replace(/\s+/g, '-');
     return title;
 }
@@ -46,4 +46,4 @@ async function getURLs(){
     return staticURLs.concat(dynamicURLs);
 }
 
-export const generateSitemap = expressSitemapXml(getURLs, "http://harden.southeastasia.azurecontainer.io/");
+export const generateSitemap = expressSitemapXml(getURLs, "https://harden.southeastasia.azurecontainer.io/");
