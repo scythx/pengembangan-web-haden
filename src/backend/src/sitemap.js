@@ -18,7 +18,7 @@ async function getArticles(){
     
     try{
         // get all article
-        const articles = await fetch('http://harden.southeastasia.azurecontainer.io/api/articles', {
+        const articles = await fetch('https://harden.southeastasia.azurecontainer.io/api/articles', {
             // set up appropriate header in order get access to API
             headers : {'Accept' : 'application/json'}
         });
