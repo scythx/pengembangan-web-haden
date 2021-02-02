@@ -41,6 +41,7 @@
     "popper.js": "^1.16.1",
     "postcss-loader": "^3.0.0",
     "raw-loader": "^0.5.1",
+    "register-service-worker": "^1.7.1",
     "vue": "^2.6.11",
     "vue-gtag": "^1.10.0",
     "vue-router": "^3.4.9",
@@ -51,6 +52,7 @@
   "devDependencies": {
     "@ckeditor/ckeditor5-alignment": "^24.0.0",
     "@vue/cli-plugin-babel": "~4.5.0",
+    "@vue/cli-plugin-pwa": "~4.5.0",
     "@vue/cli-plugin-router": "^4.5.9",
     "@vue/cli-plugin-vuex": "~4.5.0",
     "@vue/cli-service": "~4.5.0",

@@ -11,6 +11,7 @@ import CKEditor from '@ckeditor/ckeditor5-vue2';
 import VueGtag from "vue-gtag";
 import dayjs from 'dayjs';
 import _ from 'lodash'
+import './registerServiceWorker'
 
 Vue.config.productionTip = false
 Vue.prototype.$jquery = jquery
