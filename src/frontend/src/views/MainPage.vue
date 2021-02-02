@@ -1,8 +1,10 @@
 <template>
     <div>
-        <NewsHeader/>
+      <NewsHeader/>
+      <v-main>
         <router-view/>
-        <Footer/>
+      </v-main>
+      <Footer/>
     </div>
 </template>
 

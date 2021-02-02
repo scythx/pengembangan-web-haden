@@ -14,7 +14,7 @@
           :key="index"
           cols="12"
         >
-          <v-card color="rgb(0, 0, 0, 0)" outlined @click="onArticleClick(item.id_article)">
+          <v-card color="rgb(0, 0, 0, 0)" outlined @click="onArticleClick(item.id_article, item.title)">
             <div id="headline" class="d-flex flex-no-wrap justify-space-between">
               <div class="ma-2 my-3">
                 <h1
@@ -83,12 +83,14 @@ export default {
     };
   },
   methods: {
-    onArticleClick(id) {
-      if (this.$route.path !== "/article/" + id) {
-        this.$router.push("/article/" + id);
+    onArticleClick(id, title) {
+      title = title.replace(/-|;|,|:|'|"|’|‘|“|”/g, '');
+      title = title.replace(/\s+/g, '-');
+      if (this.$route.path !== "/article/" + id + "/" + title) {
+        this.$router.push("/article/" + id + "/" + title);
         this.$router.go();
       }
-    },
+    }
   },
   mounted() {
     const domparser = new DOMParser();

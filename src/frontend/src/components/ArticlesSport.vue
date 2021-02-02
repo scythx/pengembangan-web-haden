@@ -11,7 +11,7 @@
                 v-for="(article, id) in articles_sport"
                 :key="id"
                 ripple
-                @click="onArticleClick(article.id_article)"
+                @click="onArticleClick(article.id_article, article.title)"
                 class="tile"
                 dense
                 style="margin-bottom:1%"
@@ -24,9 +24,16 @@
                 <v-list-item-content>
                     <h1
                         v-text="article.title"
-                        class="h4 font-weight-light"
+                        class="h4"
                         :style="$vuetify.breakpoint.lg ? 'font-size:1.5vw' : 'font-size:2.5vw'">
                     </h1>
+                    <p
+                    v-if="$vuetify.breakpoint.lg"
+                    class="font-weight-light white--text"
+                    :style="'font-size:1vw'"
+                    >
+                        {{ article.content | textPreview }}
+                    </p>
                 </v-list-item-content>
             </v-list-item>
         </v-list>
@@ -47,12 +54,14 @@ export default {
         }
     },
     methods:{
-        onArticleClick(id){
-            if (this.$route.path !== '/article/'+id){
-                this.$router.push('/article/'+id)
-                this.$router.go()
-            }
-        }
+        onArticleClick(id, title) {
+      title = title.replace(/-|;|,|:|'|"|’|‘|“|”/g, '');
+      title = title.replace(/\s+/g, '-');
+      if (this.$route.path !== "/article/" + id + "/" + title) {
+        this.$router.push("/article/" + id + "/" + title);
+        this.$router.go();
+      }
+    }
     },
     mounted() {
         http.get('/articles/sports/' + this.id_sport)

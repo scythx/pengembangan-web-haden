@@ -6,10 +6,10 @@
                 <v-card tile color="#58ACFA" min-height="175">
                     <v-list-item>
                         <v-list-item-content class="white--text">
-                            <div class="text-h4 mb-4">
+                            <div class="text-h4 mb-4 font-weight-light">
                                 {{ jumlahArtikel }}
                             </div>
-                            <div class="text-h5">
+                            <div class="text-h5 font-weight-light">
                                 Articles
                             </div>
                         </v-list-item-content>
@@ -23,10 +23,10 @@
                 <v-card tile color="#0A8945" min-height="175">
                     <v-list-item>
                         <v-list-item-content class="white--text">
-                            <div class="text-h4 mb-4">
+                            <div class="text-h4 mb-4 font-weight-light">
                                 {{ jumlahPengguna }}
                             </div>
-                            <div class="text-h5">
+                            <div class="text-h5 font-weight-light">
                                 Users
                             </div>
                         </v-list-item-content>
@@ -40,10 +40,10 @@
                 <v-card tile color="#CC2015" min-height="175">
                     <v-list-item>
                         <v-list-item-content class="white--text">
-                            <div class="text-h4 mb-4">
+                            <div class="text-h4 mb-4 font-weight-light">
                                 {{ jumlahSubs }}
                             </div>
-                            <div class="text-h5">
+                            <div class="text-h5 font-weight-light">
                                 Subscribed
                             </div>
                         </v-list-item-content>
@@ -57,10 +57,10 @@
                 <v-card tile color="#FF8A00" min-height="175">
                     <v-list-item>
                         <v-list-item-content class="white--text">
-                            <div class="text-h4 mb-4">
+                            <div class="text-h4 mb-4 font-weight-light">
                                 {{ jumlahShare }}
                             </div> 
-                            <div class="text-h5">
+                            <div class="text-h5 font-weight-light">
                                 Share
                             </div>
                         </v-list-item-content>
@@ -74,14 +74,14 @@
             <!-- Card Users per Day-->
             <v-col>
                 <v-card class="pa-5">
-                    <h3>Users per Day</h3>
+                    <h3 class="font-weight-light">Users per Day</h3>
                     <div id="chart-users-per-day-container"></div>
                 </v-card>
             </v-col>
             <!-- Card Average Session Duration-->
             <v-col>
                 <v-card class="pa-5">
-                    <h3>Average Session Duration</h3>
+                    <h3 class="font-weight-light">Average Session Duration</h3>
                     <div id="chart-average-session"></div>
                 </v-card>
             </v-col>
@@ -90,7 +90,7 @@
             <!--Card Session-Region-->
             <v-col>
                 <v-card class="pa-5">
-                    <h3>Session per Region</h3>
+                    <h3 class="font-weight-light">Session per Region</h3>
                     <div id="chart-session-region-container"></div>
                 </v-card>
             </v-col>
@@ -105,7 +105,8 @@
         
         <v-row>
         <v-btn block
-             @click="broadcastNewsletter">
+             @click="broadcastNewsletter"
+             class="font-weight-light">
               Broadcast Newsletter
         </v-btn>
         </v-row>

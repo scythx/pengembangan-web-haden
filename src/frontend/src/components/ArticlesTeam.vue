@@ -11,7 +11,7 @@
                 v-for="(article, id) in articles_team"
                 :key="id"
                 ripple
-                @click="onArticleClick(article.id_article)"
+                @click="onArticleClick(article.id_article, article.title)"
                 class="tile"
                 dense
                 style="margin-bottom:1%"
@@ -47,12 +47,14 @@ export default {
         }
     },
     methods:{
-        onArticleClick(id){
-            if (this.$route.path !== '/article/'+id){
-                this.$router.push('/article/'+id)
-                this.$router.go()
-            }
-        }
+        onArticleClick(id, title) {
+      title = title.replace(/-|;|,|:|'|"|’|‘|“|”/g, '');
+      title = title.replace(/\s+/g, '-');
+      if (this.$route.path !== "/article/" + id + "/" + title) {
+        this.$router.push("/article/" + id + "/" + title);
+        this.$router.go();
+      }
+    }
     },
     mounted() {
         http.get('/articles/teams/' + this.id_team)
