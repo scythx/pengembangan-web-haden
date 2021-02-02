@@ -57,17 +57,15 @@ app.use(session({
 const staticFileMiddleware = express.static(__dirname + '/public')
 app.use(staticFileMiddleware)
 
-if (port == 80) {
-  const history = require('connect-history-api-fallback');
-  app.use(history({
+const history = require('connect-history-api-fallback');
+app.use(history({
     disableDotRule: true,
     verbose: true
-  }))
-  app.use(staticFileMiddleware);
-  app.get('/', function (req, res) {
+}))
+app.use(staticFileMiddleware);
+app.get('/', function (req, res) {
     res.render(path.join(__dirname + '/public/index.html'));
-  })
-}
+})
 
 const google_key = require('./google_key.json')
 const {google} = require('googleapis')
