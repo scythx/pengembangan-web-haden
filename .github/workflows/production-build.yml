@@ -19,24 +19,27 @@ jobs:
         run: |
           cd src/backend
           npm ci
-          npm run build --if-present
-          zip -r --junk-paths backend dist/main.bundle.js package.json package-lock.json
+          npm run build:production --if-present
+          cp -t dist package.json package-lock.json
+          cd dist
+          zip -r backend .
       - name: Build frontend
         run: |
           cd src/frontend
           npm ci
           npm run build --if-present
-          zip -r --junk-paths frontend dist
+          cd dist
+          zip -r frontend .
       - name: Zip nginx artifacts
         run: |
           cd src/nginx
-          zip -r --junk-paths nginx .
+          zip -r nginx .
       - name: Create release
         uses: softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           files: |
-            ./src/backend/backend.zip
-            ./src/frontend/frontend.zip
+            ./src/backend/dist/backend.zip
+            ./src/frontend/dist/frontend.zip
             ./src/nginx/nginx.zip

@@ -19,7 +19,6 @@ import * as sitemap from './sitemap'
 
 const app = express()
 const port = process.env.PORT
-var compression = require('compression')
 const robots = require('express-robots-txt');
 
 
@@ -38,14 +37,12 @@ app.use(
 // use sitemap
 app.use(sitemap.generateSitemap);
 
-
 app.use(cors({
   origin: 'http://localhost:8080',
   credentials: true,
   methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
   optionsSuccessStatus: 204
 }))
-app.use(compression())
 app.use(express.urlencoded({extended: false}))
 app.use(express.json())
 app.use(session({
@@ -53,19 +50,6 @@ app.use(session({
   resave: false,
   saveUninitialized: true
 }))
-
-const staticFileMiddleware = express.static(__dirname + '/public')
-app.use(staticFileMiddleware)
-
-const history = require('connect-history-api-fallback');
-app.use(history({
-    disableDotRule: true,
-    verbose: true
-}))
-app.use(staticFileMiddleware);
-app.get('/', function (req, res) {
-    res.render(path.join(__dirname + '/public/index.html'));
-})
 
 const google_key = require('./google_key.json')
 const {google} = require('googleapis')
@@ -699,8 +683,6 @@ app.start = async () => {
     }
 }
 
-if (process.env.NODE_ENV !== 'test') {
-    app.start()
-}
+app.start()
 
 export default app

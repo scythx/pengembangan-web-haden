@@ -5,7 +5,7 @@ properties:
   containers:
   - name: nginx
     properties:
-      image: nginx
+      image: {{ REGISTRY_NAME }}.azurecr.io/nginx:{{ IMAGE_TAG }}
       ports:
       - port: 80
         protocol: tcp
@@ -15,17 +15,14 @@ properties:
         requests:
           cpu: 0.1
           memoryInGB: 0.1
-      volumeMounts:
-      - name: nginx-config
-        mountPath: /etc/nginx
   - name: backend
     properties:
-      image: {{ REGISTRY_LOGIN_SERVER }}/{{ IMAGE_NAME }}:{{ IMAGE_TAG }}
+      image: {{ REGISTRY_NAME }}.azurecr.io/backend:{{ IMAGE_TAG }}
       environmentVariables:
         - name: "NODE_ENV"
-          value: {{ NODE_ENV }}
+          value: production
         - name: "NODE_HOSTNAME"
-          value: {{ NODE_HOSTNAME }}
+          value: https://{{ DNS_NAME_LABEL }}.southeastasia.azurecontainer.io/
         - name: "PORT"
           value: 8080
         - name: "DB_HOST"
@@ -55,18 +52,13 @@ properties:
       port: 443
     dnsNameLabel: {{ DNS_NAME_LABEL }}
   volumes:
-  - name: nginx-config
-    azureFile:
-      sharename: nginx-config
-      storageAccountName: {{ STORAGE_ACCOUNT_NAME }}
-      storageAccountKey: {{ STORAGE_ACCOUNT_KEY }}
   - name: storageaccountsharevolume
     azureFile:
-      sharename: {{ STORAGE_ACCOUNT_SHARE_NAME }}
+      sharename: storageaccountshare
       storageAccountName: {{ STORAGE_ACCOUNT_NAME }}
       storageAccountKey: {{ STORAGE_ACCOUNT_KEY }}
   imageRegistryCredentials:
-  - server: {{ REGISTRY_LOGIN_SERVER }}
+  - server: {{ REGISTRY_NAME }}.azurecr.io
     username: {{ REGISTRY_USERNAME }}
     password: {{ REGISTRY_PASSWORD }}
 type: Microsoft.ContainerInstance/containerGroups
