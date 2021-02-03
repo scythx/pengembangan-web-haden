@@ -1,8 +1,7 @@
-const { IgnorePlugin } = require('webpack')
+const path = require('path');
 const NodeExternals = require('webpack-node-externals')
 
 module.exports = {
-  devtool: 'eval-source-map',
   entry: [
     './src/main.js'
   ],
@@ -23,7 +22,7 @@ module.exports = {
     ]
   },
   output: {
-    path: __dirname + '/dist',
+    path: path.resolve(__dirname, 'dist'),
     filename: "main.bundle.js"
   },
   target: 'node'
