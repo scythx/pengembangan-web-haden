@@ -99,6 +99,11 @@
          }
        }
      }
+   },
+   metaInfo: {
+     meta: [
+       {vmid: 'description', name: 'description', content: 'halaman login Website berita olahraga terlengkap dan terupdate' }
+     ]
    }
  }
 </script>

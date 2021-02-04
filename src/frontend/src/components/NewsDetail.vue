@@ -40,16 +40,32 @@ export default {
     data() {
         return {
             article: {},
-            authorname : null
+            authorname : null,
+            metaDescription : 'Website berita olahraga terlengkap, terupdate, dan terpercaya',
         }
     },
     methods: {
+        getDescription(str){
+            // cleaned : stripped out HTML
+            if((str===null) || (str===''))
+                return false
+            else
+                str = str.toString()
+            // Regular expression to identify HTML tags in
+            // the input string. Replacing the indentified
+            // HTML tag with a null string
+            let strCleaned = str.replace( /(<([^>]+)>)/ig, '')
+            strCleaned = strCleaned.split(" ")
+            strCleaned = (strCleaned.length > 100) ? strCleaned.slice(0, 100) : strCleane
+            return strCleaned.join().replace(/-|;|,|:|'|"|’|‘|“|\?|&|”/g, ' ')
+        }
     },
     async mounted() {
         await http.get('/articles/' + this.id_article)
         .then((response) => {
             const articles = response['data']
             this.article = articles[0]
+            this.metaDescription = this.getDescription(this.article.content)
         })
         .then(() =>{
             var index = 0
@@ -74,7 +90,14 @@ export default {
             const author = response['data']
             this.authorname = author[0].fullname
         })
-    }
+    },
+    metaInfo(){
+        return{
+            meta: [
+                {vmid: 'description', name: 'description', content: this.metaDescription }
+            ]
+        }
+   }
 }
 
 </script>

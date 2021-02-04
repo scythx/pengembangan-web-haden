@@ -15,8 +15,10 @@ import NewsPage from '../views/NewsPage.vue'
 import Profile from '../components/Profile.vue'
 import AddEditFav from '../components/AddEditFav.vue'
 import store from '../store/'
+import VueMeta from 'vue-meta';
 
 Vue.use(VueRouter)
+Vue.use(VueMeta)
 
 const routes = [
   {
