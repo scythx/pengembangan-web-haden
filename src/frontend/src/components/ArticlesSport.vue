@@ -50,7 +50,8 @@ export default {
         return{
             articles_sport:[],
             sport_name:null,
-            images:[]
+            images:[],
+            metaDescription: 'Website berita olahraga terlengkap, terupdate, dan terpercaya',
         }
     },
     methods:{
@@ -66,6 +67,7 @@ export default {
         http.get('/articles/sports/' + this.id_sport)
         .then((response) => {
             this.articles_sport = response['data']
+            this.metaDescription = this.articles_sport.map(article => article.title).join()
         })
 
         http.get('/sports/' + this.id_sport)
@@ -78,6 +80,13 @@ export default {
         .then((response) => {
             this.images = response['data']
         })
+    },
+    metaInfo(){
+        return{
+            meta: [
+                {vmid: 'description', name: 'description', content: this.metaDescription }
+            ]
+        }
     }
 }
 </script>

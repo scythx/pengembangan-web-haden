@@ -23,6 +23,7 @@
    },
    data: () => ({
      articles: [],
+     metaDescription: 'Website berita olahraga terlengkap, terupdate, dan terpercaya'
    }),
    computed: {
      topHeadline: function () {
@@ -41,7 +42,16 @@
      .get('/articles')
      .then((response) => {
         this.articles = response['data']
+        this.metaDescription = this.articles.filter(article => article.is_headline)
+        this.metaDescription = this.metaDescription.map(article => article.title).join()
      })
+   },
+   metaInfo(){
+     return{
+       meta: [
+         {vmid: 'description', name: 'description', content: this.metaDescription }
+       ]
+     }
    }
  }
 </script>

@@ -147,6 +147,11 @@
          }
        }
      }
+   },
+  metaInfo: {
+     meta: [
+       {vmid: 'description', name: 'description', content: 'halaman pendaftaran Website berita olahraga terlengkap dan terupdate' }
+     ]
    }
  }
 </script>
