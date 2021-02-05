@@ -187,7 +187,6 @@ export default {
             .$store
             .dispatch('authentication/logout')
             this.$router.push('/')
-            this.$router.go()
         },
         async onUnfollowSportClick(id){
             await http.delete('/fav-sports/'+id)

@@ -4,8 +4,6 @@ import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
 import http from './http'
-import 'bootstrap'
-import 'bootstrap/dist/css/bootstrap.min.css';
 import jquery from 'jquery'
 import CKEditor from '@ckeditor/ckeditor5-vue2';
 import VueGtag from "vue-gtag";

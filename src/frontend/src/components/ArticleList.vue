@@ -94,7 +94,6 @@
 
 <script>
 import http from "@/http";
-import "bootstrap/dist/css/bootstrap.css";
 export default {
   data() {
     return {

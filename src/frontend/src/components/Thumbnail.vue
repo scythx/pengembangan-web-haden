@@ -336,31 +336,26 @@ export default {
       title = title.replace(/\s+/g, '-');
       if (this.$route.path !== "/article/" + id + "/" + title) {
         this.$router.push("/article/" + id + "/" + title);
-        this.$router.go();
       }
     },
     onLihatSemuaClick(id) {
       if (this.$route.path !== "/articles/league/" + id) {
         this.$router.push("/articles/league/" + id);
-        this.$router.go();
       }
     },
     onLihatSemuaSportClick(id) {
       if (this.$route.path !== "/articles/sport/" + id) {
         this.$router.push("/articles/sport/" + id);
-        this.$router.go();
       }
     },
     onLihatSemuaLeagueClick(id) {
       if (this.$route.path !== "/articles/league/" + id) {
         this.$router.push("/articles/league/" + id);
-        this.$router.go();
       }
     },
     onLihatSemuaTeamClick(id) {
       if (this.$route.path !== "/articles/team/" + id) {
         this.$router.push("/articles/team/" + id);
-        this.$router.go();
       }
     },
   },

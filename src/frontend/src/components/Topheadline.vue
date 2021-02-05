@@ -88,7 +88,6 @@ export default {
       title = title.replace(/\s+/g, '-');
       if (this.$route.path !== "/article/" + id + "/" + title) {
         this.$router.push("/article/" + id + "/" + title);
-        this.$router.go();
       }
     }
   },

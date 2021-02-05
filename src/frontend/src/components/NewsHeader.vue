@@ -1,31 +1,28 @@
 <template>
-    <nav>
-        <v-app-bar fixed app-bar app color="#1A2634">
-            <v-app-bar-nav-icon light class="white--text" @click="drawer = !drawer"></v-app-bar-nav-icon>
-            <v-toolbar-title class="white--text">
-                <img src="../assets/harden-logo.svg" alt="" @click="onHardenLogoClick">
-            </v-toolbar-title>
-            <v-spacer></v-spacer>
-            <v-btn icon text color="#FFCC00"
-              @click="onProfileClick">
-                <v-icon>mdi-account-circle</v-icon>
-            </v-btn>
-            <v-btn icon text color="#FFCC00">
-                <v-icon>mdi-scoreboard-outline</v-icon>
-            </v-btn>
-        </v-app-bar>
-        
-        <v-navigation-drawer color="#234A75" v-model="drawer" app left temporary>
-        <v-list nav dense>
-            <v-list-item v-for="(link, idx) in links" :key="link.text" @click="onSidebarItemClick(idx, link.text)" active-class="blue--text text--darken-3">
-                <v-list-item-action>
-                    <v-icon flat color="#FFCC00">{{ link.icon }}</v-icon>
-                </v-list-item-action>
-                <v-list-item-title class="amber--text text--accent-3 font-weight-light"> {{ link.text }} </v-list-item-title>
-            </v-list-item>
-        </v-list>
-        </v-navigation-drawer>
-    </nav>
+ <div>
+   <v-navigation-drawer app color="primary" v-model="drawer" temporary>
+     <v-list nav dense>
+       <v-list-item v-for="(link, idx) in links" :key="link.text" @click="onSidebarItemClick(idx, link.text)" active-class="blue--text text--darken-3">
+         <v-list-item-action>
+           <v-icon flat color="#FFCC00">{{ link.icon }}</v-icon>
+         </v-list-item-action>
+         <v-list-item-title class="amber--text text--accent-3 font-weight-light"> {{ link.text }} </v-list-item-title>
+       </v-list-item>
+     </v-list>
+   </v-navigation-drawer>
+
+   <v-app-bar app>
+     <v-app-bar-nav-icon light class="white--text" @click="drawer = !drawer"></v-app-bar-nav-icon>
+     <v-toolbar-title>
+       <img src="../assets/harden-logo.svg" alt="harden logo" @click="onHardenLogoClick">
+     </v-toolbar-title>
+     <v-spacer></v-spacer>
+     <v-btn icon text color="#FFCC00"
+            @click="onProfileClick">
+       <v-icon>mdi-account-circle</v-icon>
+     </v-btn>
+   </v-app-bar>
+ </div>
 </template>
 
 <script>
@@ -74,7 +71,6 @@ export default {
         onHardenLogoClick(){
         if (this.$route.path !== '/')
             this.$router.push('/')
-            this.$router.go()
         },
         onSidebarItemClick(index, name){
             //name : league name or sport name
@@ -85,7 +81,6 @@ export default {
                 if(name == this.sports[i].name){
                     if (this.$route.path !== '/articles/sport/'+this.sports[i].id_sport){
                         this.$router.push('/articles/sport/'+this.sports[i].id_sport)
-                        this.$router.go()
                     }
                 }
                 i++
