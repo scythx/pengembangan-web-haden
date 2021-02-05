@@ -14,6 +14,8 @@ jobs:
       IMAGE_TAG: latest
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v2
+
       - name: 'Login via Azure CLI'
         uses: azure/login@v1
         with:
