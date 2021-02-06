@@ -28,13 +28,20 @@ module.exports = {
       short_name: "Harden",
       start_url: "./",
       display: "standalone",
-      theme_color: "#000000",
+      theme_color: "#1A2634",
+      background_color: "#1A2634",
       icons: [
         {
           src: "./favicon.ico",
           sizes: "32x32",
           type: "image/svg+xml",
           purpose: "any maskable",
+        },
+        {
+          src: "img/icons/logo.png",
+          sizes: "512x512",
+          type: "image/png",
+          purpose: "any"
         },
       ],
     },
@@ -51,7 +58,10 @@ module.exports = {
       msTileImage: null,
     },
     // configure the workbox plugin
-    workboxPluginMode: "GenerateSW",
+    workboxPluginMode: "InjectManifest",
+    workboxOptions:{
+      swSrc: "src/service-worker.js"
+    }
   },
 
   // Vue CLI would normally use its own loader to load .svg and .css files, however:
