@@ -7,14 +7,6 @@ import ArticleList from '../components/ArticleList.vue'
 import CategoriesPage from '../components/CategoriesPage.vue'
 import Stats from '../components/Dashboard.vue'
 import MainPage from '../views/MainPage.vue'
-import MainPageComponent from '../components/MainPage.vue'
-import ArticlesLeague from '../components/ArticlesLeague.vue'
-import ArticlesSport from '../components/ArticlesSport.vue'
-import ArticlesTeam from '../components/ArticlesTeam.vue'
-import NewsPage from '../views/NewsPage.vue'
-import Profile from '../components/Profile.vue'
-import AddEditFav from '../components/AddEditFav.vue'
-import store from '../store/'
 import VueMeta from 'vue-meta';
 
 Vue.use(VueRouter)
@@ -76,42 +68,49 @@ const routes = [
       {
         path: '',
         name: 'main_page_component',
-        component: MainPageComponent
+        //Lazy loaded when route is visited
+        component: () => import(/* webpackChunkName : main_page_component*/"../components/MainPage.vue")
       },
       {
         path: 'articles/league/:id_league',
         name: 'league_articles',
-        component: ArticlesLeague,
+        //Lazy loaded when route is visited
+        component: () => import(/* webpackChunkName : league_articles*/"../components/ArticlesLeague.vue"),
         props: true
       },
       {
         path: 'articles/sport/:id_sport',
         name: 'sport_articles',
-        component: ArticlesSport,
+        //Lazy loaded when route is visited
+        component: () => import(/* webpackChunkName : articles_sport*/"../components/ArticlesSport.vue"),
         props: true
       },
       {
         path: 'articles/team/:id_team',
         name: 'team_articles',
-        component: ArticlesTeam,
+        //Lazy loaded when route is visited
+        component: () => import(/* webpackChunkName : articles_sport*/"../components/ArticlesTeam.vue"),
         props: true
       },
       {
         path: 'article/:id_article/:title',
         name: 'news_page',
-        component: NewsPage,
+        //Lazy loaded when route is visited
+        component: () => import(/* webpackChunkName : news_page*/"../views/NewsPage.vue"),
         props: true
       },
       {
         path: 'profile',
         name: 'profile_page',
-        component: Profile,
+        //Lazy loaded when route is visited
+        component: () => import(/* webpackChunkName : profile*/"../components/Profile.vue"),
         props: true,
       },
       {
         path: 'profile/add_edit_favorite',
         name: 'addeditfavorite',
-        component: AddEditFav,
+        //Lazy loaded when route is visited
+        component: () => import(/* webpackChunkName : addEditFav*/"../components/AddEditFav.vue"),
         props: true
       }
     ]
