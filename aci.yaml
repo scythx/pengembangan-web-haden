@@ -15,6 +15,9 @@ properties:
         requests:
           cpu: 0.1
           memoryInGB: 0.1
+      volumeMounts:
+      - mountPath: /usr/src/app/assets
+        name: storageaccountsharevolume
   - name: backend
     properties:
       image: {{ REGISTRY_NAME }}.azurecr.io/backend:{{ IMAGE_TAG }}
